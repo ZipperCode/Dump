@@ -37,7 +37,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         recyclerView = findViewById(R.id.rv_list)
         mAppInAdapter = AppInfoAdapter(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -81,22 +81,22 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_setting -> {
-                if (!AppUtils.isAccessibilitySettingsOn(this,
-                        DumpService::class.java)) {
-                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                } else {
-                    showAccessibilityTip();
-                }
-            }
-            R.id.menu_help -> {
-
-            }
-            R.id.menu_exit -> {
-                finish()
-            }
-        }
+//        when (item.itemId) {
+//            R.id.menu_setting -> {
+//                if (!AppUtils.isAccessibilitySettingsOn(this,
+//                        DumpService::class.java)) {
+//                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//                } else {
+//                    showAccessibilityTip();
+//                }
+//            }
+//            R.id.menu_help -> {
+//
+//            }
+//            R.id.menu_exit -> {
+//                finish()
+//            }
+//        }
         return true
     }
 
@@ -131,24 +131,6 @@ class MainActivity : BaseActivity() {
             }
         }
     }
-
-    private fun showAccessibilityTip(){
-        AlertDialog.Builder(this)
-            .setTitle("提示信息")
-            .setCancelable(true)
-            .setMessage("您当前已经拥有无障碍权限了，是否还需要跳转设置")
-            .setPositiveButton(
-                "确定"
-            ) { dialog, _ ->
-                dialog.dismiss()
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            }.setNegativeButton("取消") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-
 
     companion object {
         private val TAG: String = MainActivity::class.java.simpleName

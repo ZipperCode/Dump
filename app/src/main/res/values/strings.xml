@@ -14,12 +14,15 @@
     <string name="switch_dump_text_on">跳</string>
     <string name="switch_dump_text_off">不跳</string>
 
+    <string name="accessibility_status_tips">无障碍服务是否打开</string>
+
     <string name="text_accessibility_status_success">已运行</string>
     <string name="text_accessibility_status_failure">未打开</string>
-
 
     <string name="service_running">服务已运行</string>
     <string name="service_stopped">服务已停止</string>
 
     <string name="setting_name">设置</string>
+    <string name="help_name">帮助</string>
+    <string name="apps_setting">应用设置</string>
 </resources>

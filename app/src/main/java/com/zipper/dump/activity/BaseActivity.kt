@@ -14,13 +14,12 @@ import com.zipper.dump.R
 abstract class BaseActivity : AppCompatActivity() {
 
     @LayoutRes
-    abstract fun contentView(): Int
+    protected abstract fun contentView(): Int
 
-    open override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(contentView())
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//设置透明状态栏
-
         val toolBar: Toolbar? = findViewById(R.id.toolbar)
 
         toolBar?.run {

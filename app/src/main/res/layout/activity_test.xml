@@ -7,6 +7,7 @@
     android:layout_gravity="center"
     android:background="@color/background_color"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".activity.TestActivity">
 
     <ImageView
@@ -87,6 +88,42 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_baseline_apps_64"
+                    android:contentDescription="@string/contentDescription" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:text="@string/apps_setting"
+                    android:textColor="@color/card_enable_text_color"
+                    android:textSize="@dimen/card_title_text_size"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/card_foreground"
+            app:cardBackgroundColor="@color/card_enable_color"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
                     app:srcCompat="@drawable/ic_baseline_settings_64"
                     android:contentDescription="@string/contentDescription" />
 
@@ -102,7 +139,6 @@
                     tools:ignore="RtlSymmetry" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
     </LinearLayout>
 
 </LinearLayout>

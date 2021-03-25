@@ -24,6 +24,12 @@ class DumpService : AccessibilityService() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+        // 服务未启动，无法进行处理
+        if(!App.serviceStatus){
+            AccessibilityHelper.mAccessibilityService = null
+            return
+        }
+
         if (AccessibilityHelper.mAccessibilityService == null) {
             AccessibilityHelper.mAccessibilityService = this
         }
@@ -86,11 +92,16 @@ class DumpService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        Toast.makeText(this, "无障碍服务已打开", Toast.LENGTH_LONG).show();
         AccessibilityHelper.mAccessibilityService = this
-        setForegroundService()
         App.mIoCoroutinesScope.launch {
             AccessibilityHelper.init(this@DumpService)
+            if(SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(Intent(this@DumpService,GuardService::class.java))
+                }else{
+                    startService(Intent(this@DumpService,GuardService::class.java))
+                }
+            }
         }
     }
 
@@ -102,29 +113,6 @@ class DumpService : AccessibilityService() {
         return super.onUnbind(intent)
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
-    fun setForegroundService() {
-        //设定的通知渠道名称
-        val channelName = "Dumping服务"
-        //设置通知的重要程度
-        val importance: Int = NotificationManager.IMPORTANCE_LOW
-        //构建通知渠道
-        val channel = NotificationChannel(CHANNEL_ID, channelName, importance)
-        channel.description = "Dumping服务进程"
-        //在创建的通知渠道上发送通知
-        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, CHANNEL_ID)
-        builder.setSmallIcon(R.drawable.ic_launch) //设置通知图标
-            .setContentTitle("Dumping") //设置通知标题
-            .setContentText("我还活着，跳跳跳。。。") //设置通知内容
-            .setAutoCancel(true) //用户触摸时，自动关闭
-            .setOngoing(true) //设置处于运行状态
-        //向系统注册通知渠道，注册后不能改变重要性以及其他通知行为
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-        //将服务置于启动状态 NOTIFICATION_ID指的是创建的通知的ID
-        startForeground(NOTIFICATION_ID, builder.build())
-    }
 
     companion object {
         private val TAG = DumpService::class.java.simpleName

@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Path
 import android.graphics.Point
 import android.graphics.Rect
@@ -16,6 +17,7 @@ import androidx.annotation.RequiresApi
 import com.zipper.dump.bean.AppInfo
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.room.DBHelper
+import com.zipper.dump.service.GuardService
 
 @SuppressLint("StaticFieldLeak")
 object AccessibilityHelper {

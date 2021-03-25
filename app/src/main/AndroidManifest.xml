@@ -14,19 +14,19 @@
         android:roundIcon="@drawable/ic_launch"
         android:theme="@style/Theme.Dumping.NoActionBar">
         <activity android:name=".activity.TestActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity android:name=".activity.SplashActivity">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
         <activity android:name=".activity.AppDetailActivity" />
         <activity android:name=".activity.MainActivity"></activity>
         <activity
@@ -34,6 +34,11 @@
             android:launchMode="singleInstance"
             android:taskAffinity="com.think.accessibility.drawScreenTask"
             android:theme="@style/Translucent" />
+
+        <service
+            android:name=".service.GuardService"
+            android:enabled="true"
+            android:exported="false" />
 
         <service
             android:name=".service.DumpService"

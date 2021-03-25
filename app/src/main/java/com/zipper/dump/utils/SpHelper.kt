@@ -9,7 +9,12 @@ object SpHelper {
 
     private lateinit var mContext: Context
 
-    const val SP_NAME: String = "sp_dump"
+    private const val SP_NAME = "sp_dump"
+
+    /**
+     * 服务开关状态的值
+     */
+    const val SP_SERVICE_STATUS_KEY = "service_status"
 
     private lateinit var mSharedPreferences: SharedPreferences
 
@@ -23,6 +28,9 @@ object SpHelper {
     }
 
     fun saveString(key: String, value: String) {
+        if (!isInit) {
+            error("SpHelper must be call init method")
+        }
         val edit = mSharedPreferences.edit()
         edit.putString(key, value).apply()
     }
@@ -32,6 +40,21 @@ object SpHelper {
             error("SpHelper must be call init method")
         }
         return mSharedPreferences.getString(key, "")!!
+    }
+
+    fun saveBoolean(key: String, value: Boolean = false){
+        if (!isInit) {
+            error("SpHelper must be call init method")
+        }
+        val edit = mSharedPreferences.edit()
+        edit.putBoolean(key, value).apply()
+    }
+
+    fun loadBoolean(key: String):Boolean{
+        if (!isInit) {
+            error("SpHelper must be call init method")
+        }
+        return mSharedPreferences.getBoolean(key, false)
     }
 
     fun saveStringArray(key: String, values: Set<String>) {
