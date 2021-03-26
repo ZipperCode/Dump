@@ -20,4 +20,6 @@
     <color name="card_enable_color">#FFFFFFFF</color>
     <color name="card_enable_text_color">#424242</color>
 
+    <color name="border_color">#999999</color>
+
 </resources>

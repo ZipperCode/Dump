@@ -48,7 +48,7 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
         mAppsSettingCardView.setOnClickListener(this)
         mSettingCardView.setOnClickListener(this)
 
-        App.mMainCoroutinesScope.launch {
+        App.mIoCoroutinesScope.launch {
             val result1 = async(Dispatchers.IO) {
                 AppUtils.getLaunch(this@SplashActivity,
                     AccessibilityHelper.mMainAppInfo)
@@ -58,10 +58,6 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
             }
             result1.await()
             result2.await()
-
-//            startActivity(Intent(this@SplashActivity,
-//                MainActivity::class.java))
-//            finish()
         }
     }
 

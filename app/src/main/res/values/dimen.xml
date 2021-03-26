@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="card_height">90dp</dimen>
     <dimen name="card_radius">10dp</dimen>
     <dimen name="card_title_text_size">18sp</dimen>
 </resources>

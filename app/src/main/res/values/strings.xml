@@ -25,4 +25,6 @@
     <string name="setting_name">设置</string>
     <string name="help_name">帮助</string>
     <string name="apps_setting">应用设置</string>
+
+    <string name="search_filter_hint_text">请输入要过滤的应用名称</string>
 </resources>
