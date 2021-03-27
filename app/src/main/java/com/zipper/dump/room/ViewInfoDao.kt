@@ -6,8 +6,8 @@ import com.zipper.dump.bean.ViewInfo
 @Dao
 interface ViewInfoDao {
 
-    @Insert
-    fun insert(viewInfo: ViewInfo)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(vararg viewInfo: ViewInfo)
 
     @Update
     fun update(viewInfo: ViewInfo)
@@ -23,4 +23,7 @@ interface ViewInfoDao {
 
     @Query("SELECT * FROM tb_dump_view_info WHERE package_name = :packageName")
     fun queryByPackageName(packageName: String): List<ViewInfo>
+
+    @Query("SELECT * FROM tb_dump_view_info WHERE view_id = :viewId and package_name = :packageName")
+    fun queryByViewIdAndPackageName(viewId: String, packageName: String): List<ViewInfo>
 }

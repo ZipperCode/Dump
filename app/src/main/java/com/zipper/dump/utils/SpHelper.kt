@@ -16,6 +16,11 @@ object SpHelper {
      */
     const val SP_SERVICE_STATUS_KEY = "service_status"
 
+    /**
+     * 是否是首次打开应用，false - 首次打开，true - 非首次
+     */
+    const val SP_FIRST_OPENED_KEY = "first_opened"
+
     private lateinit var mSharedPreferences: SharedPreferences
 
     private var isInit: Boolean = false

@@ -77,13 +77,20 @@ class AccessibilityView(context: Context, viewRectList: List<ViewInfo>) : View(c
                 }
                 val time = System.currentTimeMillis() - mLastClickTime
                 if (time < mScaledDoubleTapSlop) {
-                    Toast.makeText(context, "选中当前视图id为 = ${mClickViewViewInfo?.viewId}", Toast.LENGTH_LONG).show()
+
+                    val viewId = mClickViewViewInfo?.viewId
+                    Toast.makeText(context, "选中当前视图id为 = $viewId", Toast.LENGTH_LONG).show()
                     mClickViewViewInfo?.let {
                         AlertDialog.Builder(context)
-                                .setMessage("当前选中的视图Id为空，确定保存选中吗")
+                                .setMessage("选中当前视图id为 = $viewId,确定保存选中吗")
                                 .setPositiveButton("确定"){ dialog, _ ->
                                     App.mIoCoroutinesScope.launch {
-                                        DBHelper.getViewInfoDao().insert(it)
+                                        val list = DBHelper.getViewInfoDao().queryByViewIdAndPackageName(viewId ?: "", it.packageName)
+                                        if(list.isEmpty()){
+                                            DBHelper.getViewInfoDao().insert(it)
+                                        }else{
+                                            DBHelper.getViewInfoDao().update(it)
+                                        }
                                     }
                                     Toast.makeText(context, "已保存", Toast.LENGTH_LONG).show()
                                     dialog.dismiss()

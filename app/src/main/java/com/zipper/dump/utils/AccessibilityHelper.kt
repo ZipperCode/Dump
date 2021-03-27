@@ -18,6 +18,9 @@ import com.zipper.dump.bean.AppInfo
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.room.DBHelper
 import com.zipper.dump.service.GuardService
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 @SuppressLint("StaticFieldLeak")
 object AccessibilityHelper {
@@ -48,7 +51,7 @@ object AccessibilityHelper {
     /**
      * 已安装的App信息
      */
-    val mMainAppInfo:MutableList<AppInfo> = ArrayList()
+    val mMainAppInfo: MutableList<AppInfo> = ArrayList()
 
     /**
      * 是否处于绘制视图时刻，此时不需要捕获任何无障碍事件
@@ -72,7 +75,7 @@ object AccessibilityHelper {
         SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
     }
 
-    fun addPks(pks: Collection<String>){
+    fun addPks(pks: Collection<String>) {
         mNameList.addAll(pks)
         SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
     }
@@ -82,7 +85,7 @@ object AccessibilityHelper {
         SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
     }
 
-    fun clearPks(){
+    fun clearPks() {
         mNameList.clear()
         SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
     }
@@ -96,12 +99,41 @@ object AccessibilityHelper {
      */
     private fun viewInfoInit(context: Context) {
         val db = DBHelper.openViewInfoDatabase(context.applicationContext)
+        if (!SpHelper.loadBoolean(SpHelper.SP_FIRST_OPENED_KEY)) {
+            val initViewInfo = readConfigViewInfo(context.applicationContext)
+            db.getViewInfoDao().insert(*initViewInfo.toTypedArray())
+            SpHelper.saveBoolean(SpHelper.SP_FIRST_OPENED_KEY, true)
+        }
         mDumpViewInfo.clear()
         try {
             mDumpViewInfo.addAll(db.getViewInfoDao().getAll())
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun readConfigViewInfo(context: Context): List<ViewInfo> {
+        val result: MutableList<ViewInfo> = ArrayList()
+        try {
+            val prop = Properties()
+            prop.load(context.assets.open("dump_ids.ini"))
+            prop.forEach {
+                it.key
+            }
+            val propertyNames = prop.propertyNames()
+            while (propertyNames.hasMoreElements()) {
+                val key = propertyNames.nextElement() as String
+                val viewIdString = prop[key] as String
+                val viewIds = viewIdString.split(",")
+                for (id in viewIds) {
+                    result.add(ViewInfo(0, key, id, Rect()))
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+
+        return result
     }
 
     fun addViewInfo(viewInfo: ViewInfo) {
@@ -185,7 +217,7 @@ object AccessibilityHelper {
 
     private fun findClickableView(childNode: AccessibilityNodeInfo): AccessibilityNodeInfo {
         Log.d(TAG, "[findClickableView] child-clickable = ${childNode.isClickable}")
-        return if (!childNode.isClickable) {
+        return if (!childNode.isClickable and (childNode.parent != null)) {
             findClickableView(childNode.parent)
         } else {
             childNode
@@ -215,7 +247,8 @@ object AccessibilityHelper {
         service.dispatchGesture(
             GestureDescription.Builder()
                 .addStroke(
-                    GestureDescription.StrokeDescription(path, startTime, duration)).build(),
+                    GestureDescription.StrokeDescription(path, startTime, duration)
+                ).build(),
             callback,
             null
         )
@@ -239,7 +272,10 @@ object AccessibilityHelper {
     @RequiresApi(Build.VERSION_CODES.N)
     fun gestureClick(service: AccessibilityService?, pointPth: Path) {
         Log.d(TAG, "[gestureClick] pointPth = $pointPth")
-        gestureScroll(service, pointPth, callback = object : AccessibilityService.GestureResultCallback() {})
+        gestureScroll(
+            service,
+            pointPth,
+            callback = object : AccessibilityService.GestureResultCallback() {})
 
     }
 
@@ -253,7 +289,10 @@ object AccessibilityHelper {
             nodeInfo.getBoundsInScreen(rect)
             val pointPth = getRandomPath(rect)
             Log.d(TAG, "[gestureClick] pointPth = $pointPth")
-            gestureScroll(service, pointPth, callback = object : AccessibilityService.GestureResultCallback() {})
+            gestureScroll(
+                service,
+                pointPth,
+                callback = object : AccessibilityService.GestureResultCallback() {})
         }
     }
 
@@ -317,8 +356,8 @@ object AccessibilityHelper {
             return
         }
         val screenRect = Rect()
-        viewNodeInfo.getBoundsInScreen(screenRect)
         viewNodeInfo.refresh()
+        viewNodeInfo.getBoundsInScreen(screenRect)
         viewInfoList.add(
             ViewInfo(
                 0,
@@ -336,7 +375,8 @@ object AccessibilityHelper {
     fun getRandomPath(rect: Rect): Path {
         Log.d(TAG, "[getRandomPath] rect = $rect")
         val path = Path()
-        val point = Point(getRandomPoint(rect.left, rect.right), getRandomPoint(rect.top, rect.bottom))
+        val point =
+            Point(getRandomPoint(rect.left, rect.right), getRandomPoint(rect.top, rect.bottom))
         path.moveTo(point.x.toFloat(), point.y.toFloat())
         Log.d(TAG, rect.toString())
         Log.d(TAG, point.toString())

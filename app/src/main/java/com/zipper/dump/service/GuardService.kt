@@ -18,28 +18,31 @@ import java.lang.ref.WeakReference
 
 class GuardService : Service() {
 
-    override fun onCreate() {
-        super.onCreate()
-        Log.d(TAG,"onCreate")
-        if(Build.VERSION.SDK_INT >= 24){
-            Log.d(TAG,"setForegroundService")
-            setForegroundService()
-        }
-    }
+    private var mServiceStatusText:String = SERVICE_STATUS_RUN_TEXT
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if(mRefService == null){
             mRefService = WeakReference(this)
         }
+
+        val status = intent?.getStringExtra(SERVICE_STATUS_KEY)
+
+        status?.run {
+            mServiceStatusText = this
+        }
+        if(Build.VERSION.SDK_INT >= 24){
+            Log.d(TAG,"setForegroundService")
+            setForegroundService()
+        }
+
         return START_STICKY;
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent): IBinder? = null
 
     override fun onDestroy() {
         Log.d(TAG,"无障碍服务关闭，同时关闭前台服务")
+        mRefService = null
         if(Build.VERSION.SDK_INT > 24){
             stopForeground(STOP_FOREGROUND_DETACH)
         }
@@ -59,7 +62,7 @@ class GuardService : Service() {
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, CHANNEL_ID)
         builder.setSmallIcon(R.drawable.ic_float) //设置通知图标
                 .setContentTitle("Dump服务") //设置通知标题
-                .setContentText("我还活着，跳跳跳。。。") //设置通知内容
+                .setContentText(mServiceStatusText) //设置通知内容
                 .setAutoCancel(true) //用户触摸时，自动关闭
                 .setOngoing(true) //设置处于运行状态
                 .setContentIntent(PendingIntent.getActivity(this,0,
@@ -78,5 +81,8 @@ class GuardService : Service() {
         const val NOTIFICATION_ID: Int = 100
 
         var mRefService: WeakReference<GuardService>? = null
+
+        const val SERVICE_STATUS_KEY = "GuardServiceStatus"
+        const val SERVICE_STATUS_RUN_TEXT = "我还活着，跳跳跳。。。"
     }
 }

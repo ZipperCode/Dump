@@ -4,11 +4,14 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,9 +32,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var mAppInAdapter: AppInfoAdapter
 
-    private lateinit var flControl: FloatingActionButton
-
-    private lateinit var searchView: SearchView
+    private lateinit var mSearchEditText: EditText
 
     override fun contentView(): Int = R.layout.activity_main
 
@@ -43,10 +44,13 @@ class MainActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mAppInAdapter
 
-        flControl = findViewById(R.id.fb_control)
-        flControl.setOnClickListener {
-            flClick()
-        }
+
+        mSearchEditText = findViewById(R.id.et_search)
+
+        mSearchEditText.addTextChangedListener(afterTextChanged = {
+            val text = it?.toString() ?: ""
+            mAppInAdapter.filter.filter(text)
+        })
 
         // 显示更快
         App.mMainCoroutinesScope.launch {
@@ -63,74 +67,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_act_menu, menu)
-        menu?.also {
-            val item = it.findItem(R.id.menu_search)
-            searchView = item.actionView as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = false
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    mAppInAdapter.filter.filter(newText)
-                    return false
-                }
-            })
-        }
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.menu_setting -> {
-//                if (!AppUtils.isAccessibilitySettingsOn(this,
-//                        DumpService::class.java)) {
-//                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-//                } else {
-//                    showAccessibilityTip();
-//                }
-//            }
-//            R.id.menu_help -> {
-//
-//            }
-//            R.id.menu_exit -> {
-//                finish()
-//            }
-//        }
-        return true
-    }
-
-
-    private fun flClick() {
-        if (FloatWindow.floatWindowIsShow) {
-            FloatWindow.removeInstance(this)
-        } else {
-            FloatWindow.getInstance(this).setOnClickListener {
-                if(AccessibilityHelper.mAccessibilityService == null){
-                    toast("无障碍服务未开启，无法捕获")
-                    return@setOnClickListener
-                }
-                toast("开启视图显示")
-                AccessibilityHelper.mAccessibilityService?.run {
-                    App.mIoCoroutinesScope.launch {
-                        val viewInfoList: MutableList<ViewInfo> = ArrayList()
-                        AccessibilityHelper.collectViewInfo(rootInActiveWindow, viewInfoList)
-                        Log.d(TAG, "收集到的ViewInfo有size = ${viewInfoList.size}")
-                        // 保存全局，不使用参数传递
-                        AccessibilityHelper.mCollectViewInfoList = viewInfoList
-                        val intent = Intent(this@MainActivity,
-                            TranslucentActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    }
-                }
-            }
-            FloatWindow.getInstance(this).setOnLongClickListener {
-                Toast.makeText(this,"长按",Toast.LENGTH_LONG).show()
-                true
-            }
-        }
-    }
 
     companion object {
         private val TAG: String = MainActivity::class.java.simpleName

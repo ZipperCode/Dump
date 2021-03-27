@@ -13,13 +13,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launch"
         android:theme="@style/Theme.Dumping.NoActionBar">
-        <activity android:name=".activity.TestActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
+        <activity android:name=".activity.HelpActivity"/>
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

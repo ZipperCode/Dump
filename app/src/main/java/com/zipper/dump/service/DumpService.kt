@@ -1,6 +1,7 @@
 package com.zipper.dump.service
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -88,13 +89,24 @@ class DumpService : AccessibilityService() {
     override fun onInterrupt() {
         Log.d(TAG, "中断")
         Toast.makeText(this, "无障碍服务中断", Toast.LENGTH_LONG).show();
+        if(SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)){
+            startService(Intent(this@DumpService, GuardService::class.java)
+                .putExtra(GuardService.SERVICE_STATUS_KEY, "无障碍服务中断,请前往设置中重新打开"))
+        }
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
         AccessibilityHelper.mAccessibilityService = this
+        serviceInfo = serviceInfo.apply {
+            flags = flags or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
+        }
+
         App.mIoCoroutinesScope.launch {
             AccessibilityHelper.init(this@DumpService)
+            if(SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)){
+                startService(Intent(this@DumpService, GuardService::class.java))
+            }
             if(SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     startForegroundService(Intent(this@DumpService,GuardService::class.java))
@@ -107,17 +119,13 @@ class DumpService : AccessibilityService() {
 
     override fun onUnbind(intent: Intent?): Boolean {
         Toast.makeText(this, "无障碍服务关闭，请重新打开", Toast.LENGTH_LONG).show();
-        if (Build.VERSION.SDK_INT > 24) {
-            stopForeground(STOP_FOREGROUND_DETACH)
-        }
+        stopService(Intent(this,GuardService::class.java))
         return super.onUnbind(intent)
     }
 
 
     companion object {
         private val TAG = DumpService::class.java.simpleName
-        const val CHANNEL_ID: String = "com.zipper.dump.service.DumpService"
-        const val NOTIFICATION_ID: Int = 100
     }
 
 }
