@@ -1,6 +1,5 @@
 package com.zipper.dump.activity
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -10,34 +9,32 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.core.app.DialogCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.zipper.dump.App
 import com.zipper.dump.R
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.service.DumpService
-import com.zipper.dump.service.GuardService
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
+import com.zipper.dump.utils.L
 import com.zipper.dump.utils.SpHelper
 import com.zipper.dump.view.FloatWindow
 import kotlinx.coroutines.*
 
 class SplashActivity : BaseActivity(), View.OnClickListener {
 
-    private lateinit var mServiceSwitchCardView:CardView
-    private lateinit var mAppsSettingCardView:CardView
-    private lateinit var mSettingCardView:CardView
-    private lateinit var mHelpCardView:CardView
+    private lateinit var mServiceSwitchCardView: CardView
+    private lateinit var mAppsSettingCardView: CardView
+    private lateinit var mSettingCardView: CardView
+    private lateinit var mHelpCardView: CardView
 
     private lateinit var mServiceSwitchIconView: ImageView
     private lateinit var mServiceSwitchTitleView: TextView
 
     private lateinit var flControl: FloatingActionButton
 
-    private var mServiceStatus = App.serviceStatus
+    private var mServiceStatus = false
 
     override fun contentView(): Int = R.layout.activity_splash
 
@@ -64,10 +61,12 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
 
         App.mIoCoroutinesScope.launch {
             val result1 = async(Dispatchers.IO) {
-                AppUtils.getLaunch(this@SplashActivity,
-                    AccessibilityHelper.mMainAppInfo)
+                AppUtils.getLaunch(
+                    this@SplashActivity,
+                    AccessibilityHelper.mMainAppInfo
+                )
             }
-            val result2 = async(Dispatchers.IO){
+            val result2 = async(Dispatchers.IO) {
                 AccessibilityHelper.init(this@SplashActivity)
             }
             result1.await()
@@ -77,50 +76,48 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        mServiceSwitchCardView.run {
-            mServiceStatus = App.serviceStatus
-            switchServiceVisible()
-            setOnClickListener(this@SplashActivity)
+        mServiceStatus = DumpService.serviceStatus
+        switchServiceVisible()
+
+        if(!mServiceStatus and (DumpService.mAccessibilityService != null)){
+            toast("无障碍服务已打开，请开启服务吧")
         }
+
     }
 
     override fun onClick(v: View?) {
-        when (v?.id){
-            R.id.cv_service_switch ->{
-
-                if(!AppUtils.isAccessibilitySettingsOn(this,
-                        DumpService::class.java)){
+        when (v?.id) {
+            R.id.cv_service_switch -> {
+                if (!AppUtils.isAccessibilitySettingsOn(
+                        this,
+                        DumpService::class.java
+                    )
+                ) {
                     showAccessibilityTip("检测到无障碍服务未开启，是否前往设置")
                     return
                 }
                 mServiceStatus = !mServiceStatus
-                SpHelper.saveBoolean(SpHelper.SP_SERVICE_STATUS_KEY, mServiceStatus)
-                if(mServiceStatus){
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        startForegroundService(Intent(App.mAppContext,GuardService::class.java))
-                    }else{
-                        startService(Intent(App.mAppContext,GuardService::class.java))
-                    }
-                }else{
-                    stopService(Intent(App.mAppContext,GuardService::class.java))
-                }
+                DumpService.mAccessibilityService?.notifyServiceStatus(mServiceStatus)
                 switchServiceVisible()
             }
-            R.id.cv_apps_setting ->{
-                startActivity(Intent(this,MainActivity::class.java))
+            R.id.cv_apps_setting -> {
+                startActivity(Intent(this, MainActivity::class.java))
             }
             R.id.cv_setting -> {
-                Toast.makeText(this,"打开设置", Toast.LENGTH_LONG).show()
-                if (!AppUtils.isAccessibilitySettingsOn(this,
-                        DumpService::class.java)) {
+                Toast.makeText(this, "打开设置", Toast.LENGTH_LONG).show()
+                if (!AppUtils.isAccessibilitySettingsOn(
+                        this,
+                        DumpService::class.java
+                    )
+                ) {
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 } else {
                     showAccessibilityTip("您当前已经拥有无障碍权限了，是否还需要跳转设置")
                 }
             }
-            R.id.cv_help ->{
-                Toast.makeText(this,"打开帮助", Toast.LENGTH_LONG).show()
-                startActivity(Intent(this,HelpActivity::class.java))
+            R.id.cv_help -> {
+                Toast.makeText(this, "打开帮助", Toast.LENGTH_LONG).show()
+                startActivity(Intent(this, HelpActivity::class.java))
             }
         }
     }
@@ -130,47 +127,50 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
             FloatWindow.removeInstance(this)
         } else {
             FloatWindow.getInstance(this).setOnClickListener {
-                if(AccessibilityHelper.mAccessibilityService == null){
+                if (DumpService.mAccessibilityService == null) {
                     toast("无障碍服务未开启，无法捕获")
                     return@setOnClickListener
                 }
                 toast("开启视图显示")
-                AccessibilityHelper.mAccessibilityService?.run {
+                DumpService.mAccessibilityService?.run {
                     App.mIoCoroutinesScope.launch {
                         val viewInfoList: MutableList<ViewInfo> = ArrayList()
                         AccessibilityHelper.collectViewInfo(rootInActiveWindow, viewInfoList)
-                        Log.d(TAG, "收集到的ViewInfo有size = ${viewInfoList.size}")
+                        L.d(TAG, "收集到的ViewInfo有size = ${viewInfoList.size}")
                         // 保存全局，不使用参数传递
                         AccessibilityHelper.mCollectViewInfoList = viewInfoList
-                        val intent = Intent(this@SplashActivity,
-                            TranslucentActivity::class.java)
+                        val intent = Intent(
+                            this@SplashActivity,
+                            TranslucentActivity::class.java
+                        )
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                     }
                 }
             }
             FloatWindow.getInstance(this).setOnLongClickListener {
-                Toast.makeText(this,"长按",Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "长按，隐藏悬浮球", Toast.LENGTH_LONG).show()
+                FloatWindow.removeInstance(this)
                 true
             }
         }
     }
 
-    private fun switchServiceVisible(){
+    private fun switchServiceVisible() {
         mServiceSwitchCardView.run {
-            if(mServiceStatus){
+            if (mServiceStatus) {
                 setCardBackgroundColor(resources.getColor(R.color.card_enable_color))
                 mServiceSwitchIconView.setImageResource(R.drawable.ic_baseline_check_circle_64)
-                mServiceSwitchTitleView.text =resources.getText( R.string.service_running)
-            }else{
+                mServiceSwitchTitleView.text = resources.getText(R.string.service_running)
+            } else {
                 setCardBackgroundColor(resources.getColor(R.color.card_unable_color))
                 mServiceSwitchIconView.setImageResource(R.drawable.ic_baseline_cancel_64)
-                mServiceSwitchTitleView.text =resources.getText( R.string.service_stopped)
+                mServiceSwitchTitleView.text = resources.getText(R.string.service_stopped)
             }
         }
     }
 
-    private fun showAccessibilityTip(msg: String){
+    private fun showAccessibilityTip(msg: String) {
         AlertDialog.Builder(this)
             .setTitle("提示信息")
             .setCancelable(true)
@@ -186,7 +186,7 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
             .show()
     }
 
-    companion object{
+    companion object {
         val TAG: String = SplashActivity::class.java.simpleName
     }
 }

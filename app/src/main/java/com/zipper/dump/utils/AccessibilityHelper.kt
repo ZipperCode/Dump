@@ -4,7 +4,6 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Path
 import android.graphics.Point
 import android.graphics.Rect
@@ -17,21 +16,15 @@ import androidx.annotation.RequiresApi
 import com.zipper.dump.bean.AppInfo
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.room.DBHelper
-import com.zipper.dump.service.GuardService
+import com.zipper.dump.service.DumpService
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
-@SuppressLint("StaticFieldLeak")
 object AccessibilityHelper {
     private val TAG: String = AccessibilityHelper::class.java.simpleName
 
     private const val SP_PKS_LIST_KEY = "name_list"
-
-    /**
-     * 无障碍服务对象应用
-     */
-    var mAccessibilityService: AccessibilityService? = null
 
     /**
      * 保存需要过滤的包名
@@ -57,6 +50,14 @@ object AccessibilityHelper {
      * 是否处于绘制视图时刻，此时不需要捕获任何无障碍事件
      */
     var mDrawViewBound: Boolean = false
+
+    private var mServiceClosed: Boolean = false
+
+    /**
+     * 前台服务是否被关闭
+     */
+    val guardServiceClosed get() = mServiceClosed
+
 
     fun init(context: Context) {
         pksInit(context)
@@ -205,7 +206,7 @@ object AccessibilityHelper {
         } catch (e: Exception) {
             e.printStackTrace()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                mAccessibilityService?.let {
+                DumpService.mAccessibilityService.let {
                     val rect = Rect()
                     nodeInfo.getBoundsInScreen(rect)
                     gestureClick(it, getRandomPath(rect))
@@ -216,7 +217,7 @@ object AccessibilityHelper {
     }
 
     private fun findClickableView(childNode: AccessibilityNodeInfo): AccessibilityNodeInfo {
-        Log.d(TAG, "[findClickableView] child-clickable = ${childNode.isClickable}")
+        L.d(TAG, "[findClickableView] child-clickable = ${childNode.isClickable}")
         return if (!childNode.isClickable and (childNode.parent != null)) {
             findClickableView(childNode.parent)
         } else {
@@ -243,7 +244,7 @@ object AccessibilityHelper {
         if (service == null) {
             return
         }
-        Log.d(TAG, "[gestureScroll]")
+        L.d(TAG, "[gestureScroll]")
         service.dispatchGesture(
             GestureDescription.Builder()
                 .addStroke(
@@ -261,7 +262,7 @@ object AccessibilityHelper {
      */
     @RequiresApi(Build.VERSION_CODES.N)
     fun gestureClick(service: AccessibilityService?, point: Point) {
-        Log.d(TAG, "[gestureClick] point = $point")
+        L.d(TAG, "[gestureClick] point = $point")
         val pointPth = Path().apply {
             moveTo(point.x.toFloat(), point.y.toFloat())
             lineTo(point.x.toFloat(), point.y.toFloat())
@@ -271,7 +272,7 @@ object AccessibilityHelper {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun gestureClick(service: AccessibilityService?, pointPth: Path) {
-        Log.d(TAG, "[gestureClick] pointPth = $pointPth")
+        L.d(TAG, "[gestureClick] pointPth = $pointPth")
         gestureScroll(
             service,
             pointPth,
@@ -288,7 +289,7 @@ object AccessibilityHelper {
             val rect = Rect()
             nodeInfo.getBoundsInScreen(rect)
             val pointPth = getRandomPath(rect)
-            Log.d(TAG, "[gestureClick] pointPth = $pointPth")
+            L.d(TAG, "[gestureClick] pointPth = $pointPth")
             gestureScroll(
                 service,
                 pointPth,
@@ -303,7 +304,7 @@ object AccessibilityHelper {
      * @param action        执行的操作
      */
     fun performAction(nodeInfo: AccessibilityNodeInfo, action: Int): Boolean {
-        Log.d(TAG, "[performAction] action = $action")
+        L.d(TAG, "[performAction] action = $action")
         try {
             return nodeInfo.performAction(action)
         } finally {
@@ -320,12 +321,12 @@ object AccessibilityHelper {
         rootNodeInfo: AccessibilityNodeInfo?,
         id: String
     ): AccessibilityNodeInfo? {
-        Log.d(TAG, "[findNodeById] id = $id")
+        L.d(TAG, "[findNodeById] id = $id")
         if (TextUtils.isEmpty(id) or (rootNodeInfo == null)) {
             return null
         }
         val nodeList = rootNodeInfo!!.findAccessibilityNodeInfosByViewId(id)
-        Log.d(TAG, "[findNodeById] nodeList = $nodeList")
+        L.d(TAG, "[findNodeById] nodeList = $nodeList")
         return nodeList?.distinct()?.firstOrNull()
     }
 
@@ -338,13 +339,13 @@ object AccessibilityHelper {
         rootNodeInfo: AccessibilityNodeInfo?,
         text: String
     ): AccessibilityNodeInfo? {
-        Log.d(TAG, "[findNodeByText] text = $text")
+        L.d(TAG, "[findNodeByText] text = $text")
         if ((rootNodeInfo == null) or TextUtils.isEmpty(text)) {
             return null
         }
 
         val nodeList = rootNodeInfo!!.findAccessibilityNodeInfosByText(text)
-        Log.d(TAG, "[findNodeByText] nodeList = $nodeList")
+        L.d(TAG, "[findNodeByText] nodeList = $nodeList")
         return nodeList?.distinct()?.firstOrNull()
     }
 
@@ -373,13 +374,13 @@ object AccessibilityHelper {
     }
 
     fun getRandomPath(rect: Rect): Path {
-        Log.d(TAG, "[getRandomPath] rect = $rect")
+        L.d(TAG, "[getRandomPath] rect = $rect")
         val path = Path()
         val point =
             Point(getRandomPoint(rect.left, rect.right), getRandomPoint(rect.top, rect.bottom))
         path.moveTo(point.x.toFloat(), point.y.toFloat())
-        Log.d(TAG, rect.toString())
-        Log.d(TAG, point.toString())
+        L.d(TAG, rect.toString())
+        L.d(TAG, point.toString())
         return path
     }
 

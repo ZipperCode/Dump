@@ -117,7 +117,7 @@ class FloatWindow : RelativeLayout {
         val height = MeasureSpec.makeMeasureSpec(dp2px(context, viewH.toFloat()), MeasureSpec.AT_MOST)
         val result = Math.min(width, height)
         super.onMeasure(result, result)
-//        Log.d(TAG, "onMeasure >>> with = " + MeasureSpec.getSize(width) + ",height = " + MeasureSpec.getSize(height))
+//        L.d(TAG, "onMeasure >>> with = " + MeasureSpec.getSize(width) + ",height = " + MeasureSpec.getSize(height))
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -144,7 +144,7 @@ class FloatWindow : RelativeLayout {
     }
 
     override fun performClick(): Boolean {
-//        Log.d(TAG, "performClick")
+//        L.d(TAG, "performClick")
         return super.performClick()
     }
 
@@ -168,17 +168,17 @@ class FloatWindow : RelativeLayout {
         inScreenX = event.rawX.toInt()
         inScreenY = event.rawY.toInt()
         mMoved = abs(inScreenX - downScreenX) >= touchSlop || abs(inScreenY - downScreenY) >= touchSlop
-//        Log.d(TAG, "inScreenX = $inScreenX,inScreenY = $inScreenY, downScreenX = $downScreenX,downScreenY = $downScreenY, touchSlop = $touchSlop");
+//        L.d(TAG, "inScreenX = $inScreenX,inScreenY = $inScreenY, downScreenX = $downScreenX,downScreenY = $downScreenY, touchSlop = $touchSlop");
         update()
         return true
     }
 
     private fun doUp(event: MotionEvent): Boolean {
-//        Log.d(TAG, "pl = $paddingLeft,pr = $paddingRight,pt = $paddingTop,pb = $paddingBottom")
+//        L.d(TAG, "pl = $paddingLeft,pr = $paddingRight,pt = $paddingTop,pb = $paddingBottom")
         if (!mMoved) {
             performClick()
         }
-        processTranslate(inScreenX < screenWPixel / 2)
+//        processTranslate(inScreenX < screenWPixel / 2)
         isPressed = false
         processScale(false)
         postDelayed(mDelayAlphaAnim, 3000)

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.*
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -12,6 +11,7 @@ import android.widget.Toast
 import com.zipper.dump.App
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.room.DBHelper
+import com.zipper.dump.utils.L
 import kotlinx.coroutines.launch
 
 @SuppressLint("ViewConstructor")
@@ -68,7 +68,7 @@ class AccessibilityView(context: Context, viewRectList: List<ViewInfo>) : View(c
         }
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                Log.d(TAG, "ACTION_DOWN")
+                L.d(TAG, "ACTION_DOWN")
                 mUp = false
                 val rect = matchRect(Point(event.x.toInt(), event.y.toInt()))
                 rect?.run {
@@ -82,29 +82,30 @@ class AccessibilityView(context: Context, viewRectList: List<ViewInfo>) : View(c
                     Toast.makeText(context, "选中当前视图id为 = $viewId", Toast.LENGTH_LONG).show()
                     mClickViewViewInfo?.let {
                         AlertDialog.Builder(context)
-                                .setMessage("选中当前视图id为 = $viewId,确定保存选中吗")
-                                .setPositiveButton("确定"){ dialog, _ ->
-                                    App.mIoCoroutinesScope.launch {
-                                        val list = DBHelper.getViewInfoDao().queryByViewIdAndPackageName(viewId ?: "", it.packageName)
-                                        if(list.isEmpty()){
-                                            DBHelper.getViewInfoDao().insert(it)
-                                        }else{
-                                            DBHelper.getViewInfoDao().update(it)
-                                        }
+                            .setMessage("选中当前视图id为 = $viewId,确定保存选中吗")
+                            .setPositiveButton("确定") { dialog, _ ->
+                                App.mIoCoroutinesScope.launch {
+                                    val list = DBHelper.getViewInfoDao()
+                                        .queryByViewIdAndPackageName(viewId ?: "", it.packageName)
+                                    if (list.isEmpty()) {
+                                        DBHelper.getViewInfoDao().insert(it)
+                                    } else {
+                                        DBHelper.getViewInfoDao().update(it)
                                     }
-                                    Toast.makeText(context, "已保存", Toast.LENGTH_LONG).show()
-                                    dialog.dismiss()
                                 }
-                                .setNegativeButton("取消"){dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                .show()
+                                Toast.makeText(context, "已保存", Toast.LENGTH_LONG).show()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("取消") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .show()
                     }
                 }
                 return true
             }
             MotionEvent.ACTION_UP -> {
-                Log.d(TAG, "ACTION_UP")
+                L.d(TAG, "ACTION_UP")
                 mUp = true
                 mLastClickTime = System.currentTimeMillis()
                 return true

@@ -95,6 +95,11 @@ class AppDetailActivity : BaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        mPackageViewInfo.clear()
+        super.onDestroy()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {

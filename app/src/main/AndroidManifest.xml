@@ -22,17 +22,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AppDetailActivity" />
-        <activity android:name=".activity.MainActivity"></activity>
+        <activity android:name=".activity.MainActivity"/>
         <activity
+            android:excludeFromRecents="true"
             android:name=".activity.TranslucentActivity"
             android:launchMode="singleInstance"
             android:taskAffinity="com.think.accessibility.drawScreenTask"
             android:theme="@style/Translucent" />
-
-        <service
-            android:name=".service.GuardService"
-            android:enabled="true"
-            android:exported="false" />
 
         <service
             android:name=".service.DumpService"

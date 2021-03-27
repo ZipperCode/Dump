@@ -5,6 +5,7 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -17,7 +18,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.zipper.dump.App
 import com.zipper.dump.R
+import com.zipper.dump.activity.SplashActivity
 import com.zipper.dump.utils.AccessibilityHelper
+import com.zipper.dump.utils.L
 import com.zipper.dump.utils.SpHelper
 import kotlinx.coroutines.launch
 
@@ -25,39 +28,34 @@ class DumpService : AccessibilityService() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        // 服务未启动，无法进行处理
-        if(!App.serviceStatus){
-            AccessibilityHelper.mAccessibilityService = null
+        // 当服务启动变量状态改变后，不处理任何无障碍。绘制页面时也不处理
+        if (!mServiceStatus or AccessibilityHelper.mDrawViewBound) {
             return
         }
 
-        if (AccessibilityHelper.mAccessibilityService == null) {
-            AccessibilityHelper.mAccessibilityService = this
-        }
-
-        if (AccessibilityHelper.mDrawViewBound) {
-            return
-        }
-
-        val pkName = event?.packageName?.toString() ?: ""
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
-            rootInActiveWindow?.run {
-                // 过滤不需要处理的包
-                if (AccessibilityHelper.pksContains(pkName)) {
-                    dumpSplash(this, pkName)
-                }
+            windowContentChange(event)
+        }
+    }
+
+    private fun windowContentChange(event: AccessibilityEvent?) {
+        val pkName = event?.packageName?.toString() ?: ""
+        rootInActiveWindow?.run {
+            // 过滤不需要处理的包
+            if (("com.miui.systemAdSolution" == pkName) or AccessibilityHelper.pksContains(pkName)) {
+                dumpSplash(this, pkName)
             }
         }
     }
 
     private fun dumpSplash(rootNodeInfo: AccessibilityNodeInfo, pks: String) {
-        Log.d(TAG, "当前pks = $packageName 需要进行跳过处理")
+        L.d(TAG, "当前pks = $packageName 需要进行跳过处理")
         var clicked = false
 
         AccessibilityHelper.run {
             // 判断是否有自定义设定的viewId需要跳过
             val dumpViewIds = viewInfoListIds(pks)
-            Log.d(TAG, "查找到的 dumpViewIds = $dumpViewIds")
+            L.d(TAG, "查找到的 dumpViewIds = $dumpViewIds")
             dumpViewIds.forEach {
                 // 查找所有拥有当前id的view，处理跳过
                 clicked = clicked or (findNodeById(rootNodeInfo, it)?.let { node ->
@@ -74,7 +72,10 @@ class DumpService : AccessibilityService() {
             val dumpName = SpHelper.loadString(pks)
             AccessibilityHelper.run {
                 // 能查找到包含[跳过]文本的组件
-                val dumpNode = findNodeByText(rootNodeInfo, if(TextUtils.isEmpty(dumpName)) "跳过" else dumpName)
+                val dumpNode = findNodeByText(
+                    rootNodeInfo,
+                    if (TextUtils.isEmpty(dumpName)) "跳过" else dumpName
+                )
                 dumpNode?.let {
                     return@let if (it.isClickable) {
                         click(it)
@@ -87,45 +88,89 @@ class DumpService : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        Log.d(TAG, "中断")
-        Toast.makeText(this, "无障碍服务中断", Toast.LENGTH_LONG).show();
-        if(SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)){
-            startService(Intent(this@DumpService, GuardService::class.java)
-                .putExtra(GuardService.SERVICE_STATUS_KEY, "无障碍服务中断,请前往设置中重新打开"))
-        }
+        L.d(TAG, "中断")
+        Toast.makeText(this, "无障碍服务中断", Toast.LENGTH_LONG).show()
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        AccessibilityHelper.mAccessibilityService = this
+        mAccessibilityService = this
         serviceInfo = serviceInfo.apply {
             flags = flags or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
         }
 
         App.mIoCoroutinesScope.launch {
             AccessibilityHelper.init(this@DumpService)
-            if(SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)){
-                startService(Intent(this@DumpService, GuardService::class.java))
-            }
-            if(SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(Intent(this@DumpService,GuardService::class.java))
-                }else{
-                    startService(Intent(this@DumpService,GuardService::class.java))
-                }
-            }
+            // 读取本地设置的状态
+            val status = SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)
+            notifyServiceStatus(status)
         }
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        Toast.makeText(this, "无障碍服务关闭，请重新打开", Toast.LENGTH_LONG).show();
-        stopService(Intent(this,GuardService::class.java))
+        Toast.makeText(this, "无障碍服务关闭，请重新打开", Toast.LENGTH_LONG).show()
+        notifyServiceStatus(false)
         return super.onUnbind(intent)
     }
 
+    fun notifyServiceStatus(status: Boolean) {
+        mServiceStatus = status
+        SpHelper.saveBoolean(SpHelper.SP_SERVICE_STATUS_KEY, status)
+        if (status) {
+            setForegroundService()
+        } else {
+            if (Build.VERSION.SDK_INT > 24) {
+                stopForeground(false)
+                val notificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(NOTIFICATION_ID)
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private fun setForegroundService() {
+        //设定的通知渠道名称
+        val channelName = "服务运行"
+        //设置通知的重要程度
+        val importance: Int = NotificationManager.IMPORTANCE_LOW
+        //构建通知渠道
+        val channel = NotificationChannel(CHANNEL_ID, channelName, importance)
+        channel.description = "我还活着"
+        //在创建的通知渠道上发送通知
+        val builder: NotificationCompat.Builder = NotificationCompat.Builder(
+            this,
+            CHANNEL_ID
+        )
+        builder.setSmallIcon(R.drawable.ic_float) //设置通知图标
+            .setContentTitle("Dump服务") //设置通知标题
+            .setContentText("我还活着，跳跳跳。。。") //设置通知内容
+            .setAutoCancel(false) //用户触摸时，自动关闭
+            .setOngoing(true) //设置处于运行状态
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this, 0,
+                    Intent(this, SplashActivity::class.java), 0
+                )
+            )
+        //向系统注册通知渠道，注册后不能改变重要性以及其他通知行为
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+        //将服务置于启动状态 NOTIFICATION_ID指的是创建的通知的ID
+        startForeground(NOTIFICATION_ID, builder.build())
+    }
 
     companion object {
         private val TAG = DumpService::class.java.simpleName
+        const val CHANNEL_ID: String = "com.think.accessibility.service.DumpService"
+        const val NOTIFICATION_ID: Int = 100
+        var mAccessibilityService: DumpService? = null
+
+        // 本地保存的服务是否开启变量
+        var mServiceStatus: Boolean = false
+
+        val serviceStatus: Boolean get() = ((mAccessibilityService != null) and mServiceStatus)
     }
 
 }
