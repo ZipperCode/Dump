@@ -105,15 +105,16 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.cv_setting -> {
                 Toast.makeText(this, "打开设置", Toast.LENGTH_LONG).show()
-                if (!AppUtils.isAccessibilitySettingsOn(
-                        this,
-                        DumpService::class.java
-                    )
-                ) {
-                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                } else {
-                    showAccessibilityTip("您当前已经拥有无障碍权限了，是否还需要跳转设置")
-                }
+                startActivity(Intent(this,SettingsActivity::class.java))
+//                if (!AppUtils.isAccessibilitySettingsOn(
+//                        this,
+//                        DumpService::class.java
+//                    )
+//                ) {
+//                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//                } else {
+//                    showAccessibilityTip("您当前已经拥有无障碍权限了，是否还需要跳转设置")
+//                }
             }
             R.id.cv_help -> {
                 Toast.makeText(this, "打开帮助", Toast.LENGTH_LONG).show()

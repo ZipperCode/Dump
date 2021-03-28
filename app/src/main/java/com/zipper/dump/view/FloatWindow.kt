@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
 import com.zipper.dump.R
 import com.zipper.dump.utils.AppUtils.dp2px
 import kotlin.math.abs
@@ -308,16 +309,19 @@ class FloatWindow : RelativeLayout {
             mFloatWindow = null
         }
 
+        @JvmStatic
+        fun checkPermission(context: Context): Boolean {
+           return checkPermission(context,true )
+        }
 
         @JvmStatic
-        private fun checkPermission(context: Context): Boolean {
+        fun checkPermission(context: Context, autoOpen: Boolean): Boolean {
             if (Build.VERSION.SDK_INT >= 23 && context.applicationInfo.targetSdkVersion >= 23) {
                 try {
                     if (!Settings.canDrawOverlays(context)) {
-                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                Uri.parse("package:" + context.packageName))
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(intent)
+                        if(autoOpen){
+                            openFloatPermission(context)
+                        }
                         return false
                     }
                 } catch (e: Exception) {
@@ -326,5 +330,14 @@ class FloatWindow : RelativeLayout {
             }
             return true
         }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        fun openFloatPermission(context: Context){
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + context.packageName))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
+
     }
 }

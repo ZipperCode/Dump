@@ -10,7 +10,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
@@ -29,7 +28,7 @@ class DumpService : AccessibilityService() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         // 当服务启动变量状态改变后，不处理任何无障碍。绘制页面时也不处理
-        if (!mServiceStatus or AccessibilityHelper.mDrawViewBound) {
+        if (!serviceStatus or AccessibilityHelper.mDrawViewBound) {
             return
         }
 
@@ -44,6 +43,16 @@ class DumpService : AccessibilityService() {
             // 过滤不需要处理的包
             if (("com.miui.systemAdSolution" == pkName) or AccessibilityHelper.pksContains(pkName)) {
                 dumpSplash(this, pkName)
+            }else if("com.tencent.mm" == pkName){
+                if(AccessibilityHelper.mWxSettingValue){
+                    // 微信登陆自动
+                    val loginTitle = AccessibilityHelper.findNodeByText(rootInActiveWindow,"微信登陆确认")
+                    val loginCheck = AccessibilityHelper.findNodeByText(rootInActiveWindow,"同步最近消息")
+                    val loginButton = AccessibilityHelper.findNodeByText(rootInActiveWindow,"登陆")
+                    if((loginTitle != null) and (loginCheck != null) and (loginButton != null)){
+                        AccessibilityHelper.click(loginButton!!)
+                    }
+                }
             }
         }
     }
@@ -59,11 +68,12 @@ class DumpService : AccessibilityService() {
             dumpViewIds.forEach {
                 // 查找所有拥有当前id的view，处理跳过
                 clicked = clicked or (findNodeById(rootNodeInfo, it)?.let { node ->
-                    if (node.isClickable) {
-                        click(node)
-                    } else {
-                        deepClick(node)
-                    }
+                    click(node)
+//                    if (node.isClickable) {
+//                        click(node)
+//                    } else {
+//                        deepClick(node)
+//                    }
                 } ?: false)
             }
         }
@@ -77,11 +87,12 @@ class DumpService : AccessibilityService() {
                     if (TextUtils.isEmpty(dumpName)) "跳过" else dumpName
                 )
                 dumpNode?.let {
-                    return@let if (it.isClickable) {
-                        click(it)
-                    } else {
-                        deepClick(it)
-                    }
+                    click(it)
+//                    return@let if (it.isClickable) {
+//                        click(it)
+//                    } else {
+//                        deepClick(it)
+//                    }
                 }
             }
         }
@@ -142,7 +153,7 @@ class DumpService : AccessibilityService() {
             this,
             CHANNEL_ID
         )
-        builder.setSmallIcon(R.drawable.ic_float) //设置通知图标
+        builder.setSmallIcon(R.drawable.ic_float_24) //设置通知图标
             .setContentTitle("Dump服务") //设置通知标题
             .setContentText("我还活着，跳跳跳。。。") //设置通知内容
             .setAutoCancel(false) //用户触摸时，自动关闭

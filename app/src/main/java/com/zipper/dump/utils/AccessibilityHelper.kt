@@ -53,15 +53,19 @@ object AccessibilityHelper {
 
     private var mServiceClosed: Boolean = false
 
-    /**
-     * 前台服务是否被关闭
-     */
-    val guardServiceClosed get() = mServiceClosed
+    var mWxSettingValue: Boolean = false
 
+    var isInit: Boolean = false
 
     fun init(context: Context) {
-        pksInit(context)
-        viewInfoInit(context)
+        synchronized(isInit){
+            if(isInit)
+                return
+            pksInit(context)
+            viewInfoInit(context)
+            mWxSettingValue = SpHelper.loadBoolean(SpHelper.SETTING_WEIXIN_KEY)
+            isInit = true
+        }
     }
 
     private fun pksInit(context: Context) {

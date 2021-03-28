@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SettingRowPreference">
+        <attr name="mTitle" format="string|reference"/>
+        <attr name="mStatusText" format="string|reference"/>
+        <attr name="mUnderlineVisible" format="boolean"/>
+    </declare-styleable>
+</resources>

@@ -10,6 +10,7 @@ object SpHelper {
     private lateinit var mContext: Context
 
     private const val SP_NAME = "sp_dump"
+    private const val SP_NAME_2 = "com.zipper.dump_preference"
 
     /**
      * 服务开关状态的值
@@ -21,7 +22,10 @@ object SpHelper {
      */
     const val SP_FIRST_OPENED_KEY = "first_opened"
 
+    const val SETTING_WEIXIN_KEY = "setting_weixin"
+
     private lateinit var mSharedPreferences: SharedPreferences
+    private lateinit var mSharedPreferences_2: SharedPreferences
 
     private var isInit: Boolean = false
 
@@ -29,6 +33,7 @@ object SpHelper {
     fun init(context: Context) {
         mContext = context.applicationContext
         mSharedPreferences = mContext.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+        mSharedPreferences_2 = mContext.getSharedPreferences(SP_NAME_2, Context.MODE_PRIVATE)
         isInit = true
     }
 
@@ -76,5 +81,20 @@ object SpHelper {
             error("SpHelper must be call init method")
         }
         return mSharedPreferences.getStringSet(key, HashSet())!!
+    }
+
+    fun saveSettingBoolean(key: String, value: Boolean){
+        if (!isInit) {
+            error("SpHelper must be call init method")
+        }
+        val edit = mSharedPreferences_2.edit()
+        edit.putBoolean(key, value).apply()
+    }
+
+    fun loadSettingBoolean(key: String):Boolean{
+        if (!isInit) {
+            error("SpHelper must be call init method")
+        }
+        return mSharedPreferences_2.getBoolean(key, false)
     }
 }

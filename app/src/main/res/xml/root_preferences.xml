@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.zipper.dump.SettingRowPreference
+        app:key="setting_accessibility"
+        app:layout="@layout/layout_setting_row"
+        app:mTitle="@string/setting_permission_accessibility_title"
+        app:mUnderlineVisible="true"
+        app:singleLineTitle="false" />
+
+    <com.zipper.dump.SettingRowPreference
+        android:shouldDisableView="true"
+        app:allowDividerBelow="true"
+        app:key="setting_float"
+        app:layout="@layout/layout_setting_row"
+        app:mTitle="@string/setting_permission_float_title" />
+
+    <PreferenceCategory
+        android:shouldDisableView="false"
+        android:showDividers="beginning"
+        app:shouldDisableView="false">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:icon="@drawable/ic_weixin_24"
+            app:key="setting_weixin"
+            app:title="@string/setting_weixin_login"
+            app:summary="@string/setting_weixin_login_summary"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
