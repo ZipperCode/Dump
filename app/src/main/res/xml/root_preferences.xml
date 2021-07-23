@@ -27,6 +27,10 @@
             app:title="@string/setting_weixin_login"
             app:summary="@string/setting_weixin_login_summary"/>
 
+        <Preference
+            app:key="setting_test"
+            app:title="Test"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

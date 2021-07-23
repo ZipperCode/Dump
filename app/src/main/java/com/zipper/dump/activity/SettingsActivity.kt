@@ -12,12 +12,16 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragment
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import com.zipper.auto.api.JinQiuShaoApi
 import com.zipper.dump.R
 import com.zipper.dump.SettingRowPreference
 import com.zipper.dump.service.DumpService
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
 import com.zipper.dump.view.FloatWindow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SettingsActivity : BaseActivity() {
     override fun contentView(): Int = R.layout.settings_activity
@@ -118,6 +122,18 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
             }
+
+            val test: Preference? = findPreference("setting_test")
+
+            test?.apply {
+                setOnPreferenceClickListener {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        JinQiuShaoApi().index()
+                    }
+                    true
+                }
+            }
+
         }
     }
 

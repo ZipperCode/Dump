@@ -1,2 +1,4 @@
 include ':app'
 rootProject.name = "Dump"
+include ':auto-api'
+include ':core'
