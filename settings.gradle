@@ -1,4 +1,5 @@
-include ':app'
 rootProject.name = "Dump"
-include ':auto-api'
-include ':core'
+include ':app'
+include ':Core'
+include ':BaseService'
+include ':AutoApi'

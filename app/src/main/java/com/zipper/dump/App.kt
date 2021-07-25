@@ -1,12 +1,11 @@
 package com.zipper.dump
 
-import android.app.Application
 import android.content.Context
-import com.zipper.dump.utils.AccessibilityHelper
+import com.zipper.core.BaseApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class App : Application() {
+class App : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()

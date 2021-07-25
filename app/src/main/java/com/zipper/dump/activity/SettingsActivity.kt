@@ -1,18 +1,13 @@
 package com.zipper.dump.activity
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragment
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.zipper.auto.api.JinQiuShaoApi
+import com.zipper.auto.api.JJSApi
 import com.zipper.dump.R
 import com.zipper.dump.SettingRowPreference
 import com.zipper.dump.service.DumpService
@@ -128,7 +123,7 @@ class SettingsActivity : BaseActivity() {
             test?.apply {
                 setOnPreferenceClickListener {
                     CoroutineScope(Dispatchers.IO).launch {
-                        JinQiuShaoApi().index()
+                        JJSApi().index()
                     }
                     true
                 }

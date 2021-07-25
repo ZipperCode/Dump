@@ -15,6 +15,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.zipper.base.service.plugin.impl.AutoApiPao
 import com.zipper.dump.App
 import com.zipper.dump.R
 import com.zipper.dump.activity.SplashActivity
@@ -116,6 +117,10 @@ class DumpService : AccessibilityService() {
             val status = SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)
             notifyServiceStatus(status)
         }
+
+        // 启动任务
+        AutoApiPao.fetchData(this)
+
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
