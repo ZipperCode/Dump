@@ -11,7 +11,8 @@
     <application
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true">
-        <activity android:name=".WebViewActivity"/>
+        <activity android:name=".ViewPointActivity"/>
+        <activity android:name=".DetailActivity"/>
 
 
         <service android:name=".service.FetchJobService"

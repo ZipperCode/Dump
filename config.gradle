@@ -29,6 +29,8 @@ ext {
     androidx_lifecycle_version = "2.3.1"
     androidx_work_version = "2.5.0"
     android_preference_version = "1.1.1"
+    android_room_version = "2.2.6"
+
     androidx = [
             dependencies: [
                     "androidx.appcompat:appcompat:${androidx_compat_version}",
@@ -37,11 +39,14 @@ ext {
                     "androidx.lifecycle:lifecycle-livedata-ktx:${androidx_lifecycle_version}",
                     "androidx.lifecycle:lifecycle-runtime-ktx:${androidx_lifecycle_version}",
                     "androidx.work:work-runtime-ktx:${androidx_work_version}",
-                    "androidx.preference:preference-ktx:$android_preference_version"
+                    "androidx.preference:preference-ktx:$android_preference_version",
+                    "androidx.room:room-runtime:${android_room_version}",
+                    "androidx.room:room-ktx:${android_room_version}"
             ],
             kapt: [
                     "androidx.lifecycle:lifecycle-viewmodel-savedstate:${androidx_lifecycle_version}",
-                    "androidx.lifecycle:lifecycle-compiler:${androidx_lifecycle_version}"
+                    "androidx.lifecycle:lifecycle-compiler:${androidx_lifecycle_version}",
+                    "androidx.room:room-compiler:${android_room_version}"
             ]
     ]
     material_version = "1.4.0"
@@ -65,15 +70,6 @@ ext {
             ]
     ]
 
-    room_version = "2.2.6"
-    room = [
-            dependencies: [
-                    "androidx.room:room-runtime:${room_version}"
-            ],
-            kapt        : [
-                    "androidx.room:room-compiler:${room_version}"
-            ]
-    ]
 
     index = [
             ktx,
@@ -81,7 +77,6 @@ ext {
             androidx,
             material,
             okhttp,
-            gson,
-            room
+            gson
     ]
 }

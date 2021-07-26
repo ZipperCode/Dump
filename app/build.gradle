@@ -63,7 +63,4 @@ dependencies {
     rootProject.ext.androidx['kapt'].each {
         kapt it
     }
-    rootProject.ext.room['kapt'].each {
-        kapt it
-    }
 }

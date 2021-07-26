@@ -2,6 +2,7 @@ package com.zipper.core
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 
 /**
@@ -10,10 +11,14 @@ import android.os.Bundle
  *  @description
  **/
 abstract class BaseApp : Application() {
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        PluginManager.init(base)
+    }
     override fun onCreate() {
         super.onCreate()
         registerActivityLifecycleCallbacks(lifecycleCallbacks)
-        PluginManager.init(this)
         PluginManager.onApplicationCreate(this)
     }
 

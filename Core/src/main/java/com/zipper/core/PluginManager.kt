@@ -9,7 +9,7 @@ import java.lang.Exception
 
 object PluginManager: IPlugin {
 
-    const val PLUGIN_HEAD = "plugin_"
+    private const val PLUGIN_HEAD = "Plugin_"
 
     private val mModuleMap: MutableMap<String, IPlugin> = mutableMapOf()
 
@@ -17,7 +17,7 @@ object PluginManager: IPlugin {
 
     fun init(context: Context){
         var appInfo: ApplicationInfo? = null
-        val packageManager = context.applicationContext.packageManager
+        val packageManager = context.packageManager
         try{
             appInfo = packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
         }catch (e: Exception){

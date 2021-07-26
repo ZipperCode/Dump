@@ -4,5 +4,7 @@ import android.content.Context
 
 interface IPluginAutoApi {
 
-    fun fetchData(context: Context?)
+    fun fetchData(context: Context? = null)
+
+    fun startListActivity()
 }

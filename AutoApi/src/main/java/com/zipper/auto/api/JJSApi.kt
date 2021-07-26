@@ -2,6 +2,7 @@ package com.zipper.auto.api
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.zipper.auto.api.bean.ViewPoint
 
 /**
  *  @author zipper
@@ -34,6 +35,8 @@ class JJSApi: BaseApi() {
         const val GET_A = BaseUrl + "api/intro"
 
         const val GET_CHECK = BaseUrl + "api/check"
+
+        const val match = "https://www.jinqiushao.com/index.php/api/football/info?matchId=%s"
     }
 
     suspend fun index(): List<ViewPoint>{
@@ -42,5 +45,8 @@ class JJSApi: BaseApi() {
         return Gson().fromJson(result, object : TypeToken<List<ViewPoint>>(){}.type)
     }
 
+    suspend fun getMatchTime(){
+
+    }
 
 }

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.zipper.base.service.plugin.impl.AutoApiPao
 import com.zipper.dump.App
 import com.zipper.dump.R
 import com.zipper.dump.bean.ViewInfo
@@ -118,7 +119,8 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.cv_help -> {
                 Toast.makeText(this, "打开帮助", Toast.LENGTH_LONG).show()
-                startActivity(Intent(this, HelpActivity::class.java))
+//                startActivity(Intent(this, HelpActivity::class.java))
+                AutoApiPao.startListActivity()
             }
         }
     }

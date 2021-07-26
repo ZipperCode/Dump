@@ -9,11 +9,8 @@ import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.zipper.auto.api.R
-import com.zipper.auto.api.ViewPoint
+import com.zipper.auto.api.bean.ViewPoint
 import com.zipper.core.format
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
 
 class DetailAdapter(
     val context: Context,
@@ -31,7 +28,7 @@ class DetailAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPointHolder {
-        val view = inflater.inflate(R.layout.view_point_list_item, parent)
+        val view = inflater.inflate(R.layout.view_point_list_item, parent, false)
         return ViewPointHolder(view)
     }
 

@@ -14,6 +14,7 @@ import com.zipper.auto.api.store.JJSDatabase
 import com.zipper.base.service.IPluginAutoApi
 import com.zipper.core.BaseApp
 import com.zipper.core.BasePlugin
+import com.zipper.core.LaunchUtil
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
@@ -50,17 +51,18 @@ class PluginAutoApi : BasePlugin(), IPluginAutoApi {
 
     override fun fetchData(context: Context?) {
         Log.d(TAG, "fetchData context = $context")
-        val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(true)
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresCharging(false)
-            .build()
+        val ctx = context ?: app
+        WorkManager.getInstance(ctx).cancelAllWork()
+        WorkManager.getInstance(ctx).enqueueUniqueWork(
+            "FetchWorker-1",
+            ExistingWorkPolicy.REPLACE,
+            FetchWorker.onceWork()
+        )
+    }
 
-        val workRequest = PeriodicWorkRequest.Builder(FetchWorker::class.java, 15L, TimeUnit.MINUTES)
-            .setConstraints(constraints)
-            .addTag("FetchWorker")
-            .setBackoffCriteria(BackoffPolicy.LINEAR, 10L, TimeUnit.SECONDS)
-            .build()
-        context?.also { WorkManager.getInstance(context).enqueue(workRequest) }
+    override fun startListActivity() {
+        val intent = Intent(app,ViewPointActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        app.startActivity(intent)
     }
 }

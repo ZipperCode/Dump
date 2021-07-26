@@ -1,4 +1,4 @@
-package com.zipper.auto.api
+package com.zipper.auto.api.bean
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -38,11 +38,11 @@ class ViewPoint {
     var content: String? = null
 
     @SerializedName("price")
-    var price: Int = 0
+    var price: Float = 0.0f
 
     @SerializedName("notPointRefund")
     @Ignore
-    var notPointRefund: Int = 0
+    var notPointRefund: String? = ""
 
     @SerializedName("focus")
     @ColumnInfo(name = "focus", defaultValue = "0")
@@ -56,17 +56,18 @@ class ViewPoint {
 
     @SerializedName("returnPrize")
     @Ignore
-    var returnPrize: Int = 0
+    var returnPrize: String? = "0.0"
 
     @SerializedName("payBack")
     @Ignore
-    var payBack: Int = 0
+    var payBack: String? = "0"
 
     @SerializedName("status")
     var status: Int = 0
 
-//    @SerializedName("isSettle")
-//    var isSettle: Int = 0
+    @SerializedName("isSettle")
+    @ColumnInfo(name = "isSettle")
+    var settle: Int? = 0
 
     @SerializedName("audit")
     @ColumnInfo(name = "audit", defaultValue = "0")

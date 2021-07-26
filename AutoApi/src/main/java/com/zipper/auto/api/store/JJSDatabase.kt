@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.zipper.auto.api.ViewPoint
+import com.zipper.auto.api.bean.ViewPoint
 
 @Database(entities = [ViewPoint::class], version = 2)
 abstract class JJSDatabase : RoomDatabase() {
