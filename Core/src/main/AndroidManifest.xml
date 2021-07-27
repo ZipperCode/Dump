@@ -2,4 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zipper.core">
 
+    <application>
+        <provider
+            android:name=".InitProvider"
+            android:authorities="${applicationId}.init_provider"
+            android:enabled="true"
+            android:exported="false"
+            android:multiprocess="true"/>
+    </application>
+
 </manifest>

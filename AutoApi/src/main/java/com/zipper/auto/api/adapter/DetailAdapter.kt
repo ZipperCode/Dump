@@ -35,6 +35,7 @@ class DetailAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewPointHolder, position: Int) {
         mData.value?.get(position)?.apply {
+            holder.title.text = "$title"
             holder.create_time.text = "$createTime"
             holder.play_time.text = matchTime.format()
             holder.status.text = if(status == 0) "未开始" else "开始或结束"
@@ -53,6 +54,7 @@ class DetailAdapter(
 
 
 class ViewPointHolder(view: View) : RecyclerView.ViewHolder(view) {
+    val title: TextView = view.findViewById(R.id.title)
     val create_time: TextView = view.findViewById(R.id.create_time)
     val status: TextView = view.findViewById(R.id.status)
     val play_time: TextView = view.findViewById(R.id.play_time)

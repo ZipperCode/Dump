@@ -82,6 +82,14 @@ object PluginManager: IPlugin {
         mModuleMap.values.forEach { it.onActivityDestroyed(activity) }
     }
 
+    override fun onMainActivityCreate(activity: Activity) {
+        mModuleMap.values.forEach { it.onMainActivityCreate(activity) }
+    }
+
+    override fun onMainActivityDestroy(activity: Activity) {
+        mModuleMap.values.forEach { it.onMainActivityDestroy(activity) }
+    }
+
     override fun onTrimMemory(level: Int) {
         mModuleMap.values.forEach { it.onTrimMemory(level) }
     }

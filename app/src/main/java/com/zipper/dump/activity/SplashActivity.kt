@@ -3,7 +3,6 @@ package com.zipper.dump.activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,10 +17,12 @@ import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.service.DumpService
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
-import com.zipper.dump.utils.L
-import com.zipper.dump.utils.SpHelper
+import com.zipper.core.L
+import com.zipper.core.PluginManager
 import com.zipper.dump.view.FloatWindow
 import kotlinx.coroutines.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SplashActivity : BaseActivity(), View.OnClickListener {
 
@@ -41,6 +42,7 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PluginManager.onMainActivityCreate(this)
 
         mServiceSwitchCardView = findViewById(R.id.cv_service_switch)
         mAppsSettingCardView = findViewById(R.id.cv_apps_setting)
@@ -124,6 +126,7 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
+
 
     private fun flClick() {
         if (FloatWindow.floatWindowIsShow) {

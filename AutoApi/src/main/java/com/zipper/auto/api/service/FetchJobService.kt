@@ -20,7 +20,7 @@ class FetchJobService: JobService() {
         io.launch{
             val dataList = JJSApi().index()
             val data: Array<ViewPoint> = dataList.toTypedArray()
-            JJSDatabase.openDatabase(applicationContext).getJJSDao().insert(*data)
+            JJSDatabase.openDatabase(applicationContext).getJJSDao().insert(data)
             jobFinished(params,true)
         }
         return true

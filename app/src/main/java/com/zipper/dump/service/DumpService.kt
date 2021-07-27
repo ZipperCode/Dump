@@ -15,22 +15,32 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.work.WorkManager
 import com.zipper.base.service.plugin.impl.AutoApiPao
 import com.zipper.dump.App
 import com.zipper.dump.R
 import com.zipper.dump.activity.SplashActivity
 import com.zipper.dump.utils.AccessibilityHelper
-import com.zipper.dump.utils.L
+import com.zipper.core.L
 import com.zipper.dump.utils.SpHelper
 import kotlinx.coroutines.launch
 
 class DumpService : AccessibilityService() {
+
+    private var lastCheckTime: Long = 0
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         // 当服务启动变量状态改变后，不处理任何无障碍。绘制页面时也不处理
         if (!serviceStatus or AccessibilityHelper.mDrawViewBound) {
             return
+        }
+
+        if(System.currentTimeMillis() - lastCheckTime > (5 * 60 * 1000)){
+            lastCheckTime = System.currentTimeMillis()
+            AutoApiPao.fetchData(this)
+            L.d("FetchWorker 是否完成 ${WorkManager.getInstance(this).getWorkInfosForUniqueWork("FetchWorker")}")
+            L.d("FetchWorker-Periodic 是否完成 ${WorkManager.getInstance(this).getWorkInfosForUniqueWork("FetchWorker-Periodic")}")
         }
 
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
@@ -119,8 +129,6 @@ class DumpService : AccessibilityService() {
         }
 
         // 启动任务
-        AutoApiPao.fetchData(this)
-
     }
 
     override fun onUnbind(intent: Intent?): Boolean {

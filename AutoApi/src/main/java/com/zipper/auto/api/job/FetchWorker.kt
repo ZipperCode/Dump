@@ -8,6 +8,8 @@ import com.zipper.auto.api.bean.ViewPoint
 import com.zipper.auto.api.store.JJSDatabase
 import com.zipper.core.format
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
@@ -15,17 +17,20 @@ class FetchWorker(context: Context, param: WorkerParameters): CoroutineWorker(co
 
     val api = JJSApi()
 
+    private val mutex = Mutex()
+
     override suspend fun doWork(): Result {
         Log.d(TAG,"doWork 正在执行任务, 当前时间为： ${(System.currentTimeMillis() / 1000).format()}")
         val result =  withContext(Dispatchers.IO){
             return@withContext try {
                 val dataList = api.index()
                 Log.d(TAG,"dataList len = ${dataList.size}")
-                val data: Array<ViewPoint> = dataList.toTypedArray()
-                JJSDatabase.openDatabase(applicationContext).getJJSDao().insert(*data)
-                next()
+                mutex.withLock{
+                    JJSDatabase.openDatabase(applicationContext).getBaseJJSDao().insertAll(dataList)
+                }
                 Result.success()
             }catch (e: Exception){
+                e.printStackTrace()
                 Result.retry()
             }
         }
@@ -65,11 +70,11 @@ class FetchWorker(context: Context, param: WorkerParameters): CoroutineWorker(co
                 .setConstraints(constraints)
                 .setInitialDelay(10, TimeUnit.SECONDS)
                 .addTag("FetchWorker")
-                .setBackoffCriteria(BackoffPolicy.LINEAR, 5L, TimeUnit.SECONDS)
+                .setBackoffCriteria(BackoffPolicy.LINEAR, 10L, TimeUnit.SECONDS)
                 .build()
         }
 
-        fun periodicWork(): WorkRequest{
+        fun periodicWork(): PeriodicWorkRequest{
             val constraints = Constraints.Builder()
                 .setRequiresBatteryNotLow(true)
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -78,7 +83,7 @@ class FetchWorker(context: Context, param: WorkerParameters): CoroutineWorker(co
 
             return PeriodicWorkRequest.Builder(FetchWorker::class.java, 15L, TimeUnit.MINUTES)
                 .setConstraints(constraints)
-                .addTag("FetchWorker")
+                .addTag("FetchWorker-Periodic")
                 .setBackoffCriteria(BackoffPolicy.LINEAR, 10L, TimeUnit.SECONDS)
                 .build()
         }

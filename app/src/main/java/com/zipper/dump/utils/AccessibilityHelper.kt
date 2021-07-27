@@ -2,17 +2,16 @@ package com.zipper.dump.utils
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Path
 import android.graphics.Point
 import android.graphics.Rect
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
+import com.zipper.core.L
 import com.zipper.dump.bean.AppInfo
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.room.DBHelper

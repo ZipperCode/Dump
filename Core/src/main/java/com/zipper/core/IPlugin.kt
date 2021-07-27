@@ -28,6 +28,10 @@ interface IPlugin {
 
     fun onActivityDestroyed(activity: Activity)
 
+    fun onMainActivityCreate(activity: Activity)
+
+    fun onMainActivityDestroy(activity: Activity)
+
     fun onTrimMemory(level: Int)
 
 }

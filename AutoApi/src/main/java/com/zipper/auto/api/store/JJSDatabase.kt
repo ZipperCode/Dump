@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.zipper.auto.api.bean.Expert
 import com.zipper.auto.api.bean.ViewPoint
 
-@Database(entities = [ViewPoint::class], version = 2)
+@Database(entities = [ViewPoint::class, Expert::class], version = 2)
 abstract class JJSDatabase : RoomDatabase() {
 
     abstract fun getJJSDao(): JJSDao
+
+    abstract fun getBaseJJSDao(): BaseJJSDao
 
     companion object{
 

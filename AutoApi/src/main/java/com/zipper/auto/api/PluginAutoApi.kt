@@ -1,10 +1,12 @@
 package com.zipper.auto.api
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -30,18 +32,6 @@ class PluginAutoApi : BasePlugin(), IPluginAutoApi {
         const val TAG: String = "PluginAutoApi"
 
         lateinit var jjsDatabase: JJSDatabase
-
-        @SuppressLint("BatteryLife")
-        @RequiresApi(Build.VERSION_CODES.M)
-        fun requestIgnoreBatteryOptimizations(){
-            try {
-                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                intent.data = Uri.parse("package:${app.packageName}")
-                app.startActivity(intent)
-            }catch (e: Exception){
-                e.printStackTrace()
-            }
-        }
     }
 
     override fun onApplicationCreate(baseApp: BaseApp) {
@@ -52,12 +42,21 @@ class PluginAutoApi : BasePlugin(), IPluginAutoApi {
     override fun fetchData(context: Context?) {
         Log.d(TAG, "fetchData context = $context")
         val ctx = context ?: app
-        WorkManager.getInstance(ctx).cancelAllWork()
         WorkManager.getInstance(ctx).enqueueUniqueWork(
-            "FetchWorker-1",
+            "FetchWorker",
             ExistingWorkPolicy.REPLACE,
             FetchWorker.onceWork()
         )
+    }
+
+    override fun onMainActivityCreate(activity: Activity) {
+        super.onMainActivityCreate(activity)
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+            val powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if(!powerManager.isIgnoringBatteryOptimizations(activity.packageName)){
+                LaunchUtil.toIgnoreBatteryOptimization(activity)
+            }
+        }
     }
 
     override fun startListActivity() {

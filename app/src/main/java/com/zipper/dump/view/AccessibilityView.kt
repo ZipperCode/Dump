@@ -11,7 +11,7 @@ import android.widget.Toast
 import com.zipper.dump.App
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.room.DBHelper
-import com.zipper.dump.utils.L
+import com.zipper.core.L
 import kotlinx.coroutines.launch
 
 @SuppressLint("ViewConstructor")

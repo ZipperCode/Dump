@@ -2,8 +2,8 @@ package com.zipper.core
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
+import java.util.*
 
 /**
  *  @author zipper
@@ -12,10 +12,6 @@ import android.os.Bundle
  **/
 abstract class BaseApp : Application() {
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        PluginManager.init(base)
-    }
     override fun onCreate() {
         super.onCreate()
         registerActivityLifecycleCallbacks(lifecycleCallbacks)
@@ -28,12 +24,18 @@ abstract class BaseApp : Application() {
     }
 
     private val lifecycleCallbacks = object : Application.ActivityLifecycleCallbacks {
+
+        val mActivityList = LinkedList<Activity>()
+
+        var activityCount: Int = 0
+
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
             PluginManager.onActivityCreated(activity, savedInstanceState)
         }
 
         override fun onActivityStarted(activity: Activity) {
             PluginManager.onActivityStarted(activity)
+            activityCount++
         }
 
         override fun onActivityResumed(activity: Activity) {
@@ -46,6 +48,7 @@ abstract class BaseApp : Application() {
 
         override fun onActivityStopped(activity: Activity) {
             PluginManager.onActivityStopped(activity)
+            activityCount--
         }
 
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {

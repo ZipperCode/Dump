@@ -27,7 +27,6 @@ class ViewPoint {
     var createTime: String? = null
 
     @SerializedName("title")
-    @Ignore
     var title: String? = null
 
     @SerializedName("description")

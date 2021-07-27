@@ -15,10 +15,6 @@ import java.util.*
 
 class ViewPointViewModel: ViewModel() {
 
-    init {
-        AutoApiPao.fetchData()
-    }
-
     private val viewList:MutableLiveData<List<ViewPoint>> by lazy {
         MutableLiveData<List<ViewPoint>>().also {
             loadLocalLiveData()

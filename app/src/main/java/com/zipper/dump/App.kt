@@ -13,8 +13,8 @@ class App : BaseApp() {
     }
 
     companion object {
-        val mMainCoroutinesScope = CoroutineScope(Dispatchers.Main);
-        val mIoCoroutinesScope = CoroutineScope(Dispatchers.IO);
+        val mMainCoroutinesScope = CoroutineScope(Dispatchers.Main)
+        val mIoCoroutinesScope = CoroutineScope(Dispatchers.IO)
         lateinit var mAppContext: Context;
     }
 }
