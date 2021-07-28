@@ -17,7 +17,7 @@ import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.service.DumpService
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
-import com.zipper.core.L
+import com.zipper.core.utils.L
 import com.zipper.core.PluginManager
 import com.zipper.dump.view.FloatWindow
 import kotlinx.coroutines.*

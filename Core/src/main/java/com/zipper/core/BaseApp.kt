@@ -1,8 +1,14 @@
 package com.zipper.core
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import com.zipper.core.utils.SpUtil
 import java.util.*
 
 /**
@@ -10,10 +16,14 @@ import java.util.*
  *  @date 2021-07-23
  *  @description
  **/
-abstract class BaseApp : Application() {
+abstract class BaseApp : Application(), ViewModelStoreOwner {
+
+    private lateinit var mViewModelStore: ViewModelStore
 
     override fun onCreate() {
         super.onCreate()
+        SpUtil.init(this)
+        mViewModelStore = ViewModelStore()
         registerActivityLifecycleCallbacks(lifecycleCallbacks)
         PluginManager.onApplicationCreate(this)
     }
@@ -23,19 +33,28 @@ abstract class BaseApp : Application() {
         PluginManager.onTrimMemory(level)
     }
 
+    override fun getViewModelStore(): ViewModelStore {
+        return mViewModelStore
+    }
+
+    fun getFactory(): ViewModelProvider.AndroidViewModelFactory{
+        return ViewModelProvider.AndroidViewModelFactory.getInstance(this)
+    }
+
     private val lifecycleCallbacks = object : Application.ActivityLifecycleCallbacks {
 
-        val mActivityList = LinkedList<Activity>()
-
-        var activityCount: Int = 0
+        val activityList = LinkedList<Activity>()
 
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
             PluginManager.onActivityCreated(activity, savedInstanceState)
         }
 
         override fun onActivityStarted(activity: Activity) {
+            activityList.add(activity)
             PluginManager.onActivityStarted(activity)
-            activityCount++
+            if (activityList.size == 1) {
+                PluginManager.onForeground()
+            }
         }
 
         override fun onActivityResumed(activity: Activity) {
@@ -47,8 +66,11 @@ abstract class BaseApp : Application() {
         }
 
         override fun onActivityStopped(activity: Activity) {
+            activityList.remove(activity)
             PluginManager.onActivityStopped(activity)
-            activityCount--
+            if (activityList.size == 0) {
+                PluginManager.onBackground()
+            }
         }
 
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {

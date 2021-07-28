@@ -3,10 +3,7 @@ package com.zipper.auto.api
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.WorkManager
-import com.zipper.auto.api.job.FetchWorker
-import com.zipper.core.L
+import com.zipper.core.utils.L
 
 class BootReceiver : BroadcastReceiver() {
 

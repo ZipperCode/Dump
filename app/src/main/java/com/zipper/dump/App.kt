@@ -9,7 +9,7 @@ class App : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()
-        mAppContext = this;
+        mAppContext = this
     }
 
     companion object {

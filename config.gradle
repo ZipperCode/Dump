@@ -9,17 +9,12 @@ ext {
 
     ktx_version = ext.kotlin_version
     ktx_core_version = "1.2.0"
+    ktx_coroutines_version = "1.4.2"
     ktx = [
             dependencies: [
-                    "androidx.core:core-ktx:1.2.0"
-            ]
-    ]
-
-    coroutines_version = "1.4.2"
-    coroutines = [
-            dependencies: [
-                    "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutines_version}",
-                    "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutines_version}"
+                    "androidx.core:core-ktx:${ktx_core_version}",
+                    "org.jetbrains.kotlinx:kotlinx-coroutines-core:${ktx_coroutines_version}",
+                    "org.jetbrains.kotlinx:kotlinx-coroutines-android:${ktx_coroutines_version}"
             ]
     ]
 
@@ -28,9 +23,9 @@ ext {
     androidx_constraintlayout_version = "2.0.4"
     androidx_lifecycle_version = "2.3.1"
     androidx_work_version = "2.5.0"
-    android_preference_version = "1.1.1"
-    android_room_version = "2.2.6"
-
+    androidx_preference_version = "1.1.1"
+    androidx_room_version = "2.2.6"
+    androidx_nav_version = "2.3.5"
     androidx = [
             dependencies: [
                     "androidx.appcompat:appcompat:${androidx_compat_version}",
@@ -39,14 +34,16 @@ ext {
                     "androidx.lifecycle:lifecycle-livedata-ktx:${androidx_lifecycle_version}",
                     "androidx.lifecycle:lifecycle-runtime-ktx:${androidx_lifecycle_version}",
                     "androidx.work:work-runtime-ktx:${androidx_work_version}",
-                    "androidx.preference:preference-ktx:$android_preference_version",
-                    "androidx.room:room-runtime:${android_room_version}",
-                    "androidx.room:room-ktx:${android_room_version}"
+                    "androidx.preference:preference-ktx:$androidx_preference_version",
+                    "androidx.room:room-runtime:${androidx_room_version}",
+                    "androidx.room:room-ktx:${androidx_room_version}",
+                    "androidx.navigation:navigation-fragment-ktx:$androidx_nav_version",
+                    "androidx.navigation:navigation-ui-ktx:$androidx_nav_version"
             ],
             kapt: [
                     "androidx.lifecycle:lifecycle-viewmodel-savedstate:${androidx_lifecycle_version}",
                     "androidx.lifecycle:lifecycle-compiler:${androidx_lifecycle_version}",
-                    "androidx.room:room-compiler:${android_room_version}"
+                    "androidx.room:room-compiler:${androidx_room_version}"
             ]
     ]
     material_version = "1.4.0"
@@ -73,7 +70,6 @@ ext {
 
     index = [
             ktx,
-            coroutines,
             androidx,
             material,
             okhttp,

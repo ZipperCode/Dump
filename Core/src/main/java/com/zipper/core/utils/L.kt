@@ -1,6 +1,7 @@
-package com.zipper.core
+package com.zipper.core.utils
 
 import android.util.Log
+import com.zipper.core.BuildConfig
 
 object L {
 

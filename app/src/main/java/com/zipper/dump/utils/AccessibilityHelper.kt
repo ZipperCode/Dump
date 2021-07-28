@@ -11,7 +11,7 @@ import android.text.TextUtils
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
-import com.zipper.core.L
+import com.zipper.core.utils.L
 import com.zipper.dump.bean.AppInfo
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.room.DBHelper

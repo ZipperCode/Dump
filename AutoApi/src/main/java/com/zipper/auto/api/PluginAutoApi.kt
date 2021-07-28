@@ -16,9 +16,7 @@ import com.zipper.auto.api.store.JJSDatabase
 import com.zipper.base.service.IPluginAutoApi
 import com.zipper.core.BaseApp
 import com.zipper.core.BasePlugin
-import com.zipper.core.LaunchUtil
-import java.lang.Exception
-import java.util.concurrent.TimeUnit
+import com.zipper.core.utils.LaunchUtil
 
 /**
  *  @author zipper

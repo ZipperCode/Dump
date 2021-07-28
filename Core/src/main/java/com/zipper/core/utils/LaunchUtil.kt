@@ -1,4 +1,4 @@
-package com.zipper.core
+package com.zipper.core.utils
 
 import android.content.ComponentName
 import android.content.Context
@@ -7,33 +7,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
+import com.zipper.core.ext.startActivity
 import java.util.*
-
-fun Context.startActivity(packageName: String): Boolean {
-    return try {
-        val intent = packageManager.getLaunchIntentForPackage(packageName)
-        intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        true
-    } catch (e: Exception) {
-        e.printStackTrace()
-        false
-    }
-}
-
-fun Context.startActivity(packageName: String, activityName: String): Boolean {
-    return try {
-        val intent = Intent()
-        intent.component = ComponentName(packageName, activityName)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        true
-    } catch (e: Exception) {
-        e.printStackTrace()
-        false
-    }
-}
-
 
 object LaunchUtil {
 

@@ -4,7 +4,7 @@
 
     <application>
         <provider
-            android:name=".InitProvider"
+            android:name=".provider.InitProvider"
             android:authorities="${applicationId}.init_provider"
             android:enabled="true"
             android:exported="false"

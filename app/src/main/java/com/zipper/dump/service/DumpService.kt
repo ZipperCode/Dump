@@ -21,7 +21,7 @@ import com.zipper.dump.App
 import com.zipper.dump.R
 import com.zipper.dump.activity.SplashActivity
 import com.zipper.dump.utils.AccessibilityHelper
-import com.zipper.core.L
+import com.zipper.core.utils.L
 import com.zipper.dump.utils.SpHelper
 import kotlinx.coroutines.launch
 

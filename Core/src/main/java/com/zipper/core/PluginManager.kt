@@ -5,9 +5,8 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import java.lang.Exception
 
-object PluginManager: IPlugin {
+object PluginManager : IPlugin, IAppStatusChangedListener {
 
     private const val PLUGIN_HEAD = "Plugin_"
 
@@ -15,33 +14,35 @@ object PluginManager: IPlugin {
 
     private var mMetaData: Bundle? = null
 
-    fun init(context: Context){
+    fun init(context: Context) {
         var appInfo: ApplicationInfo? = null
         val packageManager = context.packageManager
-        try{
-            appInfo = packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
-        }catch (e: Exception){
+        try {
+            appInfo =
+                packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+        } catch (e: Exception) {
             e.printStackTrace()
         }
-        if(appInfo != null){
+        if (appInfo != null) {
             mMetaData = appInfo.metaData
             val pluginNameKeys = mMetaData!!.keySet().filter { it.startsWith(PLUGIN_HEAD) }.toList()
-            for (pluginNameKey in pluginNameKeys){
+            for (pluginNameKey in pluginNameKeys) {
                 try {
                     val pluginClassValue = mMetaData!![pluginNameKey] as String
-                    val instance:IPlugin  = Class.forName(pluginClassValue).getConstructor().newInstance() as IPlugin
+                    val instance: IPlugin =
+                        Class.forName(pluginClassValue).getConstructor().newInstance() as IPlugin
                     mModuleMap[pluginNameKey] = instance
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
     }
 
-    fun <T> getPlugin(name: String): T?{
+    fun <T> getPlugin(name: String): T? {
         return try {
             mModuleMap[name] as? T
-        }catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }
@@ -75,7 +76,7 @@ object PluginManager: IPlugin {
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-        mModuleMap.values.forEach { it.onActivitySaveInstanceState(activity,outState) }
+        mModuleMap.values.forEach { it.onActivitySaveInstanceState(activity, outState) }
     }
 
     override fun onActivityDestroyed(activity: Activity) {
@@ -92,5 +93,23 @@ object PluginManager: IPlugin {
 
     override fun onTrimMemory(level: Int) {
         mModuleMap.values.forEach { it.onTrimMemory(level) }
+    }
+
+    override fun onForeground() {
+
+
+        mModuleMap.values.forEach {
+            if (it is IAppStatusChangedListener) {
+                it.onForeground()
+            }
+        }
+    }
+
+    override fun onBackground() {
+        mModuleMap.values.forEach {
+            if (it is IAppStatusChangedListener) {
+                it.onBackground()
+            }
+        }
     }
 }

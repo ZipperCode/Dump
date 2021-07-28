@@ -3,13 +3,14 @@ package com.zipper.core
 import android.app.Activity
 import android.content.ComponentCallbacks2
 import android.os.Bundle
+import com.zipper.core.utils.L
 
 /**
  *  @author zipper
  *  @date 2021-07-23
  *  @description 为模块提供统一接口
  **/
-abstract class BasePlugin : IPlugin, IAppStatusChangedListener {
+abstract class BasePlugin : IPlugin {
 
     companion object {
         lateinit var app: BaseApp
@@ -86,14 +87,6 @@ abstract class BasePlugin : IPlugin, IAppStatusChangedListener {
             ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE -> L.e("内存紧-前台-不会被清理")
 
         }
-
-    }
-
-    override fun onBackground() {
-
-    }
-
-    override fun onForeground() {
 
     }
 }
