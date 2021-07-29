@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.zipper.core.utils.BarUtil
 
 /**
  *  @author zipper
@@ -29,6 +30,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        BarUtil.transparentStatusBar(this)
         noCompatScaledDensity = resources.displayMetrics.scaledDensity
         noCompatDensity = resources.displayMetrics.density
         screenOrientation = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -50,7 +52,7 @@ abstract class BaseActivity : AppCompatActivity() {
         hideKeyboard()
     }
 
-    protected fun autoSize() {
+    protected open fun autoSize() {
         val displayMetrics: DisplayMetrics = resources.displayMetrics
         val screenWidthPixels = displayMetrics.widthPixels
         // px = density * dp, density = dpi / 160 <==> dpi = density * 160
@@ -65,7 +67,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun showKeyboard() {
+    protected open fun showKeyboard() {
         if (currentFocus != null) {
             imm.showSoftInput(currentFocus, 0)
         } else {
@@ -77,7 +79,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun showKeyboard(focusView: View?) {
+    protected open fun showKeyboard(focusView: View?) {
         focusView?.apply {
             if (!this.isFocused) {
                 requestFocus()
@@ -87,7 +89,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun hideKeyboard() {
+    protected open fun hideKeyboard() {
         window?.decorView?.apply {
             val focusView = findFocus()
             if (focusView == null) {
@@ -98,7 +100,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun showToast(msg: String, isLong: Boolean = false) {
+    protected open fun showToast(msg: String, isLong: Boolean = false) {
         Toast.makeText(this, msg, if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
     }
 }

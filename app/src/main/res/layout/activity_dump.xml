@@ -14,6 +14,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -204,6 +205,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_float_24"
+            android:onClick="@{() -> handler.openView()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:contentDescription="@string/contentDescription" />

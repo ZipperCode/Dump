@@ -30,11 +30,11 @@ abstract class BaseVmBActivity<VM: ViewModel, VDB: ViewDataBinding>: BaseVmActiv
         val sparseArray = getVariable()
 
         if(sparseArray.isNotEmpty()){
-            for(i in 0..sparseArray.size()){
+            for(i in 0 until sparseArray.size()){
                 mBinding.setVariable(sparseArray.keyAt(i), sparseArray.valueAt(i))
             }
         }
-        mBinding.executePendingBindings()
+        setContentView(mBinding.root)
     }
 
     override fun <T : View?> findViewById(id: Int): T {

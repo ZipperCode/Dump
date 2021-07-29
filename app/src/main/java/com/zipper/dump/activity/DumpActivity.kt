@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.util.SparseArray
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
@@ -11,11 +12,16 @@ import androidx.lifecycle.Observer
 import com.zipper.base.service.plugin.impl.AutoApiPao
 import com.zipper.core.PluginManager
 import com.zipper.core.activity.BaseVmBActivity
+import com.zipper.core.utils.L
+import com.zipper.dump.App
 import com.zipper.dump.BR
 import com.zipper.dump.R
+import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.databinding.ActivityDumpBinding
 import com.zipper.dump.service.DumpService
+import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
+import com.zipper.dump.view.FloatWindow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -104,6 +110,41 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
 
         fun openHelper() {
             AutoApiPao.startListActivity()
+        }
+
+        fun openView(){
+            if (FloatWindow.floatWindowIsShow) {
+                FloatWindow.removeInstance(this@DumpActivity)
+            } else {
+                FloatWindow.getInstance(this@DumpActivity).setOnClickListener {
+                    if (DumpService.mAccessibilityService == null) {
+                        showToast("无障碍服务未开启，无法捕获")
+                        return@setOnClickListener
+                    }
+                    showToast("开启视图显示")
+                    DumpService.mAccessibilityService?.run {
+                        App.mIoCoroutinesScope.launch {
+                            val viewInfoList: MutableList<ViewInfo> = ArrayList()
+                            AccessibilityHelper.collectViewInfo(rootInActiveWindow, viewInfoList)
+                            L.d(SplashActivity.TAG, "收集到的ViewInfo有size = ${viewInfoList.size}")
+                            // 保存全局，不使用参数传递
+                            AccessibilityHelper.mCollectViewInfoList = viewInfoList
+                            val intent = Intent(
+                                this@DumpActivity,
+                                TranslucentActivity::class.java
+                            )
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                    }
+                }
+                FloatWindow.getInstance(this@DumpActivity)
+                    .setOnLongClickListener {
+                    showToast( "长按，隐藏悬浮球")
+                    FloatWindow.removeInstance(this@DumpActivity)
+                    true
+                }
+            }
         }
     }
 
