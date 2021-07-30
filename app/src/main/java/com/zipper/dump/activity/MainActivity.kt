@@ -39,7 +39,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        recyclerView = findViewById(R.id.rv_list)
+//        recyclerView = findViewById(R.id.rv_list)
         mAppInAdapter = AppInfoAdapter(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mAppInAdapter

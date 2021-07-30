@@ -22,7 +22,9 @@ import com.zipper.dump.R
 import com.zipper.dump.activity.SplashActivity
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.core.utils.L
+import com.zipper.core.utils.SpUtil
 import com.zipper.dump.utils.SpHelper
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class DumpService : AccessibilityService() {
@@ -55,15 +57,15 @@ class DumpService : AccessibilityService() {
             if (("com.miui.systemAdSolution" == pkName) or AccessibilityHelper.pksContains(pkName)) {
                 dumpSplash(this, pkName)
             }else if("com.tencent.mm" == pkName){
-                if(AccessibilityHelper.mWxSettingValue){
-                    // 微信登陆自动
-                    val loginTitle = AccessibilityHelper.findNodeByText(rootInActiveWindow,"微信登陆确认")
-                    val loginCheck = AccessibilityHelper.findNodeByText(rootInActiveWindow,"同步最近消息")
-                    val loginButton = AccessibilityHelper.findNodeByText(rootInActiveWindow,"登陆")
-                    if((loginTitle != null) and (loginCheck != null) and (loginButton != null)){
-                        AccessibilityHelper.click(loginButton!!)
-                    }
-                }
+//                if(AccessibilityHelper.mWxSettingValue){
+//                    // 微信登陆自动
+//                    val loginTitle = AccessibilityHelper.findNodeByText(rootInActiveWindow,"微信登陆确认")
+//                    val loginCheck = AccessibilityHelper.findNodeByText(rootInActiveWindow,"同步最近消息")
+//                    val loginButton = AccessibilityHelper.findNodeByText(rootInActiveWindow,"登陆")
+//                    if((loginTitle != null) and (loginCheck != null) and (loginButton != null)){
+//                        AccessibilityHelper.click(loginButton!!)
+//                    }
+//                }
             }
         }
     }
@@ -123,23 +125,22 @@ class DumpService : AccessibilityService() {
 
         App.mIoCoroutinesScope.launch {
             AccessibilityHelper.init(this@DumpService)
-            // 读取本地设置的状态
-            val status = SpHelper.loadBoolean(SpHelper.SP_SERVICE_STATUS_KEY)
-            notifyServiceStatus(status)
+            AccessibilityHelper.serviceStatusFlow.collect {
+                notifyServiceStatus(it)
+            }
         }
-
-        // 启动任务
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
         Toast.makeText(this, "无障碍服务关闭，请重新打开", Toast.LENGTH_LONG).show()
-        notifyServiceStatus(false)
+        App.mMainCoroutinesScope.launch {
+            AccessibilityHelper.closeServiceCtrl()
+        }
         return super.onUnbind(intent)
     }
 
     fun notifyServiceStatus(status: Boolean) {
         mServiceStatus = status
-        SpHelper.saveBoolean(SpHelper.SP_SERVICE_STATUS_KEY, status)
         if (status) {
             setForegroundService()
         } else {

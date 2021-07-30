@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@Deprecated("")
 class SettingsActivity : BaseActivity() {
     override fun contentView(): Int = R.layout.settings_activity
 
@@ -112,7 +113,7 @@ class SettingsActivity : BaseActivity() {
             wxSwitchPreferenceCompat?.run {
                 setOnPreferenceChangeListener { _, newValue ->
                     if(newValue is Boolean){
-                        AccessibilityHelper.mWxSettingValue = newValue
+//                        AccessibilityHelper.mWxSettingValue = newValue
                     }
                     true
                 }

@@ -15,7 +15,7 @@ abstract class BaseVMFragment<VM : ViewModel> : BaseFragment() {
     private lateinit var mFragmentProvider: ViewModelProvider
     private lateinit var mActivityProvider: ViewModelProvider
 
-    protected lateinit var mBaseViewModel: ViewModel
+    protected lateinit var mBaseViewModel: VM
         private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,14 +34,14 @@ abstract class BaseVMFragment<VM : ViewModel> : BaseFragment() {
         mBaseViewModel = getFragmentViewModel(vmClass)
     }
 
-    protected fun <T : ViewModel> getActivityViewModel(clazz: Class<T>): T {
+    protected open fun <T : ViewModel> getActivityViewModel(clazz: Class<T>): T {
         if (!::mActivityProvider.isInitialized) {
             mActivityProvider = ViewModelProvider(requireActivity())
         }
         return mActivityProvider.get(clazz)
     }
 
-    protected fun <T : ViewModel> getFragmentViewModel(clazz: Class<T>): T {
+    protected open fun <T : ViewModel> getFragmentViewModel(clazz: Class<T>): T {
         if (!::mActivityProvider.isInitialized) {
             mActivityProvider = ViewModelProvider(this)
         }

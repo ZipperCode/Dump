@@ -14,8 +14,16 @@ import androidx.annotation.RequiresApi
 import com.zipper.core.utils.L
 import com.zipper.dump.bean.AppInfo
 import com.zipper.dump.bean.ViewInfo
+import com.zipper.dump.repo.AppsRepo
+import com.zipper.dump.repo.ServiceRepo
 import com.zipper.dump.room.DBHelper
 import com.zipper.dump.service.DumpService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
@@ -50,73 +58,89 @@ object AccessibilityHelper {
      */
     var mDrawViewBound: Boolean = false
 
-    private var mServiceClosed: Boolean = false
-
-    var mWxSettingValue: Boolean = false
-
     var isInit: Boolean = false
 
-    fun init(context: Context) {
-        synchronized(isInit){
-            if(isInit)
-                return
-            pksInit(context)
-            viewInfoInit(context)
-            mWxSettingValue = SpHelper.loadBoolean(SpHelper.SETTING_WEIXIN_KEY)
+    private val appRepo = AppsRepo()
+
+    val serviceRepo = ServiceRepo()
+
+    private val mDumpPksInfo = mutableSetOf<String>()
+
+    private val mInitMutex =  Mutex()
+
+    val serviceStatusFlow: Flow<Boolean> = serviceRepo.serviceCtrlState
+
+    suspend fun init(context: Context) {
+        if(isInit) return
+        mInitMutex.withLock {
+            if(isInit) return
+            try {
+                pksInit(context)
+                viewInfoInit(context)
+            }catch (e: java.lang.Exception){
+                e.printStackTrace()
+            }
             isInit = true
         }
     }
 
-    private fun pksInit(context: Context) {
-        SpHelper.init(context)
-        val pks = SpHelper.loadStringArray(SP_PKS_LIST_KEY)
-        mNameList.clear()
-        mNameList.addAll(pks)
+    private suspend fun pksInit(context: Context){
+        appRepo.loadSaveDumpPksInfo()
+        appRepo.savePksInfo.collect {
+            mDumpPksInfo.clear()
+            mDumpPksInfo.addAll(it)
+        }
     }
 
-    fun addPks(pks: String) {
-        mNameList.add(pks)
-        SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
+    suspend fun addPks(pks: String) {
+        mDumpPksInfo.add(pks)
+        appRepo.putSaveDumpPksInfo(mDumpPksInfo)
     }
 
-    fun addPks(pks: Collection<String>) {
-        mNameList.addAll(pks)
-        SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
+    suspend fun addPks(pks: Collection<String>){
+        mDumpPksInfo.addAll(pks)
+        appRepo.putSaveDumpPksInfo(mDumpPksInfo)
     }
 
-    fun delPks(pks: String) {
-        mNameList.remove(pks)
-        SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
+    suspend fun delPks(pks: String){
+        mDumpPksInfo.remove(pks)
+        appRepo.putSaveDumpPksInfo(mDumpPksInfo)
     }
 
-    fun clearPks() {
-        mNameList.clear()
-        SpHelper.saveStringArray(SP_PKS_LIST_KEY, mNameList)
+    suspend fun clearPks() {
+        mDumpPksInfo.clear()
+        appRepo.putSaveDumpPksInfo(emptySet())
     }
 
     fun pksContains(pks: String): Boolean = mNameList.contains(pks)
 
     fun pksContainsAll(pks: List<String>): Boolean = mNameList.containsAll(pks)
 
+
+    suspend fun closeServiceCtrl(){
+        serviceRepo.saveServiceCtrlState(false)
+    }
+
     /**
      * 从数据库中查找所有保存的view信息
      */
-    private fun viewInfoInit(context: Context) {
+    private suspend fun viewInfoInit(context: Context) {
         val db = DBHelper.openViewInfoDatabase(context.applicationContext)
-        if (!SpHelper.loadBoolean(SpHelper.SP_FIRST_OPENED_KEY)) {
+        val firstIn = appRepo.firstInStatus()
+        if(!firstIn){
             val initViewInfo = readConfigViewInfo(context.applicationContext)
             db.getViewInfoDao().insert(*initViewInfo.toTypedArray())
-            SpHelper.saveBoolean(SpHelper.SP_FIRST_OPENED_KEY, true)
+            appRepo.saveFirstInStatus(true)
         }
-        mDumpViewInfo.clear()
         try {
+            mDumpViewInfo.clear()
             mDumpViewInfo.addAll(db.getViewInfoDao().getAll())
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun readConfigViewInfo(context: Context): List<ViewInfo> {
+    private suspend fun readConfigViewInfo(context: Context): List<ViewInfo> = withContext(Dispatchers.IO) {
         val result: MutableList<ViewInfo> = ArrayList()
         try {
             val prop = Properties()
@@ -137,7 +161,7 @@ object AccessibilityHelper {
             e.printStackTrace()
         }
 
-        return result
+        return@withContext result
     }
 
     fun addViewInfo(viewInfo: ViewInfo) {

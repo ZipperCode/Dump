@@ -24,6 +24,7 @@ import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.ArrayList
 
+@Deprecated("")
 class SplashActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var mServiceSwitchCardView: CardView

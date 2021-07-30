@@ -1,23 +1,24 @@
-package com.zipper.dump.activity
+package com.zipper.dump.fragment
 
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.util.SparseArray
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.zipper.base.service.plugin.impl.AutoApiPao
-import com.zipper.core.PluginManager
-import com.zipper.core.activity.BaseVmBActivity
+import com.zipper.core.fragment.BaseNavVmBFragment
 import com.zipper.core.utils.L
 import com.zipper.dump.App
 import com.zipper.dump.BR
 import com.zipper.dump.R
+import com.zipper.dump.activity.*
 import com.zipper.dump.bean.ViewInfo
-import com.zipper.dump.databinding.ActivityDumpBinding
+import com.zipper.dump.databinding.FragmentDumpBinding
 import com.zipper.dump.service.DumpService
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
@@ -28,20 +29,31 @@ import kotlinx.coroutines.launch
 
 /**
  *  @author zipper
- *  @date 2021-07-28
+ *  @date 2021-07-30
  *  @description
  **/
-class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
-
+class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
     override fun vmBrId(): Int = BR.vm
 
     private lateinit var mServiceSwitchCardView: CardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PluginManager.onMainActivityCreate(this)
-        mServiceSwitchCardView = findViewById(R.id.cv_service_switch)
-        mBaseViewModel.serviceCtrlStatus.observe(this, Observer {
+        lifecycleScope.launchWhenResumed {
+            mBaseViewModel.refreshServiceState()
+        }
+    }
+
+    override fun getVariable(): SparseArray<Any> {
+        return SparseArray<Any>().apply {
+            put(BR.handler, EventHandler())
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mServiceSwitchCardView = view.findViewById(R.id.cv_service_switch)
+        mBaseViewModel.serviceCtrlStatus.observe(viewLifecycleOwner, Observer {
             mServiceSwitchCardView.setCardBackgroundColor(
                 ResourcesCompat.getColor(
                     resources,
@@ -50,12 +62,6 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
                 )
             )
         })
-    }
-
-    override fun getVariable(): SparseArray<Any> {
-        return SparseArray<Any>().apply {
-            put(BR.handler, EventHandler())
-        }
     }
 
     override fun onStart() {
@@ -67,9 +73,8 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
         }
     }
 
-
     private fun showAccessibilityTip(msg: String) {
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(requireContext())
             .setTitle("提示信息")
             .setCancelable(true)
             .setMessage(msg)
@@ -89,7 +94,7 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
         fun openOrCloseService() {
             CoroutineScope(Dispatchers.Main).launch {
                 if (!AppUtils.isAccessibilitySettingsOn(
-                        this@DumpActivity,
+                        requireActivity(),
                         DumpService::class.java
                     )
                 ) {
@@ -101,22 +106,22 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
         }
 
         fun openAppsSetting() {
-            startActivity(Intent(this@DumpActivity, AppsActivity::class.java))
+            navController.navigate(R.id.action_dumpFragment_to_appsActivity)
         }
 
         fun openSetting() {
-            startActivity(Intent(this@DumpActivity, SettingsActivity::class.java))
+            navController.navigate(R.id.action_dumpFragment_to_settingFragment)
         }
 
         fun openHelper() {
             AutoApiPao.startListActivity()
         }
 
-        fun openView(){
+        fun openView() {
             if (FloatWindow.floatWindowIsShow) {
-                FloatWindow.removeInstance(this@DumpActivity)
+                FloatWindow.removeInstance(requireContext())
             } else {
-                FloatWindow.getInstance(this@DumpActivity).setOnClickListener {
+                FloatWindow.getInstance(requireContext()).setOnClickListener {
                     if (DumpService.mAccessibilityService == null) {
                         showToast("无障碍服务未开启，无法捕获")
                         return@setOnClickListener
@@ -130,7 +135,7 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
                             // 保存全局，不使用参数传递
                             AccessibilityHelper.mCollectViewInfoList = viewInfoList
                             val intent = Intent(
-                                this@DumpActivity,
+                                requireContext(),
                                 TranslucentActivity::class.java
                             )
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -138,14 +143,13 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
                         }
                     }
                 }
-                FloatWindow.getInstance(this@DumpActivity)
+                FloatWindow.getInstance(requireContext())
                     .setOnLongClickListener {
-                    showToast( "长按，隐藏悬浮球")
-                    FloatWindow.removeInstance(this@DumpActivity)
-                    true
-                }
+                        showToast("长按，隐藏悬浮球")
+                        FloatWindow.removeInstance(requireContext())
+                        true
+                    }
             }
         }
     }
-
 }

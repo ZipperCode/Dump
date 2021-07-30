@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.zipper.dump.R
 
+@Deprecated("")
 abstract class BaseActivity : AppCompatActivity() {
 
     @LayoutRes

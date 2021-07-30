@@ -102,11 +102,11 @@ class AppInfoAdapter(context: Context) :
                 setOnClickListener { view ->
                     if (view is SwitchCompat) {
                         holder.tvStatus.text = if (view.isChecked) "Dump运行中" else "未运行"
-                        if (view.isChecked) {
-                            AccessibilityHelper.addPks(mFilterList[position].pks)
-                        } else {
-                            AccessibilityHelper.delPks(mFilterList[position].pks)
-                        }
+//                        if (view.isChecked) {
+//                            AccessibilityHelper.addPks(mFilterList[position].pks)
+//                        } else {
+//                            AccessibilityHelper.delPks(mFilterList[position].pks)
+//                        }
                     }
                 }
             }

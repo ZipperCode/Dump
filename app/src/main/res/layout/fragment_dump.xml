@@ -10,11 +10,10 @@
 
         <variable
             name="handler"
-            type="com.zipper.dump.activity.DumpActivity.EventHandler" />
+            type="com.zipper.dump.fragment.DumpFragment.EventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

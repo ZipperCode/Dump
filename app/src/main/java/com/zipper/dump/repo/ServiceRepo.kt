@@ -2,11 +2,10 @@ package com.zipper.dump.repo
 
 import com.zipper.core.utils.SpUtil
 import com.zipper.dump.service.DumpService
+import com.zipper.dump.utils.SpHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,19 +24,15 @@ class ServiceRepo {
 
     val serviceState: SharedFlow<Boolean> get() = _serviceState
 
-    private val _serviceCtrlState = MutableStateFlow(false)
+    private val _serviceCtrlState: MutableStateFlow<Boolean> by lazy {
+        MutableStateFlow(SpUtil.instance(SpHelper.SP_NAME).get(SERVICE_CTR_STATUS_KEY, false))
+    }
 
     val serviceCtrlState: Flow<Boolean> get() = _serviceCtrlState
 
-    init {
-        CoroutineScope(Dispatchers.IO).launch {
-            refreshServiceState()
-        }
-    }
-
     suspend fun refreshServiceState() = withContext(Dispatchers.IO){
         _serviceState.value = DumpService.mAccessibilityService != null
-        _serviceCtrlState.value = SpUtil.get().get(SERVICE_CTR_STATUS_KEY, false)
+        _serviceCtrlState.value = SpUtil.instance(SpHelper.SP_NAME).get(SERVICE_CTR_STATUS_KEY, false)
     }
 
     suspend fun saveServiceCtrlState(value: Boolean) = withContext(Dispatchers.IO){

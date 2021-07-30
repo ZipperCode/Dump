@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@null"
+        android:textSize="14sp"
         android:ems="10"
         android:hint="@string/search_filter_hint_text"
         android:importantForAutofill="no"

@@ -9,7 +9,10 @@ object SpHelper {
 
     private lateinit var mContext: Context
 
-    private const val SP_NAME = "sp_dump"
+    const val SP_NAME = "sp_dump"
+
+    const val SP_SAVE_PKS_KEY = "dump_pks"
+
     private const val SP_NAME_2 = "com.zipper.dump_preference"
 
     /**
