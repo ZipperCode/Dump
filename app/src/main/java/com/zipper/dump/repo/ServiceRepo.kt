@@ -20,23 +20,23 @@ class ServiceRepo {
         const val SERVICE_CTR_STATUS_KEY: String = "SERVICE_CTR_STATUS_KEY"
     }
 
-    private val _serviceState =  MutableStateFlow<Boolean>(false)
+    private val _serviceState =  MutableStateFlow(DumpService.mAccessibilityService != null)
 
-    val serviceState: SharedFlow<Boolean> get() = _serviceState
+    val serviceState: StateFlow<Boolean> get() = _serviceState
 
     private val _serviceCtrlState: MutableStateFlow<Boolean> by lazy {
         MutableStateFlow(SpUtil.instance(SpHelper.SP_NAME).get(SERVICE_CTR_STATUS_KEY, false))
     }
 
-    val serviceCtrlState: Flow<Boolean> get() = _serviceCtrlState
+    val serviceCtrlState: StateFlow<Boolean> get() = _serviceCtrlState
 
     suspend fun refreshServiceState() = withContext(Dispatchers.IO){
-        _serviceState.value = DumpService.mAccessibilityService != null
-        _serviceCtrlState.value = SpUtil.instance(SpHelper.SP_NAME).get(SERVICE_CTR_STATUS_KEY, false)
+        _serviceState.emit(DumpService.mAccessibilityService != null)
+        _serviceCtrlState.emit(SpUtil.instance(SpHelper.SP_NAME).get(SERVICE_CTR_STATUS_KEY, false))
     }
 
     suspend fun saveServiceCtrlState(value: Boolean) = withContext(Dispatchers.IO){
-        SpUtil.put(SERVICE_CTR_STATUS_KEY, value)
+        SpUtil.instance(SpHelper.SP_NAME).put(SERVICE_CTR_STATUS_KEY, value)
         refreshServiceState()
     }
 }

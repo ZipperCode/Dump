@@ -23,6 +23,7 @@ import com.zipper.dump.activity.SplashActivity
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.core.utils.L
 import com.zipper.core.utils.SpUtil
+import com.zipper.dump.MainActivity
 import com.zipper.dump.utils.SpHelper
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -125,6 +126,7 @@ class DumpService : AccessibilityService() {
 
         App.mIoCoroutinesScope.launch {
             AccessibilityHelper.init(this@DumpService)
+            AccessibilityHelper.serviceRepo.refreshServiceState()
             AccessibilityHelper.serviceStatusFlow.collect {
                 notifyServiceStatus(it)
             }
@@ -175,7 +177,7 @@ class DumpService : AccessibilityService() {
             .setContentIntent(
                 PendingIntent.getActivity(
                     this, 0,
-                    Intent(this, SplashActivity::class.java), 0
+                    Intent(this, MainActivity::class.java), 0
                 )
             )
         //向系统注册通知渠道，注册后不能改变重要性以及其他通知行为

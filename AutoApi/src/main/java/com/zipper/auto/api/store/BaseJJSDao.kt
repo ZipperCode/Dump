@@ -3,6 +3,7 @@ package com.zipper.auto.api.store
 import androidx.room.*
 import com.zipper.auto.api.bean.Expert
 import com.zipper.auto.api.bean.ViewPoint
+import kotlinx.coroutines.flow.Flow
 
 /**
  *  @author zipper
@@ -22,6 +23,11 @@ abstract class BaseJJSDao: JJSDao {
         select * from tb_api_expert where exportId = :id
     """)
     abstract fun findExpertById(id: Int): Expert
+
+    @Query("""
+        select * from tb_api_expert
+    """)
+    abstract fun findAllExpert(): Flow<List<Expert>>
 
     @Query("""
         select exportId from tb_api_expert where exportId = :id

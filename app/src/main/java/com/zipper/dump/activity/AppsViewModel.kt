@@ -1,14 +1,15 @@
 package com.zipper.dump.activity
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.zipper.dump.bean.AppsInfo
 import com.zipper.dump.repo.AppsRepo
 import com.zipper.dump.repo.ServiceRepo
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.subscribeOn
 
 /**
  *  @author zipper
@@ -19,13 +20,14 @@ class AppsViewModel : ViewModel() {
 
     private val appsRepo: AppsRepo = AppsRepo()
 
-    private val serviceRepo = ServiceRepo()
+    val appsData: MutableLiveData<List<AppsInfo>> = MutableLiveData()
 
-    val appsData: LiveData<List<AppsInfo>> = appsRepo.appsListData.asLiveData()
+    val pks:LiveData<Set<String>> = appsRepo.savePksInfo.asLiveData()
 
-    init {
-
+    suspend fun getPackages(context: Context) {
+        val apps = appsRepo.getInstallApks(context)
+        appsData.value = apps
+        appsRepo.loadSaveDumpPksInfo()
     }
 
-    suspend fun getPackages(context: Context) = appsRepo.getInstallApks(context)
 }

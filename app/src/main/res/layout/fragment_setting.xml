@@ -21,29 +21,33 @@
         <FrameLayout
             android:id="@+id/page_bar"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:background="#2B2B2B"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+            android:fitsSystemWindows="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                onThrottleClick="@{() -> handler.onBack()}"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="20dp"
-                android:src="@drawable/ic_page_back" />
-
-            <TextView
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/setting_name"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:layout_height="56dp">
+
+                <ImageView
+                    onThrottleClick="@{() -> handler.onBack()}"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_page_back" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/setting_name"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </FrameLayout>
         </FrameLayout>
 
         <ScrollView
@@ -85,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{vm.autoBootPermissionStatus ? @string/setting_permission_status_enable : @string/setting_permission_status_unable }"
-                        android:textColor="@color/text_failure"
+                        android:textColor="@{vm.autoBootPermissionStatus ? @color/text_success : @color/text_failure }"
                         android:textSize="12sp"
                         android:layout_marginEnd="5dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -137,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
                         android:text="@{vm.serviceStatus ? @string/setting_permission_status_enable : @string/setting_permission_status_unable }"
-                        android:textColor="@color/text_failure"
+                        android:textColor="@{vm.serviceStatus ? @color/text_success : @color/text_failure }"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/textView12"
@@ -187,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
                         android:text="@{vm.flowPermissionStatus ? @string/setting_permission_status_enable : @string/setting_permission_status_unable }"
-                        android:textColor="@color/text_failure"
+                        android:textColor="@{vm.flowPermissionStatus ? @color/text_success : @color/text_failure }"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/textView15"

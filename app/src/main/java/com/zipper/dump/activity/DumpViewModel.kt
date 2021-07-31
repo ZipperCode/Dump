@@ -5,6 +5,7 @@ import com.zipper.core.DefaultLifecycleObserver
 import com.zipper.core.utils.L
 import com.zipper.dump.repo.ServiceRepo
 import com.zipper.dump.utils.AccessibilityHelper
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -26,12 +27,12 @@ class DumpViewModel: ViewModel() {
     }
 
     fun switchServiceStatus(){
-        if(serviceCtrlStatus.value == null){
+        if(!repo.serviceState.value){
             L.d("无障碍服务还未开启")
             return
         }
 
-        val newValue = serviceCtrlStatus.value!!
+        val newValue = !repo.serviceCtrlState.value
         viewModelScope.launch {
             repo.saveServiceCtrlState(newValue)
         }

@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.work.*
 import com.zipper.auto.api.job.FetchWorker
+import com.zipper.auto.api.job.UpdateStatusWorker
 import com.zipper.auto.api.store.JJSDatabase
 import com.zipper.base.service.IPluginAutoApi
 import com.zipper.core.BaseApp
@@ -45,6 +46,7 @@ class PluginAutoApi : BasePlugin(), IPluginAutoApi {
             ExistingWorkPolicy.REPLACE,
             FetchWorker.onceWork()
         )
+        UpdateStatusWorker.uniquePeriodic(ctx)
     }
 
     override fun onMainActivityCreate(activity: Activity) {

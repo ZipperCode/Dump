@@ -51,6 +51,7 @@ object AccessibilityHelper {
     /**
      * 已安装的App信息
      */
+    @Deprecated("")
     val mMainAppInfo: MutableList<AppInfo> = ArrayList()
 
     /**
@@ -60,11 +61,9 @@ object AccessibilityHelper {
 
     var isInit: Boolean = false
 
-    private val appRepo = AppsRepo()
+    val appRepo = AppsRepo()
 
     val serviceRepo = ServiceRepo()
-
-    private val mDumpPksInfo = mutableSetOf<String>()
 
     private val mInitMutex =  Mutex()
 
@@ -86,36 +85,27 @@ object AccessibilityHelper {
 
     private suspend fun pksInit(context: Context){
         appRepo.loadSaveDumpPksInfo()
-        appRepo.savePksInfo.collect {
-            mDumpPksInfo.clear()
-            mDumpPksInfo.addAll(it)
-        }
     }
 
     suspend fun addPks(pks: String) {
-        mDumpPksInfo.add(pks)
-        appRepo.putSaveDumpPksInfo(mDumpPksInfo)
+        appRepo.putSaveDumpPksInfo(pks)
     }
 
     suspend fun addPks(pks: Collection<String>){
-        mDumpPksInfo.addAll(pks)
-        appRepo.putSaveDumpPksInfo(mDumpPksInfo)
+        appRepo.putSaveDumpPksInfo(pks)
     }
 
     suspend fun delPks(pks: String){
-        mDumpPksInfo.remove(pks)
-        appRepo.putSaveDumpPksInfo(mDumpPksInfo)
+        appRepo.putSaveDumpPksInfo(pks, true)
     }
 
     suspend fun clearPks() {
-        mDumpPksInfo.clear()
         appRepo.putSaveDumpPksInfo(emptySet())
     }
 
     fun pksContains(pks: String): Boolean = mNameList.contains(pks)
 
     fun pksContainsAll(pks: List<String>): Boolean = mNameList.containsAll(pks)
-
 
     suspend fun closeServiceCtrl(){
         serviceRepo.saveServiceCtrlState(false)

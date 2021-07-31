@@ -1,5 +1,6 @@
 package com.zipper.core.utils
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -29,7 +30,7 @@ object SpUtil {
             val appField = getDeclareFieldMethod.invoke(clazz, "mInitialApplication") as Field
             appField.isAccessible = true
             appContext = appField.get(atObj) as Application
-            get()
+            instance()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -39,7 +40,7 @@ object SpUtil {
         this.appContext = context.applicationContext
     }
 
-    fun get(spName: String): SharedPreferencesWrapper {
+    fun instance(spName: String): SharedPreferencesWrapper {
         if (cacheSp.containsKey(spName)) {
             return cacheSp[spName]!!
         }
@@ -48,7 +49,7 @@ object SpUtil {
         return spw
     }
 
-    fun get(): SharedPreferencesWrapper {
+    fun instance(): SharedPreferencesWrapper {
         if (cacheSp.containsKey(BASE_NAME)) {
             return cacheSp[BASE_NAME]!!
         }
@@ -70,6 +71,32 @@ object SpUtil {
 
         fun put(key: String, value: String) {
             sp.edit().putString(key, value).apply()
+        }
+        @SuppressLint("ApplySharedPref")
+        @Suppress("UNCHECKED_CAST")
+        fun<T> put(key: String, value: T){
+            when (value) {
+                is Boolean -> sp.edit().putBoolean(key, value).commit()
+                is Int -> sp.edit().putInt(key, value).commit()
+                is String -> sp.edit().putString(key,value).commit()
+                is Long -> sp.edit().putLong(key, value).commit()
+                is Float -> sp.edit().putFloat(key, value).commit()
+                is Set<*> -> sp.edit().putStringSet(key,value as Set<String>).commit()
+                else -> throw IllegalArgumentException("unknown default param type")
+            }
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        fun<T> putAsync(key: String, value: T){
+            when (value) {
+                is Boolean -> sp.edit().putBoolean(key, value).apply()
+                is Int -> sp.edit().putInt(key, value).apply()
+                is String -> sp.edit().putString(key,value).apply()
+                is Long -> sp.edit().putLong(key, value).apply()
+                is Float -> sp.edit().putFloat(key, value).apply()
+                is Set<*> -> sp.edit().putStringSet(key,value as Set<String>).apply()
+                else -> throw IllegalArgumentException("unknown default param type")
+            }
         }
 
         @Suppress("UNCHECKED_CAST")

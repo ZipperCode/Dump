@@ -2,6 +2,7 @@ package com.zipper.dump.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.zipper.core.fragment.BaseVmBFragment
@@ -32,6 +33,14 @@ class AppsFragment : BaseVmBFragment<AppsViewModel, FragmentAppsBinding>() {
         lifecycleScope.launchWhenCreated {
             mBaseViewModel.getPackages(requireActivity())
         }
+
+//        mBaseViewModel.pks.observe(viewLifecycleOwner, Observer {
+//            for (app in mBaseViewModel.appsData.value ?: emptyList()) {
+//                if (it.contains(app.pks)) {
+//                    app.accessibilityEnable.set(true)
+//                }
+//            }
+//        })
     }
 
 }
