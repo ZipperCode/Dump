@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.work.*
+import com.zipper.auto.api.activity.JDActivity
 import com.zipper.auto.api.job.FetchWorker
 import com.zipper.auto.api.job.UpdateStatusWorker
 import com.zipper.auto.api.store.JJSDatabase
@@ -61,6 +62,13 @@ class PluginAutoApi : BasePlugin(), IPluginAutoApi {
 
     override fun startListActivity() {
         val intent = Intent(app,ViewPointActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        app.startActivity(intent)
+    }
+
+
+    override fun startJdActivity() {
+        val intent = Intent(app,JDActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         app.startActivity(intent)
     }

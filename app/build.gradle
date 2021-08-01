@@ -69,6 +69,12 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     implementation project(':Core')
     implementation project(':BaseService')

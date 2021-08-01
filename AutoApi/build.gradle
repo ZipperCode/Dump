@@ -40,14 +40,20 @@ android {
         generateStubs = true
     }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
     implementation project(':Core')
     implementation project(':BaseService')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     rootProject.ext.androidx['kapt'].each {
         kapt it
     }
+    // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8
+    implementation files("libs/j2v8-6.2.0.aar")
+
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

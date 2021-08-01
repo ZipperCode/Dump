@@ -7,11 +7,10 @@ import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.zipper.auto.api.JJSApi
+import com.zipper.auto.api.api.JJSApi
 import com.zipper.dump.R
 import com.zipper.dump.SettingRowPreference
 import com.zipper.dump.service.DumpService
-import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
 import com.zipper.dump.view.FloatWindow
 import kotlinx.coroutines.CoroutineScope

@@ -3,8 +3,7 @@ package com.zipper.auto.api.job
 import android.content.Context
 import android.util.Log
 import androidx.work.*
-import com.zipper.auto.api.JJSApi
-import com.zipper.auto.api.bean.ViewPoint
+import com.zipper.auto.api.api.JJSApi
 import com.zipper.auto.api.store.JJSDatabase
 import com.zipper.core.format
 import kotlinx.coroutines.Dispatchers

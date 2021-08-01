@@ -114,7 +114,7 @@ class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
         }
 
         fun openHelper() {
-            AutoApiPao.startListActivity()
+            AutoApiPao.startJdActivity()
         }
 
         fun openView() {

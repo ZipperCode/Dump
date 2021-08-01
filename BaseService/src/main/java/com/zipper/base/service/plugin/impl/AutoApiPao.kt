@@ -20,4 +20,10 @@ object AutoApiPao {
         plugin.startListActivity()
     }
 
+    @JvmStatic
+    fun startJdActivity(){
+        val plugin = PluginManager.getPlugin<IPluginAutoApi>(MODULE_NAME) ?: return
+        plugin.startJdActivity()
+    }
+
 }

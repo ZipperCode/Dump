@@ -67,12 +67,29 @@ ext {
             ]
     ]
 
+    retrofit_version = "2.9.0"
+    retrofit = [
+            dependencies: [
+                    "com.squareup.retrofit2:retrofit:${retrofit_version}",
+                    "com.squareup.retrofit2:converter-gson:${retrofit_version}",
+                    "com.squareup.okhttp3:logging-interceptor:4.9.0"
+            ]
+    ]
+
+//    j2v8_version = "6.2.0"
+//    j2v8 = [
+//            dependencies: [
+//                    // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8
+//                    "com.eclipsesource.j2v8:j2v8:${j2v8_version}"
+//            ]
+//    ]
 
     index = [
             ktx,
             androidx,
             material,
             okhttp,
-            gson
+            gson,
+            retrofit
     ]
 }

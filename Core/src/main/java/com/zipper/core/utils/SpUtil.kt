@@ -111,6 +111,18 @@ object SpUtil {
                 else -> throw IllegalArgumentException("unknown default param type")
             }
         }
+
+        fun remove(key: String){
+            sp.edit().remove(key).apply()
+        }
+
+        fun all(condition: String = ""):Map<String,*>{
+            return sp.all.filter { it.toString().contains(condition) }
+        }
+
+        fun clear(){
+            sp.edit().clear().apply()
+        }
     }
 
 

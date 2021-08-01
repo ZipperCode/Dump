@@ -3,7 +3,7 @@ package com.zipper.auto.api.service
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.util.Log
-import com.zipper.auto.api.JJSApi
+import com.zipper.auto.api.api.JJSApi
 import com.zipper.auto.api.bean.ViewPoint
 import com.zipper.auto.api.store.JJSDatabase
 import kotlinx.coroutines.CoroutineScope
