@@ -24,7 +24,7 @@
 
         <activity android:name=".ViewPointActivity" />
         <activity android:name=".DetailActivity" />
-        <activity android:name=".activity.JDActivity" />
+
 
         <service
             android:name=".service.FetchJobService"

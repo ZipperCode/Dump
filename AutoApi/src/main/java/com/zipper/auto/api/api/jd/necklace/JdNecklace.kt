@@ -1,4 +1,4 @@
-package com.jd.api
+package com.zipper.auto.api.api.jd.necklace
 
 import android.content.Context
 import com.eclipsesource.v8.V8
@@ -12,7 +12,6 @@ import com.zipper.core.utils.L
 import com.zipper.core.utils.StringUtil
 import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.Request
 import okhttp3.RequestBody
 import java.util.*
 
@@ -108,13 +107,13 @@ class JdNecklace : JdBaseApi() {
         for (task in taskResult?.taskConfigVos ?: emptyList()) {
             if (task.taskStage == 0) {
                 print("【${task.taskName}】 任务未领取,开始领取此任务")
-                startTask(task.id)
+                necklaceStartTask(task.id)
             }
         }
     }
 
 
-    suspend fun startTask(
+    suspend fun necklaceStartTask(
         taskId: Int,
         functionId: String = "necklace_startTask",
         itemId: String = ""
@@ -152,8 +151,10 @@ class JdNecklace : JdBaseApi() {
             }catch (e: java.lang.Exception){
                 e.printStackTrace()
             }
-
         }
+    }
+
+    fun decipherJoyToken(){
 
     }
 

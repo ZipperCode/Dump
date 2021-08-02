@@ -28,39 +28,28 @@ class JDActivity: BaseVmActivity<JDViewModel>() {
                 ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
                 if (isGranted) {
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO){
-//                            ScriptManager.getScript(this@JDActivity,"Fuc")
-                            doAction()
-                        }
-                    }
+                    doAction()
                 } else {
                     Toast.makeText(this, "需要权限", Toast.LENGTH_SHORT).show()
                 }
             }
 
         findViewById<Button>(R.id.button).setOnClickListener {
-            lifecycleScope.launch {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    when {
-                        ContextCompat.checkSelfPermission(
-                            this@JDActivity,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED -> {
-                            withContext(Dispatchers.IO){
-//                                ScriptManager.getScript(this@JDActivity,"Fuc")
-                                doAction()
-                            }
-                        }
-                        shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
-                            showToast("shouldShowRequestPermissionRationale")
-                        }
-                        else -> {
-                            requestPermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this@JDActivity,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        doAction()
+                    }
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        showToast("shouldShowRequestPermissionRationale")
+                    }
+                    else -> {
+                        requestPermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     }
                 }
-
             }
         }
     }
@@ -68,6 +57,9 @@ class JDActivity: BaseVmActivity<JDViewModel>() {
     private fun doAction(){
         lifecycleScope.launch{
             JdNecklace().main(this@JDActivity)
+//            withContext(Dispatchers.IO){
+//                ScriptManager.getScript(this@JDActivity,"Fuc")
+//            }
         }
     }
 }

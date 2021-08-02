@@ -65,13 +65,6 @@ object SpUtil {
 
     class SharedPreferencesWrapper(val sp: SharedPreferences) {
 
-        fun put(key: String, value: Boolean) {
-            sp.edit().putBoolean(key, value).apply()
-        }
-
-        fun put(key: String, value: String) {
-            sp.edit().putString(key, value).apply()
-        }
         @SuppressLint("ApplySharedPref")
         @Suppress("UNCHECKED_CAST")
         fun<T> put(key: String, value: T){
@@ -82,7 +75,7 @@ object SpUtil {
                 is Long -> sp.edit().putLong(key, value).commit()
                 is Float -> sp.edit().putFloat(key, value).commit()
                 is Set<*> -> sp.edit().putStringSet(key,value as Set<String>).commit()
-                else -> throw IllegalArgumentException("unknown default param type")
+                else -> throw IllegalArgumentException("unknown value param type")
             }
         }
 
@@ -95,7 +88,7 @@ object SpUtil {
                 is Long -> sp.edit().putLong(key, value).apply()
                 is Float -> sp.edit().putFloat(key, value).apply()
                 is Set<*> -> sp.edit().putStringSet(key,value as Set<String>).apply()
-                else -> throw IllegalArgumentException("unknown default param type")
+                else -> throw IllegalArgumentException("unknown value param type")
             }
         }
 
