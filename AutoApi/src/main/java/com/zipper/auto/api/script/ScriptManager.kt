@@ -53,7 +53,6 @@ object ScriptManager {
 //            }
 //        }
 
-        val nodejs = NodeJS.createNodeJS()
 
         val v8Runtime = V8.createV8Runtime(scriptName)
         val memoryManager = MemoryManager(v8Runtime)

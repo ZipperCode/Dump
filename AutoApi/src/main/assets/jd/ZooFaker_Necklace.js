@@ -8,9 +8,6 @@ function aaa(){
     return "hello world"
 }
 
-/*
- * Bitwise rotate a 32-bit number to the left.
- */
 function bitRotateLeft(num, cnt) {
     return (num << cnt) | (num >>> (32 - cnt))
 }
@@ -28,9 +25,6 @@ function md5(string, key, raw) {
     return rawHMACMD5(key, string)
 }
 
-/*
- * Convert a raw string to a hex string
- */
 function rstr2hex(input) {
     var hexTab = '0123456789abcdef'
     var output = ''
@@ -42,15 +36,11 @@ function rstr2hex(input) {
     }
     return output
 }
-/*
- * Encode a string as utf-8
- */
+
 function str2rstrUTF8(input) {
     return unescape(encodeURIComponent(input))
 }
-/*
- * Calculate the MD5 of a raw string
- */
+
 function rstrMD5(s) {
     return binl2rstr(binlMD5(rstr2binl(s), s.length * 8))
 }
@@ -62,9 +52,7 @@ function rawMD5(s) {
     return rstrMD5(str2rstrUTF8(s))
 }
 
-/*
- * These functions implement the four basic operations the algorithm uses.
- */
+
 function md5cmn(q, a, b, x, s, t) {
     return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b)
 }
@@ -85,11 +73,8 @@ function md5ii(a, b, c, d, x, s, t) {
     return md5cmn(c ^ (b | ~d), a, b, x, s, t)
 }
 
-/*
- * Calculate the MD5 of an array of little-endian words, and a bit length.
- */
+
 function binlMD5(x, len) {
-    /* append padding */
     x[len >> 5] |= 0x80 << (len % 32)
     x[((len + 64) >>> 9 << 4) + 14] = len
 
@@ -184,9 +169,7 @@ function binlMD5(x, len) {
     }
     return [a, b, c, d]
 }
-/*
- * Convert an array of little-endian words to a string
- */
+
 function binl2rstr(input) {
     var i
     var output = ''
@@ -198,10 +181,6 @@ function binl2rstr(input) {
 }
 
 
-/*
- * Convert a raw string to an array of little-endian words
- * Characters >255 have their high-byte silently ignored.
- */
 function rstr2binl(input) {
     var i
     var output = []
@@ -272,7 +251,6 @@ function sha256_expand(W, j) {
         sha256_sigma0(W[(j + 1) & 0x0f]));
 }
 
-/* Hash constant words K: */
 var K256 = new Array(
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -292,12 +270,9 @@ var K256 = new Array(
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 );
 
-/* global arrays */
 var ihash, count, buffer;
 var sha256_hex_digits = "0123456789abcdef";
 
-/* Add 32-bit integers with 16-bit operations (bug in some JS-interpreters: 
-overflow) */
 function safe_add(x, y) {
     var lsw = (x & 0xffff) + (y & 0xffff);
     var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
@@ -366,18 +341,17 @@ function sha256_transform() {
     ihash[7] += h;
 }
 
-/* Read the next chunk of data and update the SHA256 computation */
 function sha256_update(data, inputLen) {
     var i, index, curpos = 0;
-    /* Compute number of bytes mod 64 */
+
     index = ((count[0] >> 3) & 0x3f);
     var remainder = (inputLen & 0x3f);
 
-    /* Update number of bits */
+
     if ((count[0] += (inputLen << 3)) < (inputLen << 3)) count[1]++;
     count[1] += (inputLen >> 29);
 
-    /* Transform as many times as possible */
+
     for (i = 0; i + 63 < inputLen; i += 64) {
         for (var j = index; j < 64; j++)
             buffer[j] = data.charCodeAt(curpos++);
@@ -385,12 +359,11 @@ function sha256_update(data, inputLen) {
         index = 0;
     }
 
-    /* Buffer remaining input */
     for (var j = 0; j < remainder; j++)
         buffer[j] = data.charCodeAt(curpos++);
 }
 
-/* Finish the computation by operations such as padding */
+
 function sha256_final() {
     var index = ((count[0] >> 3) & 0x3f);
     buffer[index++] = 0x80;
@@ -415,7 +388,7 @@ function sha256_final() {
     sha256_transform();
 }
 
-/* Split the internal hash values into an array of bytes */
+
 function sha256_encode_bytes() {
     var j = 0;
     var output = new Array(32);
@@ -428,7 +401,7 @@ function sha256_encode_bytes() {
     return output;
 }
 
-/* Get the internal hash as a hex string */
+
 function sha256_encode_hex() {
     var output = new String();
     for (var i = 0; i < 8; i++) {
@@ -924,13 +897,9 @@ var utils = {
             blog: "a",
             msg: ''
         }
-        // console.log(data);
-        //console.log(JSON.stringify(data));
         data = new Buffer.from(this.xorEncrypt(JSON.stringify(data), key)).toString('base64');
-        //console.log(data);
         outstr.push(data);
         outstr.push(this.getCrcCode(data));
-        //console.log(outstr.join("~"));
         return {
             extraData: {
                 log: outstr.join("~"),
