@@ -11,7 +11,7 @@ import com.zipper.core.utils.FileUtil
 import com.zipper.core.utils.L
 
 
-object ZooFakerNecklaceScript {
+class ZooFakerNecklaceScript {
 
     private lateinit var script: String
 
@@ -19,8 +19,8 @@ object ZooFakerNecklaceScript {
 
     private lateinit var memoryManager: MemoryManager
 
-    fun init(context: Context, jsScriptPath: String) {
-        val stream = context.assets.open("jd/jd_necklance.js") ?: return
+    fun init(context: Context) {
+        val stream = context.assets.open("jd/ZooFaker_Necklace.js")
         script = FileUtil.readString(stream)
         v8Runtime = V8.createV8Runtime(ZooFakerNecklaceScript::class.java.simpleName)
         memoryManager = MemoryManager(v8Runtime)
@@ -47,8 +47,122 @@ object ZooFakerNecklaceScript {
     }
 
 
-    fun getKey(id: String, randomWord: String, time: String){
+    fun getKey(id: String, randomWord: String, time: String): String{
+        var result = ""
+        val param = V8Array(v8Runtime)
+        try {
+            param.push(id).push(randomWord).push(time)
+            val utilsObj = v8Runtime.getObject("utils")
+            L.d("utilsObj = $utilsObj")
+            result = utilsObj.executeStringFunction("getKey",param)
+            L.d("getKey() ==> result = $result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            param.release()
+        }
+        return result
+    }
 
+    fun sha1(text:String): String{
+        var result = ""
+        val param = V8Array(v8Runtime)
+        try {
+            param.push(text)
+            val utilsObj = v8Runtime.getObject("utils")
+            L.d("utilsObj = $utilsObj")
+            result = utilsObj.executeStringFunction("sha1",param)
+            L.d("sha1() ==> result = $result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            param.release()
+        }
+        return result
+    }
+
+    fun getCrcCode(text: String): String{
+        var result = ""
+        val param = V8Array(v8Runtime)
+        try {
+            param.push(text)
+            val utilsObj = v8Runtime.getObject("utils")
+            L.d("utilsObj = $utilsObj")
+            result = utilsObj.executeStringFunction("getCrcCode",param)
+            L.d("getCrcCode() ==> result = $result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            param.release()
+        }
+        return result
+    }
+
+    fun getTouchSession(): String{
+        var result = ""
+        val param = V8Array(v8Runtime)
+        try {
+            val utilsObj = v8Runtime.getObject("utils")
+            L.d("utilsObj = $utilsObj")
+            result = utilsObj.executeStringFunction("getTouchSession",param)
+            L.d("getTouchSession() ==> result = $result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            param.release()
+        }
+        return result
+    }
+
+    fun hexMD5(text:String): String{
+        var result = ""
+        val param = V8Array(v8Runtime)
+        try {
+            param.push(text)
+            result = v8Runtime.executeStringFunction("hexMD5",param)
+            L.d("hexMD5() ==> result = $result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            param.release()
+        }
+        return result
+    }
+
+    fun xorEncrypt(text: String, key: String): String{
+        var result = ""
+        val param = V8Array(v8Runtime)
+        try {
+            param.push(text).push(key)
+            val utilsObj = v8Runtime.getObject("utils")
+            L.d("utilsObj = $utilsObj")
+            result = utilsObj.executeStringFunction("xorEncrypt",param)
+            L.d("xorEncrypt() ==> result = $result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            param.release()
+        }
+        return result
+    }
+
+    fun get_risk_result(joyytoken: String, joyytoken_count: Int, action: String, id: Int,userName: String, UUID: String ){
+        var result = "{}"
+        val param = V8Array(v8Runtime)
+        try {
+            param.push(joyytoken).push(joyytoken_count).push(action).push(id).push(userName).push(UUID)
+            val utilsObj = v8Runtime.getObject("utils")
+            L.d("utilsObj = $utilsObj")
+            val v8Result = utilsObj.executeObjectFunction("get_risk_result",param)
+            L.d("v8Result = $v8Result")
+            result = v8Object2Json(v8Result)
+            L.d("jsonResult = $result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            param.release()
+        }
+        return Gson().fromJson(result, object : TypeToken<Map<String, Any>>() {}.type)
     }
 
     fun getRandomWord(len: Int): String {
@@ -62,7 +176,7 @@ object ZooFakerNecklaceScript {
     }
 
     fun v8Object2Json(v8Object: V8Object): String {
-        val v8 = V8.createV8Runtime()
+        val v8 = V8.createV8Runtime("tmp")
         try {
             val json: V8Object = v8.getObject("JSON")
             val parameters = V8Array(v8).push(v8Object)
@@ -73,7 +187,7 @@ object ZooFakerNecklaceScript {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            v8.release(true)
+            v8.release()
             v8Object.release()
         }
         return "{}"

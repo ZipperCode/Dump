@@ -8,15 +8,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.jd.api.JdNecklace
 import com.zipper.auto.api.R
-import com.zipper.auto.api.script.ScriptManager
+import com.zipper.auto.api.api.jd.necklace.JdNecklace
 import com.zipper.core.activity.BaseVmActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class JDActivity: BaseVmActivity<JDViewModel>() {
+class JDActivity : BaseVmActivity<JDViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +51,8 @@ class JDActivity: BaseVmActivity<JDViewModel>() {
         }
     }
 
-    private fun doAction(){
-        lifecycleScope.launch{
+    private fun doAction() {
+        lifecycleScope.launch {
             JdNecklace().main(this@JDActivity)
 //            withContext(Dispatchers.IO){
 //                ScriptManager.getScript(this@JDActivity,"Fuc")
