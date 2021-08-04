@@ -526,14 +526,14 @@ var utils = {
         data = new Buffer.from(this.xorEncrypt(JSON.stringify(data), key)).toString('base64');
         outstr.push(data);
         outstr.push(this.getCrcCode(data));
-        return {
-            extraData: {
-                log: outstr.join("~"),
-                sceneid: "DDhomePageh5"
-            },
-            ...riskData,
-            random,
-        };
+        return JSON.stringify({
+                    extraData: {
+                        log: outstr.join("~"),
+                        sceneid: "DDhomePageh5"
+                    },
+                    ...riskData,
+                    random,
+                });
     },
     get_risk_result1: function (joyytoken, joyytoken_count, action, id, UserName, UUID) {
         var appid = "50082";
@@ -620,13 +620,13 @@ var utils = {
         outstr.push(data);
         outstr.push(this.getCrcCode(data));
         //console.log(outstr.join("~"));
-        return {
-            extraData: {
-                log: outstr.join("~"),
-                sceneid: "DDhomePageh5"
-            },
-            ...riskData,
-            random,
-        };
+        return JSON.stringify({
+                    extraData: {
+                        log: outstr.join("~"),
+                        sceneid: "DDhomePageh5"
+                    },
+                    ...riskData,
+                    random,
+                });
     }
 };

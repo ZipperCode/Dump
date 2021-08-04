@@ -101,7 +101,7 @@ class JdNecklace : JdBaseApi() {
         for (task in taskResult?.taskConfigVos ?: emptyList()) {
             if (task.taskStage == 0) {
                 print("【${task.taskName}】 任务未领取,开始领取此任务")
-                necklaceStartTask(task.id)
+                necklaceStartTask1(task.id)
             }
         }
     }

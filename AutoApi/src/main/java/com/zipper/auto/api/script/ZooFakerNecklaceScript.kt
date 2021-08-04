@@ -153,9 +153,7 @@ class ZooFakerNecklaceScript {
             param.push(joyytoken).push(joyytoken_count).push(action).push(id).push(userName).push(UUID)
             val utilsObj = v8Runtime.getObject("utils")
             L.d("utilsObj = $utilsObj")
-            val v8Result = utilsObj.executeObjectFunction("get_risk_result",param)
-            L.d("v8Result = $v8Result")
-            result = v8Object2Json(v8Result)
+            result = utilsObj.executeStringFunction("get_risk_result",param)
             L.d("jsonResult = $result")
         } catch (e: Exception) {
             e.printStackTrace()
@@ -176,10 +174,9 @@ class ZooFakerNecklaceScript {
     }
 
     fun v8Object2Json(v8Object: V8Object): String {
-        val v8 = V8.createV8Runtime("tmp")
         try {
-            val json: V8Object = v8.getObject("JSON")
-            val parameters = V8Array(v8).push(v8Object)
+            val json: V8Object = v8Runtime.getObject("JSON")
+            val parameters = V8Array(v8Runtime).push(v8Object)
             val result = json.executeStringFunction("stringify", parameters)
             parameters.release()
             json.release()
@@ -187,7 +184,6 @@ class ZooFakerNecklaceScript {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            v8.release()
             v8Object.release()
         }
         return "{}"

@@ -7,6 +7,7 @@ import com.eclipsesource.v8.V8
 import com.eclipsesource.v8.V8Array
 import com.eclipsesource.v8.utils.MemoryManager
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.zipper.auto.api.net.HttpHelper
 import com.zipper.auto.api.net.cookie.CookieStore
 import com.zipper.core.utils.L
@@ -110,16 +111,20 @@ abstract class JdBaseApi {
         )
     }
 
-    protected inline fun<reified T> convert(json: String): T{
+    protected inline fun <reified T> convert(json: String): T {
         return gson.fromJson(json, T::class.java)
+    }
+
+    protected fun convertMap(json: String): Map<String, Any> {
+        return gson.fromJson(json, object : TypeToken<Map<String, Any>>() {}.type)
     }
 
     protected open val cacheScript: MutableMap<String, V8> = mutableMapOf()
 
-    protected open val cacheScriptMemManager:MutableMap<String, MemoryManager> = mutableMapOf()
+    protected open val cacheScriptMemManager: MutableMap<String, MemoryManager> = mutableMapOf()
 
     @CallSuper
-    open suspend fun main(context: Context){
+    open suspend fun main(context: Context) {
         execute(context)
         delay(5000)
         destroy()
@@ -128,30 +133,39 @@ abstract class JdBaseApi {
     protected abstract suspend fun execute(context: Context)
 
     @CallSuper
-    open suspend fun destroy(){
-        cacheScriptMemManager.forEach{
+    open suspend fun destroy() {
+        cacheScriptMemManager.forEach {
             it.value.release()
         }
     }
 
-    protected suspend fun runScriptFunc(fileName: String, funcName: String,vararg args: Any): Any?{
-       return cacheScript[fileName]?.use {
-           val params = V8Array(it)
-           for (arg in args){
-               params.push(arg)
-           }
-           it.executeFunction(funcName,params)
+    protected suspend fun runScriptFunc(
+        fileName: String,
+        funcName: String,
+        vararg args: Any
+    ): Any? {
+        return cacheScript[fileName]?.use {
+            val params = V8Array(it)
+            for (arg in args) {
+                params.push(arg)
+            }
+            it.executeFunction(funcName, params)
         }
     }
 
-    protected suspend fun runScriptMethod(fileName: String, objName: String, funcName: String,vararg args: Any): Any?{
+    protected suspend fun runScriptMethod(
+        fileName: String,
+        objName: String,
+        funcName: String,
+        vararg args: Any
+    ): Any? {
         return cacheScript[fileName]?.use {
             val params = V8Array(it)
-            for (arg in args){
+            for (arg in args) {
                 params.push(arg)
             }
             val obj = it.getObject(objName)
-            obj.executeFunction(funcName,params)
+            obj.executeFunction(funcName, params)
         }
     }
 
