@@ -1,7 +1,8 @@
-package com.zipper.core
+package com.zipper.core.plugin
 
 import android.app.Activity
 import android.os.Bundle
+import com.zipper.core.BaseApp
 
 /**
  *  @author zipper

@@ -25,7 +25,7 @@ import com.zipper.dump.utils.AppUtils
 import com.zipper.dump.view.FloatWindow
 import kotlinx.coroutines.launch
 
-
+@Deprecated("old")
 class MainActivity : BaseActivity() {
 
     private lateinit var recyclerView: RecyclerView

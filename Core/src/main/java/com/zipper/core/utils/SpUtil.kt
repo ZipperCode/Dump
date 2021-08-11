@@ -13,27 +13,29 @@ object SpUtil {
 
     const val BASE_NAME = "sp_base"
 
-    private val cacheSp: MutableMap<String, SharedPreferencesWrapper> = mutableMapOf()
+    private val cacheSp: MutableMap<String, SharedPreferencesWrapper> by lazy {
+        mutableMapOf<String, SharedPreferencesWrapper>()
+    }
 
     init {
-        try {
-            val forNameMethod = Class::class.java.getDeclaredMethod("forName", String::class.java)
-            val getDeclareMethod = Class::class.java.getDeclaredMethod(
-                "getDeclaredMethod",
-                Class::class.java,
-                *emptyArray()
-            )
-            val getDeclareFieldMethod =
-                Class::class.java.getDeclaredMethod("getDeclaredField", Class::class.java)
-            val clazz = forNameMethod.invoke(null, "android.app.ActivityThread") as Class<*>
-            val atObj = getDeclareMethod.invoke(null, "currentActivityThread")
-            val appField = getDeclareFieldMethod.invoke(clazz, "mInitialApplication") as Field
-            appField.isAccessible = true
-            appContext = appField.get(atObj) as Application
-            instance()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        try {
+//            val forNameMethod = Class::class.java.getDeclaredMethod("forName", String::class.java)
+//            val getDeclareMethod = Class::class.java.getDeclaredMethod(
+//                "getDeclaredMethod",
+//                Class::class.java,
+//                *emptyArray()
+//            )
+//            val getDeclareFieldMethod =
+//                Class::class.java.getDeclaredMethod("getDeclaredField", Class::class.java)
+//            val clazz = forNameMethod.invoke(null, "android.app.ActivityThread") as Class<*>
+//            val atObj = getDeclareMethod.invoke(null, "currentActivityThread")
+//            val appField = getDeclareFieldMethod.invoke(clazz, "mInitialApplication") as Field
+//            appField.isAccessible = true
+//            appContext = appField.get(atObj) as Application
+//            instance()
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     fun init(context: Context){

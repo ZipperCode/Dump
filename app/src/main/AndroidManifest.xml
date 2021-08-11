@@ -13,22 +13,21 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launch"
         android:theme="@style/Theme.Dumping.NoActionBar">
-        <activity
-            android:name=".activity.SettingsActivity"
-            android:label="@string/title_activity_settings"/>
-        <activity android:name=".activity.HelpActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.TestActivity">
 
         </activity>
-
-        <activity android:name="com.zipper.auto.api.activity.JDActivity" >
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".activity.HelpActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name="com.zipper.auto.api.activity.JDActivity"></activity>
         <activity android:name=".activity.AppsActivity" />
         <activity android:name=".activity.AppDetailActivity" />
         <activity android:name=".activity.MainActivity" />

@@ -15,6 +15,7 @@ import com.zipper.dump.databinding.ActivityAppsBinding
  *  @date 2021-07-30
  *  @description
  **/
+@Deprecated("old")
 class AppsActivity: BaseVmBActivity<AppsViewModel,ActivityAppsBinding>() {
     override fun vmBrId(): Int = BR.vm
 
@@ -24,7 +25,7 @@ class AppsActivity: BaseVmBActivity<AppsViewModel,ActivityAppsBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAdapter = AppsAdapter(this, mBaseViewModel.appsData)
+        mAdapter = AppsAdapter(this, mBaseViewModel.appsData.value!!)
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView.adapter = mAdapter
 

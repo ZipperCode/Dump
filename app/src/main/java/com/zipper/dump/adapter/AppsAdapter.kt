@@ -14,6 +14,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zipper.core.utils.L
 import com.zipper.dump.BR
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
  **/
 class AppsAdapter(
     private val mContext: Context,
-    private val mData: LiveData<List<AppsInfo>>
+    private val mData: List<AppsInfo>
 ) : RecyclerView.Adapter<AppsAdapter.AppsViewHolder>(), Observer<List<AppsInfo>>, Filterable {
 
     private val mLayoutInflater: LayoutInflater = LayoutInflater.from(mContext)
@@ -119,28 +120,15 @@ class AppsAdapter(
         return if (position == 0) ItemType.HEADER.type else ItemType.CONTENT.type
     }
 
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        L.d("")
-        mData.observeForever(this)
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        mData.removeObserver(this)
-        L.d("")
-    }
-
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 mFilterList.clear()
                 val str = constraint?.toString() ?: ""
-                if (TextUtils.isEmpty(str) && mData.value != null) {
-                    mFilterList.addAll(mData.value!!)
+                if (TextUtils.isEmpty(str)) {
+                    mFilterList.addAll(mData)
                 } else {
-                    for (app in mData.value ?: emptyList()) {
+                    for (app in mData) {
                         if (app.appName.contains(str)) {
                             mFilterList.add(app)
                         }

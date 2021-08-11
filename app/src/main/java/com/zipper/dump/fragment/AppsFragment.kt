@@ -26,7 +26,7 @@ class AppsFragment : BaseVmBFragment<AppsViewModel, FragmentAppsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mAdapter = AppsAdapter(requireContext(), mBaseViewModel.appsData)
+        mAdapter = AppsAdapter(requireContext(), mBaseViewModel.appsData.value!!)
         mRecyclerView = view.findViewById(R.id.recyclerView)
         mRecyclerView.adapter = mAdapter
 

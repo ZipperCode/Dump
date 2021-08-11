@@ -1,4 +1,4 @@
-package com.zipper.core
+package com.zipper.core.plugin
 
 /**
  *  @author zipper

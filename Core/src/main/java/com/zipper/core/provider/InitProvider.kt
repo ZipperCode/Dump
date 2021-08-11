@@ -4,7 +4,8 @@ import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import com.zipper.core.PluginManager
+import com.zipper.core.plugin.PluginManager
+import com.zipper.core.utils.SpUtil
 
 class InitProvider : ContentProvider() {
 
@@ -15,6 +16,7 @@ class InitProvider : ContentProvider() {
     override fun insert(uri: Uri, values: ContentValues?): Uri? = null
 
     override fun onCreate(): Boolean {
+        SpUtil.init(context!!)
         PluginManager.init(context!!)
         return true
     }

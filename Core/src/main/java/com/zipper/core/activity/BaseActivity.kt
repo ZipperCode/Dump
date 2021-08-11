@@ -2,12 +2,15 @@ package com.zipper.core.activity
 
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.BuildCompat
+import com.zipper.core.ext.statusBarAdaptive
 import com.zipper.core.utils.BarUtil
 
 /**
@@ -28,12 +31,21 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private val imm get() = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
+    protected open var isFullScreen = true
+        set(value) {
+            if (value != field && value) {
+                adjustContentScreen()
+            }
+            field = value
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BarUtil.transparentStatusBar(this)
         noCompatScaledDensity = resources.displayMetrics.scaledDensity
         noCompatDensity = resources.displayMetrics.density
-        screenOrientation = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        screenOrientation =
+            resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         autoSize()
     }
 
@@ -64,6 +76,14 @@ abstract class BaseActivity : AppCompatActivity() {
             density = targetDensity
             densityDpi = targetDensityDpi
             scaledDensity = targetScaledDensity
+        }
+    }
+
+    protected open fun adjustContentScreen() {
+        window.decorView.apply {
+            systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }
     }
 

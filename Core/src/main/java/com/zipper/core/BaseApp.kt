@@ -1,13 +1,13 @@
 package com.zipper.core
 
 import android.app.Activity
-import android.app.ActivityManager
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import com.zipper.core.plugin.PluginManager
 import com.zipper.core.utils.SpUtil
 import java.util.*
 
@@ -18,11 +18,17 @@ import java.util.*
  **/
 abstract class BaseApp : Application(), ViewModelStoreOwner {
 
+    companion object{
+        lateinit var instance: BaseApp
+    }
+
     private lateinit var mViewModelStore: ViewModelStore
+
+    private lateinit var mAppViewModelProvider: ViewModelProvider
 
     override fun onCreate() {
         super.onCreate()
-        SpUtil.init(this)
+        instance = this
         mViewModelStore = ViewModelStore()
         registerActivityLifecycleCallbacks(lifecycleCallbacks)
         PluginManager.onApplicationCreate(this)
@@ -37,8 +43,22 @@ abstract class BaseApp : Application(), ViewModelStoreOwner {
         return mViewModelStore
     }
 
+    open fun <T : ViewModel> getAppViewModel(clazz: Class<T>): T {
+        if (!::mAppViewModelProvider.isInitialized) {
+            mAppViewModelProvider =
+                ViewModelProvider(this, getFactory())
+        }
+        return mAppViewModelProvider.get(clazz)
+    }
+
     fun getFactory(): ViewModelProvider.AndroidViewModelFactory{
         return ViewModelProvider.AndroidViewModelFactory.getInstance(this)
+    }
+
+    fun startStrictMode(){
+        if(BuildConfig.DEBUG){
+
+        }
     }
 
     private val lifecycleCallbacks = object : Application.ActivityLifecycleCallbacks {

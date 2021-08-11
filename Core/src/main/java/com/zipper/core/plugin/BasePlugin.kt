@@ -1,8 +1,9 @@
-package com.zipper.core
+package com.zipper.core.plugin
 
 import android.app.Activity
 import android.content.ComponentCallbacks2
 import android.os.Bundle
+import com.zipper.core.BaseApp
 import com.zipper.core.utils.L
 
 /**

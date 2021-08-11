@@ -7,7 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.isNotEmpty
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenStateAtLeast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -24,7 +30,7 @@ abstract class BaseVmBActivity<VM: ViewModel, VDB: ViewDataBinding>: BaseVmActiv
         super.onCreate(savedInstanceState)
         initBinding()
         // 使livaData可观察
-        mBinding.lifecycleOwner = this
+        mBinding.lifecycleOwner = this@BaseVmBActivity
         mBinding.setVariable(vmBrId(), mBaseViewModel)
 
         val sparseArray = getVariable()
@@ -37,9 +43,9 @@ abstract class BaseVmBActivity<VM: ViewModel, VDB: ViewDataBinding>: BaseVmActiv
         setContentView(mBinding.root)
     }
 
-    override fun <T : View?> findViewById(id: Int): T {
-        return mBinding.root.findViewById<T>(id)
-    }
+//    override fun <T : View?> findViewById(id: Int): T {
+//        return mBinding.root.findViewById<T>(id)
+//    }
 
     protected open fun getVariable(): SparseArray<Any>{
         return SparseArray()

@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_dumpFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_dumpFragment_to_taskLoadingDialog"
+            app:destination="@id/taskLoadingDialog" />
     </fragment>
     <activity
         android:id="@+id/appsActivity"
@@ -23,4 +26,8 @@
         android:id="@+id/settingFragment"
         android:name="com.zipper.dump.fragment.SettingFragment"
         android:label="SettingFragment" />
+    <dialog
+        android:id="@+id/taskLoadingDialog"
+        android:name="com.zipper.dump.dialog.TaskLoadingDialog"
+        android:label="TaskLoadingDialog" />
 </navigation>

@@ -53,7 +53,7 @@ abstract class BaseVmActivity<VM : ViewModel> : BaseActivity() {
 
     protected open fun <T : ViewModel> getAppViewModel(clazz: Class<T>): T {
         if (!::mAppProvider.isInitialized) {
-            mActivityProvider =
+            mAppProvider =
                 ViewModelProvider(application as BaseApp, (application as BaseApp).getFactory())
         }
         return mActivityProvider.get(clazz)

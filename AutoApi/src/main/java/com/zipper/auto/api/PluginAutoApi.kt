@@ -1,15 +1,11 @@
 package com.zipper.auto.api
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
-import android.provider.Settings
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.work.*
 import com.zipper.auto.api.activity.JDActivity
 import com.zipper.auto.api.job.FetchWorker
@@ -17,7 +13,7 @@ import com.zipper.auto.api.job.UpdateStatusWorker
 import com.zipper.auto.api.store.JJSDatabase
 import com.zipper.base.service.IPluginAutoApi
 import com.zipper.core.BaseApp
-import com.zipper.core.BasePlugin
+import com.zipper.core.plugin.BasePlugin
 import com.zipper.core.utils.LaunchUtil
 
 /**

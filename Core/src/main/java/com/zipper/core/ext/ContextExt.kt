@@ -34,3 +34,11 @@ fun Context.startActivity(packageName: String, activityName: String): Boolean {
         false
     }
 }
+
+fun Context.dp2px(dp: Int): Int{
+    return (resources.displayMetrics.density * dp + 0.5).toInt()
+}
+
+fun Context.sp2Px(sp: Int) : Int{
+    return (resources.displayMetrics.scaledDensity * sp + 0.5).toInt()
+}

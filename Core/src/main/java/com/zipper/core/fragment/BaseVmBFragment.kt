@@ -21,7 +21,7 @@ abstract class BaseVmBFragment<VM: ViewModel, VDB: ViewDataBinding>: BaseVMFragm
 
     abstract fun vmBrId(): Int
 
-    protected lateinit var mBinding: VDB
+    protected open lateinit var mBinding: VDB
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +31,11 @@ abstract class BaseVmBFragment<VM: ViewModel, VDB: ViewDataBinding>: BaseVMFragm
         initBinding(container)
         // 使livaData可观察
         mBinding.lifecycleOwner = viewLifecycleOwner
+        return mBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mBinding.setVariable(vmBrId(), mBaseViewModel)
 
         val sparseArray = getVariable()
@@ -40,7 +45,6 @@ abstract class BaseVmBFragment<VM: ViewModel, VDB: ViewDataBinding>: BaseVMFragm
                 mBinding.setVariable(sparseArray.keyAt(i), sparseArray.valueAt(i))
             }
         }
-        return mBinding.root
     }
 
     protected open fun getVariable(): SparseArray<Any> {

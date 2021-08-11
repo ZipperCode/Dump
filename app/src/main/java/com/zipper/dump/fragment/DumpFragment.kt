@@ -19,6 +19,7 @@ import com.zipper.dump.R
 import com.zipper.dump.activity.*
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.databinding.FragmentDumpBinding
+import com.zipper.dump.dialog.TaskLoadingDialog
 import com.zipper.dump.service.DumpService
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.dump.utils.AppUtils
@@ -110,7 +111,8 @@ class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
         }
 
         fun openSetting() {
-            navController.navigate(R.id.action_dumpFragment_to_settingFragment)
+//            navController.navigate(R.id.action_dumpFragment_to_settingFragment)
+            navController.navigate(R.id.action_dumpFragment_to_taskLoadingDialog)
         }
 
         fun openHelper() {

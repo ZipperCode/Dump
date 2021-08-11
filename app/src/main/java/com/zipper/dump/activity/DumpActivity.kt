@@ -4,13 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.util.SparseArray
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.zipper.base.service.plugin.impl.AutoApiPao
-import com.zipper.core.PluginManager
+import com.zipper.core.plugin.PluginManager
 import com.zipper.core.activity.BaseVmBActivity
 import com.zipper.core.utils.L
 import com.zipper.dump.App

@@ -2,7 +2,7 @@ package com.zipper.base.service.plugin.impl
 
 import android.content.Context
 import com.zipper.base.service.IPluginAutoApi
-import com.zipper.core.PluginManager
+import com.zipper.core.plugin.PluginManager
 
 object AutoApiPao {
 
