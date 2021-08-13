@@ -1,5 +1,6 @@
 package com.zipper.core.ext
 
+import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -42,3 +43,5 @@ fun Context.dp2px(dp: Int): Int{
 fun Context.sp2Px(sp: Int) : Int{
     return (resources.displayMetrics.scaledDensity * sp + 0.5).toInt()
 }
+
+fun Context.notificationManager() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

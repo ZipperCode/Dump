@@ -36,15 +36,17 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <FrameLayout
+        <Button
+            android:id="@+id/btn_big_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:text="BigText" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="hello world" />
-        </FrameLayout>
+        <Button
+            android:id="@+id/btn_inbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
 
 
     </LinearLayout>
