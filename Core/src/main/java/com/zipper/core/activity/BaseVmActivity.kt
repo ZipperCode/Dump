@@ -37,9 +37,6 @@ abstract class BaseVmActivity<VM : ViewModel> : BaseActivity() {
     private fun initViewModel() {
         val parameterizedType = javaClass.genericSuperclass as ParameterizedType
         val actualTypeArguments = parameterizedType.actualTypeArguments
-        if (actualTypeArguments.isEmpty()) {
-            throw IllegalArgumentException("argument Type num <= 1, must be noe type param")
-        }
         val vmClass = actualTypeArguments[0] as Class<VM>
         mBaseViewModel = getActivityViewModel(vmClass)
     }

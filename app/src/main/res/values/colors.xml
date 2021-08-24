@@ -23,6 +23,4 @@
     <color name="border_color">#D3D3D3</color>
 
     <color name="setting_text_color">#4A4A4A</color>
-
-    <color name="bg_loading_dialog">#800C0C0C</color>
 </resources>

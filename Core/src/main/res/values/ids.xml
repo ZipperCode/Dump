@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="common_state_loading_view_stub_id" type="id"/>
+    <item name="common_state_loading_view_inflate_id" type="id"/>
+    <item name="common_state_content_view_stub_id" type="id"/>
+    <item name="common_state_content_view_inflate_id" type="id"/>
+    <item name="common_state_empty_view_stub_id" type="id"/>
+    <item name="common_state_empty_view_inflate_id" type="id"/>
+    <item name="common_state_error_view_stub_id" type="id"/>
+    <item name="common_state_error_view_inflate_id" type="id"/>
+
+</resources>
