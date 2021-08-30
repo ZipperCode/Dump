@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 
 /**
  *  @author zipper
@@ -34,6 +35,14 @@ abstract class BaseDialog: DialogFragment(){
     override fun onStart() {
         super.onStart()
         adjustDialog()
+    }
+
+    fun hide(activity: FragmentActivity){
+        activity.supportFragmentManager.beginTransaction().hide(this).commit()
+    }
+
+    fun hide2Show(activity: FragmentActivity){
+        activity.supportFragmentManager.beginTransaction().show(this).commit()
     }
 
     fun adjustDialog(){

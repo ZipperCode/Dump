@@ -147,7 +147,7 @@ object ScriptManager {
             "error",
             arrayOf<Class<*>>(String::class.java)
         )
-        v8Console.release()
+        v8Console.close()
     }
 
     fun registerVoidCall(v8Runtime: V8, name: String, voidCallback: JavaVoidCallback) {

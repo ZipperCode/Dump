@@ -7,7 +7,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('D:\\Project\\Dump\\key.jks')
+            storeFile file('../../key.jks')
             storePassword 'zipper949389'
             keyPassword 'zipper949389'
             keyAlias 'zipper'
