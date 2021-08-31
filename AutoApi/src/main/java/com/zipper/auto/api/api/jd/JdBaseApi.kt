@@ -15,16 +15,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 abstract class JdBaseApi {
 
     protected open val cookieStore: CookieStore = HttpHelper.cookieStore
 
-    protected open val okHttpClient = HttpHelper.okHttpClient
+    private val okHttpClient = HttpHelper.okHttpClient
 
     protected open val userAgent = UserAgents.agent
 
-    protected open val gson = Gson()
+    val gson = Gson()
+
+    val retrofit: Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .baseUrl(domain())
+        .client(okHttpClient)
+        .build()
 
     abstract fun domain(): String
 

@@ -58,7 +58,8 @@ class JDActivity : BaseVmActivity<JDViewModel>() {
         lifecycleScope.launch {
 //            JdNecklace().main(this@JDActivity)
             withContext(Dispatchers.IO){
-                ScriptManager.getScript(this@JDActivity,"Fuc")
+//                ScriptManager.getScript(this@JDActivity,"Fuc")
+
             }
         }
     }

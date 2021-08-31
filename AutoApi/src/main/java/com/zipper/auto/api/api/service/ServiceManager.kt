@@ -22,7 +22,9 @@ class ServiceManager {
         .build()
 
 
+
     fun getService(): JdNecklaceService{
         return retrofit.create(JdNecklaceService::class.java)
     }
+
 }

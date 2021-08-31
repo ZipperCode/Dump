@@ -53,6 +53,7 @@ dependencies {
     }
     // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8
     implementation files("libs/j2v8-6.2.0.aar")
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 
     testImplementation 'junit:junit:4.+'

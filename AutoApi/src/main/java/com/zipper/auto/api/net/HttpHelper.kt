@@ -5,6 +5,7 @@ import com.zipper.auto.api.net.cookie.CookieJarImpl
 import com.zipper.auto.api.net.cookie.CookieStore
 import com.zipper.auto.api.net.cookie.PersistentCookieStore
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 
@@ -19,5 +20,6 @@ object HttpHelper {
         .hostnameVerifier(HostnameVerifier { _, _ -> true })
         .sslSocketFactory(BaseApi.createSSLSocketFactory(), TrustAllCerts())
         .addInterceptor(LoggerInterceptor())
+        .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC })
         .build()
 }
