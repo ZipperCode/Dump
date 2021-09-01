@@ -1,10 +1,17 @@
 package com.zipper.auto.api.api.jd.delay
 
 import com.zipper.auto.api.api.jd.delay.bean.*
+import com.zipper.auto.api.api.jd.delay.bean.sign.JdUserSignPre
+import com.zipper.auto.api.api.jd.delay.bean.JdUserSign1
 import retrofit2.Call
 import retrofit2.http.*
 
 interface JdDelaySignService {
+
+
+    @FormUrlEncoded
+    @GET
+    fun totalBean(@Url url: String = "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion"): Call<JdTotalBean>
 
     @FormUrlEncoded
     @POST("client.action")
@@ -76,5 +83,70 @@ interface JdDelaySignService {
     @Headers("Referer:https://active.jd.com/forever/cashback/index")
     fun jdSubsidy(@Url url: String = "https://ms.jr.jd.com/gw/generic/uc/h5/m/signIn7"): Call<JdSubsidy>
 
+//    @GET("https://api.m.jd.com/client.action?functionId=cash_sign&body=%7B%22remind%22%3A0%2C%22inviteCode%22%3A%22%22%2C%22type%22%3A0%2C%22breakReward%22%3A0%7D&client=apple&clientVersion=9.0.8&openudid=1fce88cd05c42fe2b054e846f11bdf33f016d676&sign=7e2f8bcec13978a691567257af4fdce9&st=1596954745073&sv=111")
+//    fun jdGetCash(): Call<JdGetCash>
+
+    /**
+     * 京东-领现金
+     */
+    @FormUrlEncoded
+    @POST("client.action")
+    fun jdGetCash(@FieldMap body: Map<String, String> = mapOf(
+        "functionId" to "cash_sign",
+        "body" to "{\"remind\":0,\"inviteCode\":\"\",\"type\":0,\"breakReward\":0}",
+        "client" to "apple",
+        "clientVersion" to "9.0.8",
+        "openudid" to "1fce88cd05c42fe2b054e846f11bdf33f016d676",
+        "sign" to "7e2f8bcec13978a691567257af4fdce9",
+        "st" to "1596954745073",
+        "sv" to "111"
+    )): Call<JdGetCash>
+
+    /**
+     * 京东-摇一摇
+     * 可能会活动火爆
+     */
+    @GET("client.action?appid=vip_h5&functionId=vvipclub_shaking")
+    fun jdShake(): Call<JdShake>
+
+
+    /**
+     * 京东-秒杀
+     */
+    @FormUrlEncoded
+    @Headers("Origin:https://h5.m.jd.com")
+    @POST("client.action")
+    fun jdSecKilling(@FieldMap body: Map<String, String> = mapOf(
+        "functionId" to "homePageV2",
+        "appid" to "SecKill2020"
+    )): Call<JdKillingQuery>
+
+
+    @FormUrlEncoded
+    @POST
+    fun jdDoll(@FieldMap body: Map<String, String>, @Url url: String = "https://nu.jr.jd.com/gw/generic/jrm/h5/m/process"): Call<JdDoll>
+
+    @FormUrlEncoded
+    @POST("client.action")
+    @Headers("Origin:https://h5.m.jd.com")
+    fun jdKilling(@FieldMap body: Map<String, String>): Call<JdKilling>
+
+
+    @FormUrlEncoded
+    @POST
+    fun jdUserSignPre(@FieldMap body: Map<String, String>): Call<JdUserSignPre>
+
+
+    @FormUrlEncoded
+    @POST("client.action")
+    fun jdUserSign1(@FieldMap body: Map<String, String>): Call<JdUserSign1>
+
+    @GET
+    fun jdUserSignDetail(@Url url: String):Call<Map<String, Any>>
+
+    @FormUrlEncoded
+    @POST
+    @Headers("lks:d7db92cf40ad5a8d54b9da2b561c5f84", "lkt:1629984131120")
+    fun jdUserSign2(@Url url: String, @FieldMap body: Map<String, String>): Call<JdUserSign2>
 
 }

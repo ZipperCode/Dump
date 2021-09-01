@@ -1,0 +1,33 @@
+package com.zipper.auto.api.api.jd.delay.bean.sign
+
+data class JdUserSignPre(
+    val activityId: String,
+    val backgroundColor: String,
+    val biimpr: String,
+    val channelPoint: ChannelPoint,
+    val code: String,
+    val encodeActivityId: String,
+    val floatLayerList: List<Any>,
+    val floorList: List<Floor>,
+    val h5IsSupportPullDown: Int,
+    val h5PageFrameState: String,
+    val hasPerData: String,
+    val head: Head,
+    val item: String,
+    val jdAtHomePageLackAddress: String,
+    val msg: String,
+    val pageConfig: PageConfig,
+    val pageId: String,
+    val pagination: Boolean,
+    val paginationFlrs: String,
+    val paginationParamEnd: String,
+    val paginationParams: List<String>,
+    val repFloorGr: Any,
+    val returnMsg: String,
+    val subCode: String,
+    val templateIdSet: List<String>,
+    val timestamp: String,
+    val transParam: String,
+    val useDiscovery: String,
+    val visReState: VisReState
+)

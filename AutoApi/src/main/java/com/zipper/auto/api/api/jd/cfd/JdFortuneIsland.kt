@@ -11,7 +11,7 @@ import okhttp3.RequestBody
 import java.util.*
 
 
-class JdFortuneIsland : JdBaseApi() {
+class JdFortuneIsland : JdBaseApi("") {
     override fun domain(): String = "m.jingxi.com"
 
     private val appId: String = "10028"

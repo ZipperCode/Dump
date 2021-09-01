@@ -14,7 +14,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import java.util.*
 
-class JdNecklace : JdBaseApi() {
+class JdNecklace : JdBaseApi("") {
 
     override fun domain(): String = "bh.m.jd.com"
 

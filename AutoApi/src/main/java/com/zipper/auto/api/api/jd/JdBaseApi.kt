@@ -8,21 +8,40 @@ import com.eclipsesource.v8.V8Array
 import com.eclipsesource.v8.utils.MemoryManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.zipper.auto.api.api.BaseApi
 import com.zipper.auto.api.net.HttpHelper
+import com.zipper.auto.api.net.LoggerInterceptor
+import com.zipper.auto.api.net.TrustAllCerts
+import com.zipper.auto.api.net.cookie.CookieInterceptor
+import com.zipper.auto.api.net.cookie.CookieJarImpl
 import com.zipper.auto.api.net.cookie.CookieStore
+import com.zipper.auto.api.net.cookie.PersistentCookieStore
 import com.zipper.core.utils.L
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.*
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
+import java.util.concurrent.TimeUnit
+import javax.net.ssl.HostnameVerifier
 
-abstract class JdBaseApi {
+abstract class JdBaseApi(protected val storeKey: String) {
 
-    protected open val cookieStore: CookieStore = HttpHelper.cookieStore
+    protected open val cookieStore: CookieStore = PersistentCookieStore(storeKey)
 
-    private val okHttpClient = HttpHelper.okHttpClient
+    private val okHttpClient = OkHttpClient.Builder()
+        .callTimeout(10, TimeUnit.SECONDS)
+        .connectTimeout(10, TimeUnit.SECONDS)
+//        .cookieJar(CookieJarImpl(cookieStore))
+        .hostnameVerifier(HostnameVerifier { _, _ -> true })
+        .sslSocketFactory(BaseApi.createSSLSocketFactory(), TrustAllCerts())
+        .addInterceptor(LoggerInterceptor())
+        .addInterceptor(CookieInterceptor(storeKey))
+        .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC })
+        .build()
 
     protected open val userAgent = UserAgents.agent
 
@@ -34,7 +53,17 @@ abstract class JdBaseApi {
         .client(okHttpClient)
         .build()
 
+    protected open var isLogin = false
+
     abstract fun domain(): String
+
+    protected fun catchExp(block: () -> Unit){
+        try {
+            block.invoke()
+        }catch (e: Throwable){
+            e.printStackTrace()
+        }
+    }
 
     protected open suspend fun get(url: String, headers: Map<String, String> = emptyMap()): String {
         val requestBuilder = Request.Builder()

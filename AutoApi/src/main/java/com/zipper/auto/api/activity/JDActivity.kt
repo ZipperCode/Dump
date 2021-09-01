@@ -21,7 +21,6 @@ class JDActivity : BaseVmActivity<JDViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_jd)
-        val tvResult = findViewById<TextView>(R.id.tv_result)
 
         val requestPermissionLauncher =
             registerForActivityResult(
@@ -34,7 +33,7 @@ class JDActivity : BaseVmActivity<JDViewModel>() {
                 }
             }
 
-        findViewById<Button>(R.id.button).setOnClickListener {
+        findViewById<Button>(R.id.button)?.setOnClickListener {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 when {
                     ContextCompat.checkSelfPermission(

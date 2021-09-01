@@ -1,0 +1,31 @@
+package com.zipper.auto.api.api.jd.delay.bean.sign
+
+data class Floor(
+    val advIds: List<Any>,
+    val backgroundColor: String,
+    val bizId: String,
+    val boardParams: BoardParams?,
+    val cmpIds: List<Any>,
+    val config: Config,
+    val externalBorder: String,
+    val floorNum: String,
+    val godIds: List<Any>,
+    val h5FloorFrameState: Int,
+    val height: Any,
+    val hotZone: HotZone,
+    val htmlSource: String,
+    val htmlSourceUrl: String,
+    val id: Int,
+    val lrMargin: String,
+    val materialParams: Any,
+    val moduleId: Int,
+    val ofn: String,
+    val sameColor: String,
+    val signInfos: SignInfos,
+    val sourceId: String,
+    val ssr: Int,
+    val styleId: String,
+    val template: String,
+    val timestamp: String,
+    val width: Any
+)
