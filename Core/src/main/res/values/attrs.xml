@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="StateLayout">
+        <attr name="use_data_binding" format="boolean"/>
         <attr name="loading_layout" format="reference"/>
         <attr name="content_layout" format="reference"/>
         <attr name="empty_layout" format="reference"/>
         <attr name="error_layout" format="reference"/>
         <!-- dataBinding method -->
         <attr name="changeViewState" format="string"/>
-    </declare-styleable>
-
-    <declare-styleable name="StateBindLayout">
-        <!-- dataBinding method -->
         <attr name="bindContent" format="string"/>
         <attr name="bindError" format="string"/>
     </declare-styleable>

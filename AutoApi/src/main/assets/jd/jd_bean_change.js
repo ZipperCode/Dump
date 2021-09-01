@@ -21,9 +21,15 @@ cron "2 9 * * *" script-path=jd_bean_change.js, tag=京东资产变动通知
 京东资产变动通知 = type=cron,script-path=jd_bean_change.js, cronexpr="2 9 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东资产变动通知');
+console.log("【JS】脚本开始 isJ2v8 = " + $.isJ2v8());
+console.log("【JS】脚本开始 isNode = " + $.isNode());
+console.log("【JS】脚本开始 isQuanX = " + $.isQuanX());
+console.log("【JS】脚本开始 isSurge = " + $.isSurge());
+console.log("【JS】脚本开始 isLoon = " + $.isLoon());
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : 'pt_key=AAJhDK27ADAFKRijGch2mX7SLk8nVDIfE8nOD00iT7eyFvmFgFmRHZLnU37Qc9Yneml4qsdsP8E;pt_pin=jd_59739e7a7a296;';
+console.log("【JS】jdCookieNode = " + jdCookieNode);
 let allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
@@ -36,53 +42,56 @@ if ($.isNode()) {
 } else {
   cookiesArr = [jdCookieNode, $.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-console.log("cookiesArr = " + cookiesArr);
-!(async () => {
-  if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
-      "open-url": "https://bean.m.jd.com/bean/signIndex.action"
-    });
-    return;
-  }
-  for (let i = 0; i < cookiesArr.length; i++) {
-    if (cookiesArr[i]) {
-      cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-      $.index = i + 1;
-      $.beanCount = 0;
-      $.incomeBean = 0;
-      $.expenseBean = 0;
-      $.todayIncomeBean = 0;
-      $.errorMsg = '';
-      $.isLogin = true;
-      $.nickName = '';
-      $.message = '';
-      $.balance = 0;
-      $.expiredBalance = 0;
-      console.log(`\n********开始【京东账号${$.index}】${$.nickName || $.UserName}******\n`);
-      await TotalBean();
-      if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
-          "open-url": "https://bean.m.jd.com/bean/signIndex.action"
-        });
-
-        if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        }
-        continue
-      }
-      await bean();
-      await showMsg();
+console.log("【JS】cookiesArr = " + cookiesArr);
+ !(async () => {
+    console.log("【JS】异步Start");
+    if (!cookiesArr[0]) {
+      $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
+        "open-url": "https://bean.m.jd.com/bean/signIndex.action"
+      });
+      return;
     }
-  }
+    console.log("【JS】读取Cookie");
+    for (let i = 0; i < cookiesArr.length; i++) {
+      if (cookiesArr[i]) {
+        cookie = cookiesArr[i];
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+        $.index = i + 1;
+        $.beanCount = 0;
+        $.incomeBean = 0;
+        $.expenseBean = 0;
+        $.todayIncomeBean = 0;
+        $.errorMsg = '';
+        $.isLogin = true;
+        $.nickName = '';
+        $.message = '';
+        $.balance = 0;
+        $.expiredBalance = 0;
+        console.log(`\n********开始【京东账号${$.index}】${$.nickName || $.UserName}******\n`);
+        await TotalBean();
+        console.log("totalBean函数执行完毕")
+        if (!$.isLogin) {
+          $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
+            "open-url": "https://bean.m.jd.com/bean/signIndex.action"
+          });
 
-  if ($.isNode() && allMessage) {
-    await notify.sendNotify(`${$.name}`, `${allMessage}`, {
-      url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-    })
-  }
-})()
-.catch((e) => {
+          if ($.isNode()) {
+            await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          }
+          continue
+        }
+        await bean();
+        await showMsg();
+      }
+    }
+
+    if ($.isNode() && allMessage) {
+      await notify.sendNotify(`${$.name}`, `${allMessage}`, {
+        url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
+      })
+    }
+  })()
+  .catch((e) => {
     console.log(`❌ ${$.name}, 失败! 原因: ${e}!`);
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
   })
@@ -103,7 +112,7 @@ async function bean() {
   // console.log(`北京时间零点时间戳:${parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000}`);
   // console.log(`北京时间2020-10-28 06:16:05::${new Date("2020/10/28 06:16:05+08:00").getTime()}`)
   // 不管哪个时区。得到都是当前时刻北京时间的时间戳 new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000
-  console.log("执行bean函数");
+  console.log("【JS】执行bean函数");
   //前一天的0:0:0时间戳
   const tm = parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000 - (24 * 60 * 60 * 1000);
   // 今天0:0:0时间戳
@@ -179,9 +188,9 @@ function TotalBean() {
         "Accept-Encoding": "gzip, deflate, br"
       }
     }
-    console.log("totalBean get");
+    console.log("【JS】totalBean get");
     $.get(options, (err, resp, data) => {
-      console.log("totalBean get result");
+      console.log("【JS】totalBean get result");
       try {
         if (err) {
           $.logErr(err)
@@ -208,7 +217,6 @@ function TotalBean() {
         resolve();
       }
     })
-    console.log("totalBean 执行完毕");
   })
 }
 
@@ -387,14 +395,14 @@ function timeFormat(time) {
   return date.getFullYear() + '-' + ((date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1)) + '-' + (date.getDate() >= 10 ? date.getDate() : '0' + date.getDate());
 }
 
-console.log("脚本读取完毕");
+console.log("【JS】脚本读取完毕");
 
 // prettier-ignore
 function Env(t, e) {
   "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0);
   class s {
     constructor(t) {
-      this.env = t;
+      this.env = t
     }
     send(t, e = "GET") {
       t = "string" == typeof t ? {
@@ -430,7 +438,7 @@ function Env(t, e) {
     isLoon() {
       return "undefined" != typeof $loon
     }
-    isJ2v8() {
+    isJ2v8(){
       return "undefined" != typeof $j2v8
     }
 
@@ -540,11 +548,6 @@ function Env(t, e) {
           e = ""
         }
       }
-      if (this.isJ2v8()) {
-        if (t == "CookieJD") {
-          return nativeGetCookie()
-        }
-      }
       return e
     }
     setdata(t, e) {
@@ -619,20 +622,6 @@ function Env(t, e) {
         } = t;
         e(s, i, i && i.body)
       }))
-      if (this.isJ2v8()) {
-        try {
-          nativeGet(JSON.stringify(t), function (data) {
-            console.log("【nativeGet-reslove】 data = " + data);
-            e(null, null, data)
-          }, function (error) {
-            console.log("【nativeGet-reject】error = " + error);
-            e(error, null, null)
-          })
-        } catch (e) {
-          console.log("【nativeGet-执行失败】 e = " + e);
-          e(e, null, null)
-        }
-      }
     }
     post(t, e = (() => {})) {
       if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
@@ -682,19 +671,8 @@ function Env(t, e) {
           } = t;
           e(s, i, i && i.body)
         })
-      } else if (this.isJ2v8()) {
-        try {
-          nativePost(JSON.stringify(t), function (data) {
-            console.log("【nativePost-reslove】 data = " + data);
-            e(null, null, data)
-          }, function (error) {
-            console.log("【nativePost-reject】error = " + error);
-            e(error, null, null)
-          })
-        } catch (e) {
-          console.log("【nativePost-执行失败】e = " + e);
-          e(e, null, null)
-        }
+      }else if(this.isJ2v8()){
+        
       }
     }
     time(t, e = null) {

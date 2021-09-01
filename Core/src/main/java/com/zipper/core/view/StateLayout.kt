@@ -9,14 +9,18 @@ import android.view.ViewStub
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
 import androidx.annotation.IntDef
+import androidx.core.util.forEach
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import com.zipper.core.R
+import java.lang.ref.WeakReference
 
 /**
  *  @author zipper
  *  @date 2021-08-18
  *  @description
  **/
-open class StateLayout @JvmOverloads constructor(
+class StateLayout @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyle: Int = 0
@@ -48,31 +52,33 @@ open class StateLayout @JvmOverloads constructor(
     @Retention(AnnotationRetention.SOURCE)
     annotation class ViewState {}
 
-    private val loadingLayoutId: Int
-    private val contentLayoutId: Int
-    private val emptyLayoutId: Int
-    private val errorLayoutId: Int
+    private val useDataBinding: Boolean
 
     private val inflateViewIds: SparseArray<Int> = SparseArray()
 
-    protected val viewStubHolders: SparseArray<ViewStub> = SparseArray()
+    private val viewStubHolders: SparseArray<ViewStub> = SparseArray()
+
+    private val stubInflateViewHolders: SparseArray<WeakReference<View>> = SparseArray()
+
+    private val stateViewBindData: SparseArray<SparseArray<Any>> = SparseArray()
 
     @ViewState
-    protected open var currentViewState: Int = LAYOUT_LOADING_ID
+    private var currentViewState: Int = LAYOUT_LOADING_ID
 
     init {
         val typeArray = context.obtainStyledAttributes(attributeSet, R.styleable.StateLayout)
+        useDataBinding = typeArray.getBoolean(R.styleable.StateLayout_use_data_binding, false)
 
-        loadingLayoutId = typeArray.getResourceId(
+        val loadingLayoutId = typeArray.getResourceId(
             R.styleable.StateLayout_loading_layout,
             R.layout.common_state_loading
         )
-        contentLayoutId = typeArray.getResourceId(R.styleable.StateLayout_content_layout, 0)
-        emptyLayoutId = typeArray.getResourceId(
+        val contentLayoutId = typeArray.getResourceId(R.styleable.StateLayout_content_layout, 0)
+        val emptyLayoutId = typeArray.getResourceId(
             R.styleable.StateLayout_empty_layout,
             R.layout.common_state_empty
         )
-        errorLayoutId = typeArray.getResourceId(
+        val errorLayoutId = typeArray.getResourceId(
             R.styleable.StateLayout_error_layout,
             R.layout.common_state_error
         )
@@ -83,23 +89,16 @@ open class StateLayout @JvmOverloads constructor(
             throw IllegalArgumentException("state layout must contain a content view")
         }
 
-        init()
-    }
-
-    private fun init() {
         initInflateIds()
-        initViewStubs()
-        viewStubHolders[currentViewState].inflate()
-    }
-
-
-    protected open fun initViewStubs() {
         initViewStub(contentLayoutId, LAYOUT_CONTENT_ID, R.id.common_state_content_view_stub_id)
         initViewStub(loadingLayoutId, LAYOUT_LOADING_ID, R.id.common_state_loading_view_stub_id)
         initViewStub(emptyLayoutId, LAYOUT_EMPTY_DATA_ID, R.id.common_state_empty_view_stub_id)
         initViewStub(errorLayoutId, LAYOUT_ERROR_ID, R.id.common_state_error_view_stub_id)
-    }
 
+        initInflateListener()
+
+        viewStubHolders[currentViewState].inflate()
+    }
 
     private fun initInflateIds() {
         inflateViewIds.put(LAYOUT_LOADING_ID, R.id.common_state_loading_view_inflate_id)
@@ -108,7 +107,7 @@ open class StateLayout @JvmOverloads constructor(
         inflateViewIds.put(LAYOUT_ERROR_ID, R.id.common_state_error_view_inflate_id)
     }
 
-    private fun initViewStub(layoutId: Int, @ViewState state: Int, @IdRes stubViewId: Int) {
+    private fun initViewStub(layoutId: Int, @ViewState state: Int, @IdRes stubViewId: Int){
         val viewStub = ViewStub(context, layoutId)
         viewStub.id = stubViewId
         viewStub.inflatedId = inflateViewIds[state]
@@ -120,7 +119,18 @@ open class StateLayout @JvmOverloads constructor(
             })
     }
 
-    open fun changeViewState(@ViewState state: Int) {
+    private fun initInflateListener(){
+        if(useDataBinding){
+            viewStubHolders.forEach { key, viewStub ->
+                viewStub.setOnInflateListener { _, inflatedView ->
+                    stubInflateViewHolders.put(key, WeakReference(inflatedView))
+                    bindView(key, inflatedView)
+                }
+            }
+        }
+    }
+
+    fun changeViewState(@ViewState state: Int) {
         if (state == currentViewState) {
             return
         }
@@ -159,7 +169,43 @@ open class StateLayout @JvmOverloads constructor(
         changeViewState(LAYOUT_ERROR_ID)
     }
 
+    private fun bindView(state: Int, inflatedView: View){
+        val bindingData = stateViewBindData[state]
+        if(bindingData != null){
+            // 说明在inflate 前已经赋值了绑定数据，此处进行绑定
+            val binding = DataBindingUtil.bind<ViewDataBinding>(inflatedView)
+            binding?.run {
+                bindingData.forEach { key, value ->
+                    setVariable(key, value)
+                }
+            }
+            // 绑定后移除绑定数据，避免内存泄漏
+            stateViewBindData.remove(state)
+        }
+    }
+
     @IdRes
     fun getInflateId(@ViewState state: Int): Int = inflateViewIds[state]
 
+    fun bindContent(bindData: SparseArray<Any>) = dataBind(LAYOUT_CONTENT_ID, bindData)
+
+    fun bindError(bindData: SparseArray<Any>) = dataBind(LAYOUT_ERROR_ID, bindData)
+
+    private fun dataBind(state: Int, bindData: SparseArray<Any>){
+        if(!useDataBinding){
+            return
+        }
+        val inflateViewRef = stubInflateViewHolders[state]
+        stateViewBindData.put(state, bindData)
+        if(inflateViewRef == null){
+            // 说明该状态的view还没有inflate出来, 先保存绑定数据
+            return
+        }
+        val inflateView = inflateViewRef.get()
+            ?: // 说明view的引用消失了，该view已经不存在了
+            throw IllegalAccessException("inflate view ref null")
+
+        bindView(state, inflateView)
+
+    }
 }

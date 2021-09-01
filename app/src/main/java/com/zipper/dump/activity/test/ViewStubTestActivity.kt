@@ -18,12 +18,7 @@ import kotlin.random.Random
  **/
 class ViewStubTestActivity: BaseVmBActivity<ViewStubTestViewModel,TestActivityViewStubBinding>() {
 
-    var state = arrayOf(
-        StateLayout.LAYOUT_LOADING_ID,
-        StateLayout.LAYOUT_CONTENT_ID,
-        StateLayout.LAYOUT_EMPTY_DATA_ID,
-        StateLayout.LAYOUT_ERROR_ID
-    )
+    var state = arrayOf(StateLayout.LAYOUT_LOADING_ID, StateLayout.LAYOUT_CONTENT_ID, StateLayout.LAYOUT_EMPTY_DATA_ID, StateLayout.LAYOUT_ERROR_ID)
 
     var index = 0
     override fun onCreate(savedInstanceState: Bundle?) {

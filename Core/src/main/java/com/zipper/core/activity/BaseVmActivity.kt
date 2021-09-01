@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.zipper.core.BaseApp
 import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 
 /**
  *  @author zipper
@@ -20,13 +19,6 @@ abstract class BaseVmActivity<VM : ViewModel> : BaseActivity() {
 
     protected lateinit var mBaseViewModel: VM
         private set
-
-    protected val mTypeArguments: Array<out Type>
-
-    init {
-        val parameterizedType = javaClass.genericSuperclass as ParameterizedType
-        mTypeArguments = parameterizedType.actualTypeArguments
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +35,9 @@ abstract class BaseVmActivity<VM : ViewModel> : BaseActivity() {
 
     @Suppress("UNCHECKED_CAST")
     private fun initViewModel() {
-        val vmClass = mTypeArguments[0] as Class<VM>
+        val parameterizedType = javaClass.genericSuperclass as ParameterizedType
+        val actualTypeArguments = parameterizedType.actualTypeArguments
+        val vmClass = actualTypeArguments[0] as Class<VM>
         mBaseViewModel = getActivityViewModel(vmClass)
     }
 
