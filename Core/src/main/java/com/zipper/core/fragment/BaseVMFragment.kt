@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
 /**
  *  @author zipper
@@ -18,6 +19,13 @@ abstract class BaseVMFragment<VM : ViewModel> : BaseFragment() {
     protected lateinit var mBaseViewModel: VM
         private set
 
+    protected val mTypeArguments: Array<out Type>
+
+    init {
+        val parameterizedType = javaClass.genericSuperclass as ParameterizedType
+        mTypeArguments = parameterizedType.actualTypeArguments
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
@@ -25,12 +33,10 @@ abstract class BaseVMFragment<VM : ViewModel> : BaseFragment() {
 
     @Suppress("UNCHECKED_CAST")
     private fun initViewModel() {
-        val parameterizedType = javaClass.genericSuperclass as ParameterizedType
-        val actualTypeArguments = parameterizedType.actualTypeArguments
-        if (actualTypeArguments.isEmpty()) {
+        if (mTypeArguments.isEmpty()) {
             throw IllegalArgumentException("argument Type num < 1, must be noe type param")
         }
-        val vmClass = actualTypeArguments[0] as Class<VM>
+        val vmClass = mTypeArguments[0] as Class<VM>
         mBaseViewModel = getFragmentViewModel(vmClass)
     }
 
