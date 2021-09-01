@@ -53,8 +53,7 @@ abstract class BaseVmBFragment<VM: ViewModel, VDB: ViewDataBinding>: BaseVMFragm
 
     @Suppress("UNCHECKED_CAST")
     private fun initBinding(viewGroup: ViewGroup?, attachToRoot: Boolean = false){
-        val parameterizedType = javaClass.genericSuperclass as ParameterizedType
-        val vdmClass = parameterizedType.actualTypeArguments[1] as Class<*>
+        val vdmClass = mTypeArguments[1] as Class<*>
         val inflaterMethod = vdmClass.getDeclaredMethod(
             "inflate",
             LayoutInflater::class.java,
