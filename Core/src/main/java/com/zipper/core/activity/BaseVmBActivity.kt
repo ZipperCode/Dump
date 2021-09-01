@@ -22,7 +22,7 @@ import java.lang.reflect.ParameterizedType
  *  @description
  **/
 abstract class BaseVmBActivity<VM: ViewModel, VDB: ViewDataBinding>: BaseVmActivity<VM>() {
-    protected lateinit var mBinding: VDB
+    private lateinit var mBinding: VDB
 
     abstract fun vmBrId(): Int
 
@@ -60,7 +60,8 @@ abstract class BaseVmBActivity<VM: ViewModel, VDB: ViewDataBinding>: BaseVmActiv
 
     @Suppress("UNCHECKED_CAST")
     private fun initBinding(){
-        val vdmClass = mTypeArguments[1] as Class<*>
+        val parameterizedType = javaClass.genericSuperclass as ParameterizedType
+        val vdmClass = parameterizedType.actualTypeArguments[1] as Class<*>
         val inflaterMethod = vdmClass.getDeclaredMethod(
             "inflate",
             LayoutInflater::class.java
