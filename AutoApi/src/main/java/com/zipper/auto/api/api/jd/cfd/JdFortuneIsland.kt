@@ -22,8 +22,6 @@ class JdFortuneIsland : JdBaseApi("") {
 
     private var username:String = ""
 
-    private var isLogin: Boolean = false
-
     private var nickname: String = ""
 
     override suspend fun execute(context: Context) {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_home_graph"
-    app:startDestination="@id/jdMainFragment">
+    android:id="@+id/nav_home"
+    app:startDestination="@id/nav_home_fragment">
 
     <fragment
-        android:id="@+id/jdMainFragment"
-        android:name="com.zipper.auto.api.activity.JdMainFragment"
-        android:label="JdMainFragment" />
+        android:id="@+id/nav_home_fragment"
+        android:name="com.zipper.auto.api.activity.HomeFragment"
+        android:label="HomeFragment" />
 </navigation>

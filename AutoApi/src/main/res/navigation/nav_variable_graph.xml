@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_variable_graph"
-    app:startDestination="@id/variableFragment">
+    android:id="@+id/nav_variable"
+    app:startDestination="@id/nav_variable_fragment">
 
     <fragment
-        android:id="@+id/variableFragment"
+        android:id="@+id/nav_variable_fragment"
         android:name="com.zipper.auto.api.activity.VariableFragment"
         android:label="VariableFragment" />
 </navigation>

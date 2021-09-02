@@ -3,24 +3,42 @@ package com.zipper.auto.api.activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.zipper.auto.api.BR
 import com.zipper.auto.api.R
-import com.zipper.auto.api.api.jd.necklace.JdNecklace
-import com.zipper.auto.api.script.ScriptManager
-import com.zipper.core.activity.BaseVmActivity
+import com.zipper.auto.api.databinding.ActivityApiBinding
+import com.zipper.core.activity.BaseVmBActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class JDActivity : BaseVmActivity<JDViewModel>() {
+class ApiActivity : BaseVmBActivity<ApiViewModel, ActivityApiBinding>() {
+
+    companion object{
+        const val TAG: String = "JDActivity"
+    }
+    
+    private lateinit var navController: NavController
+
+    override fun vmBrId(): Int = BR.vm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_jd)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+        navController = navHostFragment.navController
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_bottom_view)
+        bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            mBaseViewModel.destinationChanged(destination)
+        }
 
         val requestPermissionLauncher =
             registerForActivityResult(
@@ -37,7 +55,7 @@ class JDActivity : BaseVmActivity<JDViewModel>() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 when {
                     ContextCompat.checkSelfPermission(
-                        this@JDActivity,
+                        this@ApiActivity,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) == PackageManager.PERMISSION_GRANTED -> {
                         doAction()
@@ -53,6 +71,15 @@ class JDActivity : BaseVmActivity<JDViewModel>() {
         }
     }
 
+
+    override fun onBackPressed() {
+        if(mBaseViewModel.containMainScreen(navController.currentDestination?.id)){
+            finish()
+        }else{
+            super.onBackPressed()
+        }
+    }
+
     private fun doAction() {
         lifecycleScope.launch {
 //            JdNecklace().main(this@JDActivity)
@@ -62,4 +89,6 @@ class JDActivity : BaseVmActivity<JDViewModel>() {
             }
         }
     }
+
+
 }

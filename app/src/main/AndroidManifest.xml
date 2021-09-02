@@ -15,11 +15,7 @@
         android:theme="@style/Theme.Dumping.NoActionBar">
 
         <activity android:name=".activity.test.ViewStubTestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.TestActivity">
 
@@ -32,7 +28,13 @@
             android:screenOrientation="fullSensor">
 
         </activity>
-        <activity android:name="com.zipper.auto.api.activity.JDActivity"></activity>
+        <activity android:name="com.zipper.auto.api.activity.ApiActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.AppsActivity" />
         <activity android:name=".activity.AppDetailActivity" />
         <activity android:name=".activity.MainActivity" />

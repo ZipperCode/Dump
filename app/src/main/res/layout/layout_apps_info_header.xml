@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tv_dump"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginLeft="20dp"
