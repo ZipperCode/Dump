@@ -1,6 +1,7 @@
 package com.zipper.dump
 
 import com.zipper.core.BaseApp
+import com.zipper.core.fragment.FragmentNavConfigHelper
 import com.zipper.core.utils.ThemeHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

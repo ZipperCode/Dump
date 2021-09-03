@@ -57,7 +57,7 @@ abstract class JdBaseApi(protected val storeKey: String) {
 
     abstract fun domain(): String
 
-    protected fun catchExp(block: () -> Unit){
+    protected suspend fun catchExp(block: suspend () -> Unit){
         try {
             block.invoke()
         }catch (e: Throwable){

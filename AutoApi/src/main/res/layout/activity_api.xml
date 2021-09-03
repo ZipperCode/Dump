@@ -15,7 +15,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_container"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:name="com.zipper.core.fragment.CustomNavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

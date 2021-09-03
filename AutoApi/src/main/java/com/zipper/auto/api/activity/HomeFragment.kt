@@ -21,7 +21,7 @@ class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
     override fun getVariable(): SparseArray<Any> {
         return SparseArray<Any>().apply {
             put(BR.adapter, TaskAdapter(requireContext()){
-
+                navController.navigate(R.id.action_nav_home_fragment_to_oneFragment)
             })
         }
     }

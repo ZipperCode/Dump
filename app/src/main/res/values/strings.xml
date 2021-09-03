@@ -1,5 +1,5 @@
 <resources>
-    <string name="contentDescription">图片</string>
+
     <string name="app_name">跳啊</string>
     <string name="accessibility_service_describe_title">跳广告专用</string>
     <string name="accessibility_service_describe_content">当然是跳广告啦，个别App依旧无法跳过</string>

@@ -15,22 +15,30 @@ import com.zipper.auto.api.BR
 import com.zipper.auto.api.R
 import com.zipper.auto.api.databinding.ActivityApiBinding
 import com.zipper.core.activity.BaseVmBActivity
+import com.zipper.core.fragment.FragmentNavConfigHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ApiActivity : BaseVmBActivity<ApiViewModel, ActivityApiBinding>() {
 
-    companion object{
+    companion object {
         const val TAG: String = "JDActivity"
     }
-    
+
     private lateinit var navController: NavController
 
     override fun vmBrId(): Int = BR.vm
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        FragmentNavConfigHelper
+            .configNavMode(FragmentNavConfigHelper.ONLY_TOP)
+            .addTopFragmentId(R.id.nav_home_fragment)
+            .addTopFragmentId(R.id.nav_variable_fragment)
+            .addTopFragmentId(R.id.nav_person_fragment)
+
         super.onCreate(savedInstanceState)
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_bottom_view)
@@ -71,19 +79,20 @@ class ApiActivity : BaseVmBActivity<ApiViewModel, ActivityApiBinding>() {
         }
     }
 
-
     override fun onBackPressed() {
-        if(mBaseViewModel.containMainScreen(navController.currentDestination?.id)){
-            finish()
-        }else{
-            super.onBackPressed()
-        }
+//        if (mBaseViewModel.containMainScreen(navController.currentDestination?.id)) {
+//            finish()
+//        } else {
+//            super.onBackPressed()
+//        }
+
+        super.onBackPressed()
     }
 
     private fun doAction() {
         lifecycleScope.launch {
 //            JdNecklace().main(this@JDActivity)
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
 //                ScriptManager.getScript(this@JDActivity,"Fuc")
 
             }

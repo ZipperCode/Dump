@@ -7,5 +7,29 @@
     <fragment
         android:id="@+id/nav_home_fragment"
         android:name="com.zipper.auto.api.activity.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_nav_home_fragment_to_oneFragment"
+            app:destination="@id/oneFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/oneFragment"
+        android:name="com.zipper.auto.api.activity.test.OneFragment"
+        android:label="OneFragment" >
+        <action
+            android:id="@+id/action_oneFragment_to_twoFragment"
+            app:destination="@id/twoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/twoFragment"
+        android:name="com.zipper.auto.api.activity.test.TwoFragment"
+        android:label="TwoFragment" >
+        <action
+            android:id="@+id/action_twoFragment_to_threeFragment"
+            app:destination="@id/threeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/threeFragment"
+        android:name="com.zipper.auto.api.activity.test.ThreeFragment"
+        android:label="ThreeFragment" />
 </navigation>

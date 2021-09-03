@@ -2,6 +2,7 @@ package com.zipper.auto.api.api.jd.user
 
 import com.zipper.auto.api.api.jd.user.bean.JdGetTokenResp
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
@@ -18,7 +19,7 @@ interface JdUserService {
     @Headers("user-agent:okhttp/3.12.1;jdmall;android;version/10.1.2;build/89743;screen/1080x1920;os/11;network/wifi;",
         "Content-Type:application/x-www-form-urlencoded; charset=UTF-8"
     )
-    suspend fun getToken(@Field("body") body: String = """{"to":"https%3a%2f%2fplogin.m.jd.com%2fjd-mlogin%2fstatic%2fhtml%2fappjmp_blank.html"}"""): JdGetTokenResp
+    suspend fun getToken(@Field("body") body: String = """{"to":"https%3a%2f%2fplogin.m.jd.com%2fjd-mlogin%2fstatic%2fhtml%2fappjmp_blank.html"}"""): Response<JdGetTokenResp>
 
 
 }

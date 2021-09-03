@@ -7,5 +7,21 @@
     <fragment
         android:id="@+id/nav_variable_fragment"
         android:name="com.zipper.auto.api.activity.VariableFragment"
-        android:label="VariableFragment" />
+        android:label="VariableFragment" >
+        <action
+            android:id="@+id/action_nav_variable_fragment_to_fourFragment"
+            app:destination="@id/fourFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fourFragment"
+        android:name="com.zipper.auto.api.activity.test.FourFragment"
+        android:label="FourFragment" >
+        <action
+            android:id="@+id/action_fourFragment_to_oneFragment2"
+            app:destination="@id/oneFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/oneFragment2"
+        android:name="com.zipper.auto.api.activity.test.OneFragment"
+        android:label="OneFragment" />
 </navigation>

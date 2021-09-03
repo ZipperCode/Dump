@@ -110,8 +110,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         }
     }
 
-    fun checkLogin(): Boolean {
-        val response = jdDelaySignService.totalBean().execute()
+    suspend fun checkLogin(): Boolean {
+        val response = jdDelaySignService.totalBean()
         if (!response.isSuccessful) {
             L.d(TAG, "请求失败")
             return false
@@ -123,8 +123,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         return isLogin
     }
 
-    fun jdBeanHome() {
-        val response = jdDelaySignService.jdBeanHome().execute()
+    suspend fun jdBeanHome() {
+        val response = jdDelaySignService.jdBeanHome()
         if (!response.isSuccessful) {
             L.d(TAG, "京东京豆-请求失败")
             return
@@ -148,8 +148,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         }
     }
 
-    fun jdStore() {
-        val response = jdDelaySignService.jdStore().execute()
+    suspend fun jdStore() {
+        val response = jdDelaySignService.jdStore()
         if (response.isSuccessful) {
             val body = response.body()
             if (body?.data?.success == true || body?.data?.bizCode == 811) {
@@ -160,8 +160,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         L.d(TAG, "京东商城-超市签到失败 ==> response = $response")
     }
 
-    fun jdTurn() {
-        val response = jdDelaySignService.jdTurn().execute()
+    suspend fun jdTurn() {
+        val response = jdDelaySignService.jdTurn()
         if (response.isSuccessful) {
             val body = response.body()
             if (body?.data?.lotteryCode == "1") {
@@ -171,9 +171,9 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         }
     }
 
-    private fun jdTurnSign(code: String) {
+    private suspend fun jdTurnSign(code: String) {
         val response =
-            jdDelaySignService.jdTurnSign(mapOf("body" to "{\"actId\":\"jgpqtzjhvaoym\",\"appSource\":\"jdhome\",\"lotteryCode\":\"${code}\"}")).execute()
+            jdDelaySignService.jdTurnSign(mapOf("body" to "{\"actId\":\"jgpqtzjhvaoym\",\"appSource\":\"jdhome\",\"lotteryCode\":\"${code}\"}"))
         if (response.isSuccessful) {
             val body = response.body()
             when {
@@ -203,8 +203,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
     }
 
 
-    fun jdSubsidy() {
-        val response = jdDelaySignService.jdSubsidy().execute()
+    suspend fun jdSubsidy() {
+        val response = jdDelaySignService.jdSubsidy()
         if (response.isSuccessful) {
             val body = response.body()
             if (body?.resultCode == 0 && body.resultData?.code == 0) {
@@ -217,8 +217,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         }
     }
 
-    fun jdGetCash() {
-        val response = jdDelaySignService.jdGetCash().execute()
+    suspend fun jdGetCash() {
+        val response = jdDelaySignService.jdGetCash()
         if (!response.isSuccessful) {
             L.d(TAG, "京东商城-现金签到失败")
             return
@@ -236,8 +236,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         }
     }
 
-    fun jdShake() {
-        val response = jdDelaySignService.jdShake().execute()
+    suspend fun jdShake() {
+        val response = jdDelaySignService.jdShake()
         if (!response.isSuccessful) {
             L.d(TAG, "京东商城-摇摇: 失败, 原因: 请求失败")
             return
@@ -246,7 +246,7 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
 
         if (body?.success == true && body.data.prizeCoupon != null) {
             L.d(TAG, "京东商城-摇一摇签到成功 ")
-            if (body.data.luckyBox?.freeTimes ?: 0 > 0) {
+            if ((body.data.luckyBox?.freeTimes ?: 0) > 0) {
                 CoroutineScope(Dispatchers.Default).launch {
                     delay(1000)
                     jdShake()
@@ -259,8 +259,8 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         }
     }
 
-    private fun jdSecKilling() {
-        val response = jdDelaySignService.jdSecKilling().execute()
+    suspend fun jdSecKilling() {
+        val response = jdDelaySignService.jdSecKilling()
         if (!response.isSuccessful) {
             L.d(TAG, "京东秒杀-红包: 失败, 原因: 请求失败")
             return
@@ -273,16 +273,14 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
             val projectId = body.result.projectId
             val taskId = body.result.taskId
             L.d(TAG, "京东秒杀-红包查询成功 taskId = $taskId , projectId = $projectId")
-            CoroutineScope(Dispatchers.Default).launch {
-                delay(100)
-                jdKilling(projectId, taskId)
-            }
+            delay(100)
+            jdKilling(projectId, taskId)
         } else {
             L.d(TAG, "京东秒杀-红包查询失败 原因: 未知‼️")
         }
     }
 
-    private fun jdKilling(projectId: String, taskId: String) {
+    private suspend fun jdKilling(projectId: String, taskId: String) {
 
         val reqBody = mapOf(
             "functionId" to "doInteractiveAssignment",
@@ -293,7 +291,7 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
             """.trimIndent()
         )
 
-        val response = jdDelaySignService.jdKilling(reqBody).execute()
+        val response = jdDelaySignService.jdKilling(reqBody)
         if (!response.isSuccessful) {
             L.d(TAG, "京东秒杀-红包: 失败, 原因: 请求失败")
             return
@@ -312,7 +310,7 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
      * 京东金贴-双签：code = 1DF13833F7
      * 金融京豆-双签: code = F68B2C3E71 belong = jingdou
      */
-    fun jdDoll(title: String, code: String, type: String? = null, belong: String = "") {
+    suspend fun jdDoll(title: String, code: String, type: String? = null, belong: String = "") {
 
 
         val frontParam = when (code) {
@@ -332,7 +330,7 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
             """.trimIndent()
         )
 
-        val response = jdDelaySignService.jdDoll(reqBody).execute()
+        val response = jdDelaySignService.jdDoll(reqBody)
 
         if (!response.isSuccessful) {
             L.d(TAG, "京东签到-$title 请求失败")
@@ -365,7 +363,7 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
         }
     }
 
-    fun jdUserSignPre(title: String, activityId: String, ask: String = "") {
+    suspend fun jdUserSignPre(title: String, activityId: String, ask: String = "") {
         val reqBody = mapOf(
             "functionId" to "qryH5BabelFloors",
             "client" to "wh5",
@@ -375,7 +373,7 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
                 {"activityId":"$activityId","paginationParam":"2","paginationFlrs":"$ask"}
             """.trimIndent()
         )
-        val response = jdDelaySignService.jdUserSignPre(reqBody).execute()
+        val response = jdDelaySignService.jdUserSignPre(reqBody)
         if (!response.isSuccessful) {
             L.d(TAG, "京东签到-$title : 失败, 原因: 请求失败")
             return
@@ -418,14 +416,14 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
     /**
      * @param body eg: {"params":"{\"enActK\":\"9wKIMMJjQLbQFeZ6KQv0Jd2uoEjYGDUa2jM9qv4aH7mg3o9A4MJ4izn9K7SR3bSRcRRfojzJNzIB\\naiUadRY9Jv6KZBhNOwmCFk0xY4qnbBXxcg+FRoBf1Ned7AMupe1LGmbP5+HKCzc=\",\"isFloatLayer\":false,\"ruleSrv\":\"00898735_60491585_t1\",\"signId\":\"Z1YoCFWVQAgaZs/n4coLNw==\"}"}
      */
-    private fun jdUserSign1(title: String, body: String) {
+    private suspend fun jdUserSign1(title: String, body: String) {
         val reqBody = mapOf(
             "functionId" to "userSign",
             "client" to "wh5",
             "body" to body
         )
 
-        val response = jdDelaySignService.jdUserSign1(reqBody).execute()
+        val response = jdDelaySignService.jdUserSign1(reqBody)
         if (!response.isSuccessful) {
             L.d(TAG, "京东签到-$title : 失败, 原因: 请求失败")
             return
@@ -441,16 +439,16 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
 
     }
 
-    private fun jdUserSign2(title: String, turnTableId: String) {
+    private suspend fun jdUserSign2(title: String, turnTableId: String) {
         val detailUrl = "https://jdjoy.jd.com/api/turncard/channel/detail?turnTableId=${turnTableId}&invokeKey=ztmFUCxcPMNyUq0P"
-        jdDelaySignService.jdUserSignDetail(detailUrl).execute()
+        jdDelaySignService.jdUserSignDetail(detailUrl)
         val url = "https://jdjoy.jd.com/api/turncard/channel/sign"
         val response = jdDelaySignService.jdUserSign2(
             url, mapOf(
                 "invokeKey" to "ztmFUCxcPMNyUq0P",
                 "turnTableId" to turnTableId
             )
-        ).execute()
+        )
 
         if (!response.isSuccessful) {
             L.d(TAG, "京东签到-$title : 失败, 原因: 请求失败")
@@ -466,5 +464,4 @@ class JdDelayApi(storeKey: String) : JdBaseApi(storeKey) {
 
 
     }
-
 }
