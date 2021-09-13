@@ -25,7 +25,6 @@
             android:layout_height="match_parent"
             android:adapter="@{adapter}"
             android:layoutMode="opticalBounds"
-            android:scrollbars="vertical"
             tools:listitem="@layout/list_item_task"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

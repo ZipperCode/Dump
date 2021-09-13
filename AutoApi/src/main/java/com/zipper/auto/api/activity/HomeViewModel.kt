@@ -1,23 +1,26 @@
 package com.zipper.auto.api.activity
 
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableLong
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.zipper.auto.api.activity.bean.ModuleTaskBean
 import com.zipper.auto.api.activity.bean.TaskInfoBean
 
 class HomeViewModel: ViewModel() {
 
-    private val _taskInfoList: MutableLiveData<List<TaskInfoBean>> = MutableLiveData()
+    private val _taskInfoList: MutableLiveData<List<ModuleTaskBean>> = MutableLiveData()
 
-    val taskInfoList: LiveData<List<TaskInfoBean>> get() = _taskInfoList
+    val taskInfoList: LiveData<List<ModuleTaskBean>> get() = _taskInfoList
 
     init {
         _taskInfoList.value = listOf(
-            TaskInfoBean(0, "1"),
-            TaskInfoBean(0, "2"),
-            TaskInfoBean(0, "3"),
-            TaskInfoBean(0, "4"),
-            TaskInfoBean(0, "5")
+            ModuleTaskBean("0", ObservableField("123"), ObservableLong(0L)),
+            ModuleTaskBean("1", ObservableField("123546"), ObservableLong(0L)),
+            ModuleTaskBean("2", ObservableField("234"), ObservableLong(0L)),
+            ModuleTaskBean("3", ObservableField("fasdfa"), ObservableLong(0L)),
+            ModuleTaskBean("4", ObservableField("fadsf"), ObservableLong(0L))
         )
     }
 

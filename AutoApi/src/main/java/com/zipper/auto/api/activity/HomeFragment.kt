@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.zipper.auto.api.BR
 import com.zipper.auto.api.R
+import com.zipper.auto.api.activity.adapter.ModuleTaskAdapter
 import com.zipper.auto.api.activity.adapter.TaskAdapter
 import com.zipper.auto.api.databinding.FragmentHomeBinding
 import com.zipper.core.delegates.ViewById
@@ -20,7 +21,7 @@ class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
 
     override fun getVariable(): SparseArray<Any> {
         return SparseArray<Any>().apply {
-            put(BR.adapter, TaskAdapter(requireContext()){
+            put(BR.adapter, ModuleTaskAdapter(requireContext()){ type, bean ->
                 navController.navigate(R.id.action_nav_home_fragment_to_oneFragment)
             })
         }
@@ -30,7 +31,7 @@ class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         mBaseViewModel.taskInfoList.observe(viewLifecycleOwner, Observer {
-            (rvList.adapter as TaskAdapter).submitList(it)
+            (rvList.adapter as ModuleTaskAdapter).submitList(it)
         })
     }
 
