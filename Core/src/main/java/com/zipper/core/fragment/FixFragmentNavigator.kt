@@ -86,71 +86,49 @@ class FixFragmentNavigator(
 
         val tag = destination.id.toString()
 
-        val fragment =if (FragmentNavConfigHelper.isOnLyTopMode
-            && FragmentNavConfigHelper.isTopLevelId(currentDestinationId)
-        ) {
-            // 当前模式下，隐藏当前显示的片段
-            if (currentFragment != null) {
+        val fragment = if(currentFragment == null){
+            val destFragment = genFragment(destination, args)
+            ft.replace(containerId, destFragment, tag)
+            destFragment
+        }else{
+            if (FragmentNavConfigHelper.isOnLyTopMode && FragmentNavConfigHelper.isTopLevelId(currentDestinationId)) {
+                // 当前模式下，隐藏当前显示的片段
                 ft.hide(currentFragment)
-            }
 
-            if (FragmentNavConfigHelper.isTopLevelId(destination.id)) {
-                // top -> top
-                // 根据tag查询目标片段是否是隐藏的片段
-                val nextFragment = fragmentManager.findFragmentByTag(tag)
-                if (nextFragment != null) {
-                    ft.show(nextFragment)
-                    nextFragment
+                if (FragmentNavConfigHelper.isTopLevelId(destination.id)) {
+                    // top -> top
+                    // 根据tag查询目标片段是否是隐藏的片段
+                    val nextFragment = fragmentManager.findFragmentByTag(tag)
+                    if (nextFragment != null) {
+                        ft.show(nextFragment)
+                        nextFragment
+                    } else {
+                        // 目标片段不存在，则加入
+                        val frag = genFragment(destination, args)
+                        ft.add(containerId, frag, tag)
+                        frag
+                    }
                 } else {
-                    // 目标片段不存在，则加入
+                    // top -> other
                     val frag = genFragment(destination, args)
                     ft.add(containerId, frag, tag)
                     frag
                 }
-            } else {
-                // top -> other
-                val frag = genFragment(destination, args)
-                ft.add(containerId, frag, tag)
-                frag
+            }else{
+                // other -> other
+                ft.hide(currentFragment)
+                var destFragment = fragmentManager.findFragmentByTag(tag)
+                if(destFragment == null){
+                    destFragment = genFragment(destination, args)
+                    ft.add(containerId, destFragment, tag)
+                }else{
+                    ft.show(destFragment)
+                }
+                destFragment
             }
-        }else{
-            // other -> other
-            val frag = genFragment(destination, args)
-            ft.replace(containerId, frag, tag)
-            frag
         }
 
 
-        /**
-         * 是否仅
-         */
-//        val fragment = if ((FragmentNavConfigHelper.isOnLyTopMode
-//                    && FragmentNavConfigHelper.isTopLevelId(currentDestinationId))
-//            || FragmentNavConfigHelper.isAllMode
-//        ) {
-//
-//            // 当前模式下，隐藏当前显示的片段
-//            if (currentFragment != null) {
-//                ft.hide(currentFragment)
-//            }
-//
-//            // 根据tag查询目标片段是否是隐藏的片段
-//            val nextFragment = fragmentManager.findFragmentByTag(tag)
-//            if (nextFragment != null) {
-//                ft.show(nextFragment)
-//                nextFragment
-//            } else {
-//                // 目标片段不存在，则加入
-//                val frag = genFragment(destination, args)
-//                ft.add(containerId, frag, tag)
-//                frag
-//            }
-//        } else {
-//            // 第一个片段走这边
-//            val frag = genFragment(destination, args)
-//            ft.replace(containerId, frag, tag)
-//            frag
-//        }
 
         // 设置当前片段
         ft.setPrimaryNavigationFragment(fragment)

@@ -14,7 +14,7 @@ object FragmentNavConfigHelper {
     annotation class ApplyMode
 
     @ApplyMode
-    var navApplyMode: Int = DEFAULT
+    var navApplyMode: Int = ONLY_TOP
         private set
 
     val isDefaultMode: Boolean get() = navApplyMode == DEFAULT

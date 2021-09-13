@@ -32,7 +32,6 @@ class ApiActivity : BaseVmBActivity<ApiViewModel, ActivityApiBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FragmentNavConfigHelper
-            .configNavMode(FragmentNavConfigHelper.ONLY_TOP)
             .addTopFragmentId(R.id.nav_home_fragment)
             .addTopFragmentId(R.id.nav_variable_fragment)
             .addTopFragmentId(R.id.nav_person_fragment)
@@ -80,11 +79,11 @@ class ApiActivity : BaseVmBActivity<ApiViewModel, ActivityApiBinding>() {
     }
 
     override fun onBackPressed() {
-//        if (mBaseViewModel.containMainScreen(navController.currentDestination?.id)) {
-//            finish()
-//        } else {
-//            super.onBackPressed()
-//        }
+        if (FragmentNavConfigHelper.isTopLevelId(navController.currentDestination?.id)) {
+            finish()
+        } else {
+            super.onBackPressed()
+        }
 
         super.onBackPressed()
     }
@@ -98,6 +97,4 @@ class ApiActivity : BaseVmBActivity<ApiViewModel, ActivityApiBinding>() {
             }
         }
     }
-
-
 }

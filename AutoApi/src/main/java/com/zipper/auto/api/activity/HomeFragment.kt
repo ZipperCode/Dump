@@ -32,8 +32,6 @@ class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
         mBaseViewModel.taskInfoList.observe(viewLifecycleOwner, Observer {
             (rvList.adapter as TaskAdapter).submitList(it)
         })
-
-        mBaseViewModel.requestData()
     }
 
 }

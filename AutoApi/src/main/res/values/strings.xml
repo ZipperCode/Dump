@@ -16,4 +16,10 @@
     <string name="global">全</string>
     <string name="global_title">是否应用全局</string>
 
+    <string name="module_name">模块名：</string>
+    <string name="module_execute_time">执行时间：</string>
+    <string name="module_run">手动运行</string>
+    <string name="module_ban">禁用</string>
+    <string name="module_delete">删除</string>
+
 </resources>

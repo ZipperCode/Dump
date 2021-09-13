@@ -11,7 +11,7 @@ class HomeViewModel: ViewModel() {
 
     val taskInfoList: LiveData<List<TaskInfoBean>> get() = _taskInfoList
 
-    fun requestData() {
+    init {
         _taskInfoList.value = listOf(
             TaskInfoBean(0, "1"),
             TaskInfoBean(0, "2"),
@@ -19,5 +19,9 @@ class HomeViewModel: ViewModel() {
             TaskInfoBean(0, "4"),
             TaskInfoBean(0, "5")
         )
+    }
+
+    fun requestData() {
+
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="module_btn_h">20dp</dimen>
+    <dimen name="module_btn_w">30dp</dimen>
+</resources>
