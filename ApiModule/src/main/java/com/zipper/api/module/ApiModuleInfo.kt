@@ -6,8 +6,9 @@ data class ApiModuleInfo(
     val moduleKey: String,
     val moduleName: String,
     @ModuleStoreType
-    val moduleStoreType: Int,
-    val modulePath: String,
+    var moduleStoreType: Int,
+    val moduleFileName: String?,
+    var modulePath: String,
     @ModuleType
     val moduleType: Int,
     val moduleImplClass: String,

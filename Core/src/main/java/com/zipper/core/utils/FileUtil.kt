@@ -1,8 +1,6 @@
 package com.zipper.core.utils
 
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 
 object FileUtil {
 
@@ -15,6 +13,21 @@ object FileUtil {
                 stringBuilder.append(line).append("\n")
             }while (line != null)
             stringBuilder.toString()
+        }
+    }
+
+    fun copyFile(inputStream: InputStream, outputStream: OutputStream){
+        inputStream.use { input->
+            outputStream.use { output->
+                var len: Int
+                val buff = ByteArray(1024 * 1024)
+                len = input.read(buff)
+                while (len != -1){
+                    output.write(buff, 0,len)
+                    len = input.read(buff)
+                }
+                output.flush()
+            }
         }
     }
 }
