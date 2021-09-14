@@ -45,21 +45,16 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    def dep_index = rootProject.ext.index
-    dep_index.each{
-        def deps = it['dependencies']
-        if(deps != null){
-            for (dep in deps){
-                api dep
-            }
-        }
 
-        def kapts = it['kapt']
-        if(kapts != null){
-            for (kpt in kapts){
-                kapt kpt
-            }
-        }
+    def dep_list = rootProject.ext.core_lib
+
+    dep_list.each{
+        api it
+    }
+
+    def kapt_list = rootProject.ext.kapt_lib
+
+    kapt_list.each{
+        kapt it.value
     }
 }

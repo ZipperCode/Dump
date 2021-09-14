@@ -40,21 +40,10 @@ android {
         generateStubs = true
     }
 }
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
 
 dependencies {
     implementation project(':Core')
     implementation project(':BaseService')
     implementation project(':ApiModule')
-
-    // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8
-    implementation files("libs/j2v8-6.2.0.aar")
-
     implementation rootProject.ext.lib["ax_work_runtime_ktx"]
-    implementation rootProject.ext.lib["ax_legacy_support"]
-
 }

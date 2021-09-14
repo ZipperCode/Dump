@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.SecureRandom
@@ -31,7 +30,6 @@ abstract class BaseApi(protected val domain: String) {
             .connectTimeout(10, TimeUnit.SECONDS)
             .hostnameVerifier(HostnameVerifier { _, _ -> true })
             .sslSocketFactory(createSSLSocketFactory(), TrustAllCerts())
-            .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC })
         interceptors.forEach{
             builder.addInterceptor(it)
         }

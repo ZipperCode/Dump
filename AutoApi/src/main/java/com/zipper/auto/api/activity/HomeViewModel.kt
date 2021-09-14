@@ -14,7 +14,10 @@ class HomeViewModel: ViewModel() {
 
     val taskInfoList: LiveData<List<ModuleTaskBean>> get() = _taskInfoList
 
+    private val homeRepository = HomeRepository()
+
     init {
+
         _taskInfoList.value = listOf(
             ModuleTaskBean("0", ObservableField("123"), ObservableLong(0L)),
             ModuleTaskBean("1", ObservableField("123546"), ObservableLong(0L)),

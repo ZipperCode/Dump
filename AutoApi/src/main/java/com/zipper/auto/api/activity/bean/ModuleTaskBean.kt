@@ -2,6 +2,7 @@ package com.zipper.auto.api.activity.bean
 
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableLong
+import com.zipper.api.module.ApiModuleInfo
 
 data class ModuleTaskBean(
     val moduleKey: String,
@@ -10,4 +11,10 @@ data class ModuleTaskBean(
 ){
 
     val moduleExecTimeFormat: String get() = ""
+
+    companion object{
+        fun convert(apiModuleInfo: ApiModuleInfo): ModuleTaskBean{
+            return ModuleTaskBean(apiModuleInfo.moduleKey, ObservableField(apiModuleInfo.moduleName), ObservableLong(0L))
+        }
+    }
 }

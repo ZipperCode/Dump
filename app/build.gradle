@@ -79,8 +79,11 @@ dependencies {
     implementation project(':Core')
     implementation project(':BaseService')
     implementation project(':AutoApi')
-    print(rootProject.ext.androidx['kapt'])
-    rootProject.ext.androidx['kapt'].each {
-        kapt it
+
+    implementation rootProject.ext.lib["ax_preference_ktx"]
+    implementation rootProject.ext.lib["ax_work_runtime_ktx"]
+
+    rootProject.ext.kapt_lib.each {
+        kapt it.value
     }
 }

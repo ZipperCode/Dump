@@ -1,0 +1,47 @@
+[
+  {
+    "moduleKey": "kgModule",
+    "moduleName": "酷狗模块",
+    "moduleStoreType":1,
+    "modulePath": "",
+    "moduleType": 1,
+    "moduleImplClass": "com.zipper.api.kgmodule.KgApiModuleImpl",
+    "moduleExecTime": "0 0 8 * * ? "
+  },
+  {
+    "moduleKey": "module2",
+    "moduleName": "module2Name",
+    "moduleStoreType":1,
+    "modulePath": "",
+    "moduleType": 1,
+    "moduleImplClass": "",
+    "moduleExecTime": "0 0 8 * * ? "
+  },
+  {
+    "moduleKey": "module3",
+    "moduleName": "module3Name",
+    "moduleStoreType":1,
+    "modulePath": "",
+    "moduleType": 1,
+    "moduleImplClass": "",
+    "moduleExecTime": "0 0 8 * * ? "
+  },
+  {
+    "moduleKey": "module4",
+    "moduleName": "module4Name",
+    "moduleStoreType":1,
+    "modulePath": "",
+    "moduleType": 1,
+    "moduleImplClass": "",
+    "moduleExecTime": "0 0 8 * * ? "
+  },
+  {
+    "moduleKey": "module5",
+    "moduleName": "module5Name",
+    "moduleStoreType":1,
+    "modulePath": "",
+    "moduleType": 1,
+    "moduleImplClass": "",
+    "moduleExecTime": "0 0 8 * * ? "
+  }
+]
