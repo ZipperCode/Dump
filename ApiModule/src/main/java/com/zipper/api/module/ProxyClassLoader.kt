@@ -8,7 +8,7 @@ import java.io.IOException
 import java.lang.Exception
 import java.lang.reflect.Field
 
-class ModuleClassLoader : PathClassLoader {
+class ProxyClassLoader : PathClassLoader {
 
     companion object{
         const val TAG: String = "ModuleClassLoader"

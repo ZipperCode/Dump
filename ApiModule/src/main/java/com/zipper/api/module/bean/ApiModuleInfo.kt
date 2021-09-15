@@ -1,6 +1,7 @@
-package com.zipper.api.module
+package com.zipper.api.module.bean
 
 import androidx.annotation.IntDef
+import com.zipper.api.module.ApiModuleTaskInfo
 
 data class ApiModuleInfo(
     val moduleKey: String,
@@ -13,10 +14,11 @@ data class ApiModuleInfo(
     val moduleType: Int,
     val moduleImplClass: String,
     val moduleExecTime: String,
+    val isBan: Boolean,
     val apiModuleTasks: List<ApiModuleTaskInfo>? = null
 ){
 
-    @IntDef(value = [ModuleType.TYPE_JAR, ModuleType.TYPE_AAR,ModuleType.TYPE_APK])
+    @IntDef(value = [ModuleType.TYPE_JAR, ModuleType.TYPE_AAR, ModuleType.TYPE_APK])
     @Retention(AnnotationRetention.SOURCE)
     annotation class ModuleType{
         companion object{

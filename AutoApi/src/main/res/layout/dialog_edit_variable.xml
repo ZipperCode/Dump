@@ -8,7 +8,7 @@
         <import type="android.view.View"/>
         <variable
             name="bean"
-            type="com.zipper.auto.api.activity.bean.VariableBean" />
+            type="com.zipper.auto.api.activity.bean.VariableItemBean" />
     </data>
 
     <FrameLayout

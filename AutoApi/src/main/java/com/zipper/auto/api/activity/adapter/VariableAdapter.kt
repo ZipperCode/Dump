@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zipper.auto.api.BR
 import com.zipper.auto.api.R
-import com.zipper.auto.api.activity.bean.VariableBean
+import com.zipper.auto.api.activity.bean.VariableItemBean
 
-class VariableAdapter(context: Context, private val onClick: (VariableBean) -> Unit)
-    : ListAdapter<VariableBean, VariableViewHolder>(VariableItemDiffer()) {
+class VariableAdapter(context: Context, private val onClick: (VariableItemBean) -> Unit)
+    : ListAdapter<VariableItemBean, VariableViewHolder>(VariableItemDiffer()) {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -34,12 +34,12 @@ class VariableAdapter(context: Context, private val onClick: (VariableBean) -> U
     }
 }
 
-class VariableItemDiffer: DiffUtil.ItemCallback<VariableBean>(){
-    override fun areContentsTheSame(oldItem: VariableBean, newItem: VariableBean): Boolean {
+class VariableItemDiffer: DiffUtil.ItemCallback<VariableItemBean>(){
+    override fun areContentsTheSame(oldItem: VariableItemBean, newItem: VariableItemBean): Boolean {
         return oldItem.name.get() == oldItem.name.get()
     }
 
-    override fun areItemsTheSame(oldItem: VariableBean, newItem: VariableBean): Boolean {
+    override fun areItemsTheSame(oldItem: VariableItemBean, newItem: VariableItemBean): Boolean {
         return oldItem == newItem
     }
 }

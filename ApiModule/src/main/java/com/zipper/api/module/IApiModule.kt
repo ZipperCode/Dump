@@ -1,5 +1,6 @@
 package com.zipper.api.module
 
+import android.content.Context
 import androidx.work.WorkRequest
 
 /**
@@ -12,6 +13,8 @@ interface IApiModule {
     fun moduleUniqueKey(): String
 
     fun debugMode(debug: Boolean)
+
+    fun getModuleContext(): Context
 
     /**
      * 注入环境变量

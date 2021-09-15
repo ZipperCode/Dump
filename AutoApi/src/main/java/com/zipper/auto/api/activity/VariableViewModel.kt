@@ -4,32 +4,30 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.zipper.auto.api.activity.bean.TaskInfoBean
-import com.zipper.auto.api.activity.bean.VariableBean
-import com.zipper.core.utils.L
+import com.zipper.auto.api.activity.bean.VariableItemBean
 
 class VariableViewModel: ViewModel() {
 
-    private val _variableList: MutableLiveData<MutableList<VariableBean>> = MutableLiveData()
+    private val _variableItemList: MutableLiveData<MutableList<VariableItemBean>> = MutableLiveData()
 
-    val variableList: LiveData<MutableList<VariableBean>> get() = _variableList
+    val variableItemList: LiveData<MutableList<VariableItemBean>> get() = _variableItemList
 
     fun requestData() {
-        _variableList.value = mutableListOf(
-            VariableBean(ObservableField("1"), ObservableField("1")),
-            VariableBean(ObservableField("2"), ObservableField("2"))
+        _variableItemList.value = mutableListOf(
+            VariableItemBean(ObservableField("1"), ObservableField("1")),
+            VariableItemBean(ObservableField("2"), ObservableField("2"))
         )
     }
 
-    fun containAndAdd(variableBean: VariableBean){
-        if(variableBean.name.get().isNullOrEmpty() || variableBean.value.get().isNullOrEmpty()){
+    fun containAndAdd(variableItemBean: VariableItemBean){
+        if(variableItemBean.name.get().isNullOrEmpty() || variableItemBean.value.get().isNullOrEmpty()){
             return
         }
 
-        val variables = _variableList.value ?: mutableListOf()
-        if(!variables.contains(variableBean)){
-            variables.add(variableBean)
-            _variableList.value = variables
+        val variables = _variableItemList.value ?: mutableListOf()
+        if(!variables.contains(variableItemBean)){
+            variables.add(variableItemBean)
+            _variableItemList.value = variables
         }
     }
 }

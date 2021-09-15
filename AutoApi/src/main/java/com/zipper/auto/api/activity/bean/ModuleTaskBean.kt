@@ -2,7 +2,7 @@ package com.zipper.auto.api.activity.bean
 
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableLong
-import com.zipper.api.module.ApiModuleInfo
+import com.zipper.api.module.bean.ApiModuleInfo
 
 data class ModuleTaskBean(
     val moduleKey: String,

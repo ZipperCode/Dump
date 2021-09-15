@@ -39,7 +39,7 @@ class VariableFragment: BaseNavVmBFragment<VariableViewModel,FragmentVariableBin
             navController.navigate(R.id.action_nav_variable_fragment_to_fourFragment)
         }
 
-        mBaseViewModel.variableList.observe(viewLifecycleOwner, Observer {
+        mBaseViewModel.variableItemList.observe(viewLifecycleOwner, Observer {
             (rvList.adapter as VariableAdapter).submitList(it)
         })
 

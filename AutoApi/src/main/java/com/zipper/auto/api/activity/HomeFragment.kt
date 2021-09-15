@@ -5,6 +5,7 @@ import android.util.SparseArray
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.zipper.api.module.ApiModuleManager
 import com.zipper.auto.api.BR
 import com.zipper.auto.api.R
 import com.zipper.auto.api.activity.adapter.ModuleTaskAdapter
@@ -12,6 +13,7 @@ import com.zipper.auto.api.activity.adapter.TaskAdapter
 import com.zipper.auto.api.databinding.FragmentHomeBinding
 import com.zipper.core.delegates.ViewById
 import com.zipper.core.fragment.BaseNavVmBFragment
+import com.zipper.core.utils.L
 
 class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
 
@@ -22,7 +24,24 @@ class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
     override fun getVariable(): SparseArray<Any> {
         return SparseArray<Any>().apply {
             put(BR.adapter, ModuleTaskAdapter(requireContext()){ type, bean ->
-                navController.navigate(R.id.action_nav_home_fragment_to_oneFragment)
+//                navController.navigate(R.id.action_nav_home_fragment_to_oneFragment)
+                when(type){
+                    0 -> {
+                        if(ApiModuleManager.checkModuleIsRun(bean.moduleKey)){
+                            L.d(HomeViewModel.TAG,"模块 ${bean.moduleKey} 正在运行 请停止后再手动运行")
+                            return@ModuleTaskAdapter
+                        }
+                        mBaseViewModel.customCallModule(bean.moduleKey)
+                    }
+                    1 ->{
+
+                    }
+                    2 ->{
+
+                    }
+                    else -> {}
+                }
+
             })
         }
     }
