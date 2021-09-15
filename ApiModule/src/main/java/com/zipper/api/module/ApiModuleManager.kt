@@ -94,23 +94,17 @@ object ApiModuleManager {
 
     private fun loadApiModule(){
         val unExistsModule = mutableListOf<ApiModuleInfo>()
+        val classLoader = ModuleClassLoader(javaClass.classLoader!!)
 
         for (moduleInfo in moduleInfoList){
-            try {
-                val moduleFile = File(moduleInfo.modulePath)
-                if(!moduleFile.exists()){
-                    unExistsModule.add(moduleInfo)
-                    continue
-                }
-
-
-
-            }catch (e: Exception){
-                e.printStackTrace()
+            val moduleFile = File(moduleInfo.modulePath)
+            if(!moduleFile.exists()){
+                unExistsModule.add(moduleInfo)
+                continue
             }
         }
-
         moduleInfoList.removeAll(unExistsModule)
+        classLoader.addDexPath(moduleInfoList.map { it.modulePath }.toList())
     }
 
 }
