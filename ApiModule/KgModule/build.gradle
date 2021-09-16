@@ -1,14 +1,22 @@
-plugins {
-    id 'com.android.library'
+buildscript{
+    if (rootProject.ext.moduleDebug){
+        apply plugin: 'com.android.library'
+    }else{
+        apply plugin: 'com.android.application'
+    }
+}
+plugins{
     id 'kotlin-android'
     id 'kotlin-kapt'
 }
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
+        if (rootProject.ext.moduleDebug){
+            applicationId "com.zipper.api.module.kg"
+        }
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -42,8 +50,21 @@ android {
 }
 
 dependencies {
-    implementation project(':Core')
-    implementation project(':BaseService')
-    implementation project(':ApiModule')
-    implementation rootProject.ext.lib["ax_work_runtime_ktx"]
+//    compileOnly rootProject.ext.lib["ktx_core"]
+//    compileOnly rootProject.ext.lib["ktx_coroutines_core"]
+//    compileOnly rootProject.ext.lib["ktx_coroutines_android"]
+//
+//    compileOnly rootProject.ext.lib["okhttp"]
+//    compileOnly rootProject.ext.lib["okhttp_log_interceptor"]
+//    compileOnly rootProject.ext.lib["gson"]
+//    compileOnly rootProject.ext.lib["retrofit"]
+//    compileOnly rootProject.ext.lib["retrofit_converter_gson"]
+
+    def dep_list = rootProject.ext.core_lib
+
+    dep_list.each{
+        compileOnly it
+    }
+
+    compileOnly project(':ApiModule')
 }

@@ -27,10 +27,3 @@ fun Fragment.hasPermission(permission: String) =
 fun Fragment.checkSelfPermissionCompat(permission: String) =
     ContextCompat.checkSelfPermission(requireContext(), permission)
 
-fun Fragment.shouldShowRequestPermissionRationale(permission: String): Boolean{
-    return if(Build.VERSION.SDK_INT >= 23){
-        requireActivity().shouldShowRequestPermissionRationale(permission)
-    }else{
-        false
-    }
-}

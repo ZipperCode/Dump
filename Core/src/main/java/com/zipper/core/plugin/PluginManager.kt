@@ -13,6 +13,8 @@ object PluginManager : IPlugin, IAppStatusChangedListener {
 
     private val mModuleMap: MutableMap<String, IPlugin> = mutableMapOf()
 
+    val moduleMap:Map<String,IPlugin> get() = mModuleMap
+
     private var mMetaData: Bundle? = null
 
     fun init(context: Context) {
@@ -40,9 +42,9 @@ object PluginManager : IPlugin, IAppStatusChangedListener {
         }
     }
 
-    fun <T> getPlugin(name: String): T? {
+    inline fun <reified T> getPlugin(name: String): T? {
         return try {
-            mModuleMap[name] as? T
+            moduleMap[name] as? T
         } catch (e: Exception) {
             null
         }

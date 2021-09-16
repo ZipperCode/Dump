@@ -1,11 +1,11 @@
 package com.zipper.api.kgmodule
 
 import android.os.Build
-import com.sign.demo.LoggerInterceptor
 import com.zipper.api.kgmodule.bean.*
-import com.zipper.core.api.BaseApi
-import com.zipper.core.api.StringUtil
-import com.zipper.core.utils.L
+import com.zipper.api.module.BaseApi
+import com.zipper.api.module.MLog
+import com.zipper.api.module.LoggerInterceptor
+import com.zipper.api.module.StringUtil
 import kotlinx.coroutines.delay
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -108,7 +108,7 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
 
     override suspend fun execute() {
         if(!isInit){
-            L.d("must be init")
+            MLog.d("must be init")
             return
         }
         signState()
@@ -143,14 +143,14 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
             val response = kgTaskService.profile(param)
 
             if(!response.isSuccessful){
-                L.d(TAG,"【profile】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
+                MLog.d(TAG,"【profile】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
                 return@catchExp
             }
 
             val body = response.body()
 
             if(!(body?.errcode == 0 && body.status == 1)){
-                L.d(TAG, "【signState】 code = ${body?.errcode} msg = ${body?.error}")
+                MLog.d(TAG, "【signState】 code = ${body?.errcode} msg = ${body?.error}")
                 return@catchExp
             }
             val taskList = body.data.task
@@ -163,7 +163,7 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
                             if(canExecuteOnceTask){
                                 onceTaskSubmit(it)
                             }else{
-                                L.d(TAG, "如果需要执行一次性任务，将 canExecuteOnceTask 设置为true")
+                                MLog.d(TAG, "如果需要执行一次性任务，将 canExecuteOnceTask 设置为true")
                             }
                         } else {
                             sampleTaskSubmit(it)
@@ -185,7 +185,7 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
             val awardType = taskProfileTask.award_type
             val awardList = taskProfileTask._award_list
             val maxDoneCount = taskProfileTask.max_done_count
-            L.d(TAG, "【flushVideoRedPack】isOpen = $isOpen awardType = $awardType maxDoneCount = $maxDoneCount")
+            MLog.d(TAG, "【flushVideoRedPack】isOpen = $isOpen awardType = $awardType maxDoneCount = $maxDoneCount")
             if (awardList.isNotEmpty()) {
                 // taskid = 9 看视频
                 awardList.filter { award -> !award.done }.forEach { _ ->
@@ -204,7 +204,7 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
         val taskId = taskProfileTask.taskid
         val maxDoneCount = taskProfileTask.max_done_count
         catchExp {
-            L.d(TAG, "【sampleTaskSubmit】taskId = $taskId maxDoneCount = $maxDoneCount")
+            MLog.d(TAG, "【sampleTaskSubmit】taskId = $taskId maxDoneCount = $maxDoneCount")
             var times = 1
             var doneCount = stateList(taskId)
             while (doneCount != -1 && doneCount != maxDoneCount && times <= maxDoneCount && !closedTaskList.contains(taskId)){
@@ -224,20 +224,20 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
         val taskId = taskProfileTask.taskid
         val maxDoneCount = taskProfileTask.max_done_count
         catchExp {
-            L.d(TAG, "【onceTaskSubmit】taskId = $taskId maxDoneCount = $maxDoneCount")
+            MLog.d(TAG, "【onceTaskSubmit】taskId = $taskId maxDoneCount = $maxDoneCount")
             submit(taskId)
         }
     }
 
     private suspend fun fitTimeSubmit() {
         val taskId = 1105
-        L.d(TAG, "【fixTimeSubmit】taskId = $taskId")
+        MLog.d(TAG, "【fixTimeSubmit】taskId = $taskId")
         catchExp {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val resp = submit(taskId)
             
             if(resp == null){
-                L.d(TAG,"【fitTimeSubmit】submit 接口返回 null 不再继续执行了")
+                MLog.d(TAG,"【fitTimeSubmit】submit 接口返回 null 不再继续执行了")
                 return@catchExp
             }
 
@@ -245,10 +245,10 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
             val maxCountDone = resp.data.state.max_done_count
             val nextAwardTime = resp.data.state.next_award_time + 60
             val randomNetAwardTime = nextAwardTime + getRandomNum()
-            L.d(TAG,"")
+            MLog.d(TAG,"")
 
             if(doneCount <= maxCountDone){
-                L.d(TAG,"【定时收币】已执行${doneCount}次，最大可执行${maxCountDone}次，预计下次可执行时间为${dateFormat.format(Date(nextAwardTime * 1000L))}")
+                MLog.d(TAG,"【定时收币】已执行${doneCount}次，最大可执行${maxCountDone}次，预计下次可执行时间为${dateFormat.format(Date(nextAwardTime * 1000L))}")
                 // 调度任务执行
             }
         }
@@ -299,7 +299,7 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
         val result = catchExp {
             val response = kgTaskService.stateList(params, reqBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()))
             if (!response.isSuccessful) {
-                L.d(TAG,"【submit】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
+                MLog.d(TAG,"【submit】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
                 return@catchExp -1
             }
 
@@ -316,7 +316,7 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
             }else if(h5Token.isEmpty() && body?.errcode == 1002){
                 return@catchExp -2
             } else{
-                L.d(TAG, "【stateList】code = ${body?.errcode} msg = ${body?.error}")
+                MLog.d(TAG, "【stateList】code = ${body?.errcode} msg = ${body?.error}")
             }
 
             return@catchExp -1
@@ -367,26 +367,26 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
         param["clienttime"] = "${Date().time / 1000}"
         val reqJson = if (doubleCode.isEmpty()) { firstJson } else { secondJson }
         param["signature"] = StringUtil.signature(SIGN_2, param, reqJson)
-        L.d(TAG, "【submit】taskId = $taskId isDouble = ${doubleCode.isNotEmpty()}")
+        MLog.d(TAG, "【submit】taskId = $taskId isDouble = ${doubleCode.isNotEmpty()}")
 
         return catchExp {
             val response = kgTaskService.submit(param, reqJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()) )
             if (!response.isSuccessful) {
-                L.d(TAG,"【submit】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
+                MLog.d(TAG,"【submit】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
                 return@catchExp null
             }
             val body = response.body()
 
             if (body?.status == 1 && body.errcode == 0) {
                 if (body.is_double == false) {
-                    L.d("$taskId 第一次任务完成")
+                    MLog.d("$taskId 第一次任务完成")
                     val doubleCode1 = body.data.double_code
                     if (!doubleCode1.isNullOrEmpty()) {
                         delay(5000)
                         submit(taskId, doubleCode1)
                     }
                 } else {
-                    L.d("$taskId 看视频第二次任务成功")
+                    MLog.d("$taskId 看视频第二次任务成功")
                 }
             }else if(body?.status == 0 && body.errcode == 40001){
                 if(!closedTaskList.contains(taskId)){
@@ -408,14 +408,14 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
             val response = kgTaskService.signState(param)
 
             if (!response.isSuccessful) {
-                L.d(TAG,"【signState】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
+                MLog.d(TAG,"【signState】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
                 return@catchExp
             }
 
             val body = response.body()
 
             if(!(body?.errcode == 0 && body.status == 1)){
-                L.d(TAG, "【signState】 code = ${body?.errcode} msg = ${body?.error}")
+                MLog.d(TAG, "【signState】 code = ${body?.errcode} msg = ${body?.error}")
                 return@catchExp
             }
 
@@ -428,10 +428,10 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
 
             body.data.list.forEach {
                 if (it.today == 1) {
-                    L.d(TAG, "当前时间 $currentDate 上一次签到时间 ${it.code}")
-                    L.d(TAG, "当前签到第${signDay}天，获得 ${if (it.type == "coin") "${it.award_coins} 狗狗币" else "VIP ${it.award_vips} 天"}")
+                    MLog.d(TAG, "当前时间 $currentDate 上一次签到时间 ${it.code}")
+                    MLog.d(TAG, "当前签到第${signDay}天，获得 ${if (it.type == "coin") "${it.award_coins} 狗狗币" else "VIP ${it.award_vips} 天"}")
                     if(it.code != currentDate && !signDate.isNullOrEmpty()){
-                        L.d(TAG, "当前时间与上一次签到时间不同，执行签到")
+                        MLog.d(TAG, "当前时间与上一次签到时间不同，执行签到")
                         signOn(signDate)
                     }
                     return@forEach
@@ -466,22 +466,22 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
         catchExp {
             val response = kgTaskService.list(param)
             if(!response.isSuccessful){
-                L.d(TAG, "【info】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
+                MLog.d(TAG, "【info】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
                 return@catchExp
             }
             val body = response.body()
             if(!(body?.status == 1 && body.errcode == 0)){
                 // 20006 签名错误
-                L.d(TAG, "【info】 code = ${body?.errcode} msg = ${body?.error}")
+                MLog.d(TAG, "【info】 code = ${body?.errcode} msg = ${body?.error}")
                 return@catchExp
             }
 
             val giftTypeList = body.data.list
             giftTypeList.forEach {
                 it.gift_list.filter { gift -> gift.can_excharge }.forEach { gift ->
-                    L.d(TAG, "商品：${gift.name} 需要花费：${gift.coins}狗狗币，还剩${gift.total_num - gift.remain_num}件")
+                    MLog.d(TAG, "商品：${gift.name} 需要花费：${gift.coins}狗狗币，还剩${gift.total_num - gift.remain_num}件")
                 }
-                L.d(TAG, "------------------------------------------------------------------------------------------")
+                MLog.d(TAG, "------------------------------------------------------------------------------------------")
             }
         }
     }
@@ -513,17 +513,17 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
         catchExp {
             val response = kgTaskService.info(param)
             if(!response.isSuccessful){
-                L.d(TAG, "【info】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
+                MLog.d(TAG, "【info】接口访问失败 http code = ${response.code()} msg = ${response.message()}")
                 return@catchExp
             }
 
             val body = response.body()
             if (body?.status == 1 && body.errcode == 0) {
-                L.d(TAG, "用户：${body.data.base.nickname} 是否新用户： ${body.data.state.is_new_user}")
-                L.d(TAG, "总的狗狗币 ${body.data.account.total_coins} 相当于人民币 ${body.data.account.total_coins / 10000.0}元")
+                MLog.d(TAG, "用户：${body.data.base.nickname} 是否新用户： ${body.data.state.is_new_user}")
+                MLog.d(TAG, "总的狗狗币 ${body.data.account.total_coins} 相当于人民币 ${body.data.account.total_coins / 10000.0}元")
             }else{
                 // 20006 签名错误
-                L.d(TAG, "【info】 code = ${body?.errcode} msg = ${body?.error}")
+                MLog.d(TAG, "【info】 code = ${body?.errcode} msg = ${body?.error}")
             }
         }
     }
@@ -565,24 +565,24 @@ class KgTaskApi : BaseApi("https://escp.kugou.com/") {
             val response = kgTaskService.signOn(param, jsonBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()))
 
             if(!response.isSuccessful){
-                L.d(TAG, "【signOn】接口请求失败 http code = ${response.code()} msg = ${response.message()}")
+                MLog.d(TAG, "【signOn】接口请求失败 http code = ${response.code()} msg = ${response.message()}")
                 return@catchExp
             }
             val body = response.body()
 
             if(!(body?.status == 1 && body.errcode == 0)){
-                L.d("body error = ${body?.error}")
+                MLog.d("body error = ${body?.error}")
                 return@catchExp
             }
 
             if (!body.is_double) {
-                L.d("第一次签到成功")
+                MLog.d("第一次签到成功")
                 val doubleCode1 = body.data.double_code
                 if (!doubleCode1.isNullOrEmpty()) {
                     signOn(signDate, doubleCode1)
                 }
             } else {
-                L.d("看视频第二次签到成功")
+                MLog.d("看视频第二次签到成功")
             }
         }
     }

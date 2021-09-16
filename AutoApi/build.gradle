@@ -57,4 +57,6 @@ dependencies {
     implementation rootProject.ext.lib["ax_work_runtime_ktx"]
     implementation rootProject.ext.lib["ax_legacy_support"]
 
+    kapt rootProject.ext.kapt_lib["ax_room_compoler"]
+    kapt rootProject.ext.kapt_lib["ax_lifecycle_compiler"]
 }

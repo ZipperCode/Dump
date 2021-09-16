@@ -1,0 +1,55 @@
+buildscript{
+    if (rootProject.ext.moduleDebug){
+        apply plugin: 'com.android.library'
+    }else{
+        apply plugin: 'com.android.application'
+    }
+}
+plugins{
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        if (rootProject.ext.moduleDebug){
+            applicationId "com.zipper.api.module.test"
+        }
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    dataBinding{
+        enabled = true
+    }
+
+    kapt{
+        generateStubs = true
+    }
+}
+
+dependencies {
+    compileOnly project(':ApiModule')
+}

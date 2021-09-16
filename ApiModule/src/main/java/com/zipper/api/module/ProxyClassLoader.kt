@@ -57,7 +57,9 @@ class ProxyClassLoader : PathClassLoader {
     fun addDexPath(moduleDexList: List<String>){
         try {
             val dexPathListCls = ReflectUtils.loadHideForName("dalvik.system.DexPathList")
-            val pathListObj = ReflectUtils.loadHideFieldValue(this,"pathList")
+            val baseDexClassLoaderCls = BaseDexClassLoader::class.java
+            val pathListField = ReflectUtils.loadHideField(baseDexClassLoaderCls, "pathList")
+            val pathListObj = pathListField.get(this)
             val addDexPathMethod = ReflectUtils.loadHideMethod(dexPathListCls, "addDexPath", String::class.java, File::class.java)
 
             for (moduleDexPath in moduleDexList){
@@ -67,7 +69,7 @@ class ProxyClassLoader : PathClassLoader {
                     continue
                 }
                 try {
-                    addDexPathMethod.invoke(pathListObj, file.absoluteFile, null)
+                    addDexPathMethod.invoke(pathListObj, file.absolutePath, null)
                     L.d(TAG,"dexFile ${file.absoluteFile} 成功添加到DexPathList")
                 }catch (e: Exception){
                     e.printStackTrace()

@@ -1,5 +1,6 @@
 package com.zipper.auto.api.activity
 
+import com.zipper.api.module.ApiModuleManager
 import com.zipper.api.module.bean.ApiModuleInfo
 import com.zipper.api.module.ApiModuleTaskInfo
 import kotlinx.coroutines.flow.Flow
@@ -13,39 +14,7 @@ import kotlinx.coroutines.flow.flow
 class HomeRepository {
 
     val apiModuleListFlow: Flow<List<ApiModuleInfo>> = flow {
-        emit(mutableListOf(
-            ApiModuleInfo(
-                "moduleKey",
-                "测试模块",
-                ApiModuleInfo.ModuleStoreType.TYPE_ASSETS,
-                "文件名称",
-                "路径",
-                ApiModuleInfo.ModuleType.TYPE_AAR,
-                "com....",
-                "100000L",
-                false,
-                mutableListOf(
-                    ApiModuleTaskInfo(
-                        "testModuleTask1",
-                        "模块测试任务1",
-                        "任务描述",
-                        10000L
-                    ),
-                    ApiModuleTaskInfo(
-                        "testModuleTask1",
-                        "模块测试任务1",
-                        "任务描述",
-                        10000L
-                    ),
-                    ApiModuleTaskInfo(
-                        "testModuleTask1",
-                        "模块测试任务1",
-                        "任务描述",
-                        10000L
-                    )
-                )
-            )
-        ))
+        emit(ApiModuleManager.moduleInfoList)
     }
 
     fun addModule(apiModule: ApiModuleInfo){

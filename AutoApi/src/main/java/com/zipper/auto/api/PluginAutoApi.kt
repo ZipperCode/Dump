@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.util.Log
 import androidx.work.*
+import com.zipper.api.module.ApiModuleManager
 import com.zipper.auto.api.activity.ApiActivity
 import com.zipper.auto.api.job.FetchWorker
 import com.zipper.auto.api.job.UpdateStatusWorker
@@ -33,6 +34,7 @@ class PluginAutoApi : BasePlugin(), IPluginAutoApi {
     override fun onApplicationCreate(baseApp: BaseApp) {
         super.onApplicationCreate(baseApp)
         jjsDatabase = JJSDatabase.openDatabase(baseApp)
+        ApiModuleManager.initModule(baseApp)
     }
 
     override fun fetchData(context: Context?) {

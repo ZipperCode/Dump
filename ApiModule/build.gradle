@@ -48,6 +48,4 @@ repositories {
 
 dependencies {
     implementation project(':Core')
-    implementation project(':BaseService')
-    implementation rootProject.ext.lib["ax_work_runtime_ktx"]
 }

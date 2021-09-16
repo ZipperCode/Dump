@@ -1,32 +1,30 @@
 package com.zipper.api.kgmodule
 
-import com.zipper.api.module.IApiModule
-import com.zipper.core.api.BaseApi
-import com.zipper.core.utils.L
-
+import android.content.Context
+import com.zipper.api.module.ApiModuleContext
+import com.zipper.api.module.BaseApiModule
+import com.zipper.api.module.MLog
 /**
  *
  * @author zhangzhipeng
  * @date   2021/9/14
  **/
-class KgApiModuleImpl: IApiModule {
+class KgApiModuleImpl(context: ApiModuleContext): BaseApiModule(context) {
 
     companion object{
         const val TAG: String = "KgApiModuleImpl"
     }
 
-    private var debug: Boolean = true
-
     override fun moduleUniqueKey(): String = "KG_MODULE_UNIQUE_KEY"
 
     private val variableMap = mutableMapOf<String,String>()
 
-    override fun debugMode(debug: Boolean) {
-        this.debug = debug
+    override fun getModuleContext(): Context {
+        return context;
     }
 
     override fun setVariable(variableMap: Map<String, String>) {
-        L.d(TAG,"注入环境变量 ==> $variableMap")
+        MLog.d(TAG,"注入环境变量 ==> $variableMap")
         this.variableMap.clear()
         this.variableMap.putAll(variableMap)
     }

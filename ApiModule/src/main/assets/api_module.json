@@ -1,0 +1,24 @@
+[
+  {
+    "moduleKey": "kgModule",
+    "moduleName": "酷狗模块",
+    "moduleStoreType":1,
+    "moduleFileName": "KgModule-debug.apk",
+    "modulePath": "modules/KgModule-debug.apk",
+    "moduleType": 3,
+    "moduleImplClass": "com.zipper.api.kgmodule.KgApiModuleImpl",
+    "isBan": true,
+    "moduleExecTime": "0 0 8 * * ? "
+  },
+  {
+    "moduleKey": "testModule",
+    "moduleName": "测试模块",
+    "moduleStoreType":1,
+    "moduleFileName": "TestModule-debug.apk",
+    "modulePath": "modules/TestModule-debug.apk",
+    "moduleType": 3,
+    "moduleImplClass": "com.zipper.testmodule.TestModuleImpl",
+    "isBan": false,
+    "moduleExecTime": "0 0 8 * * ? "
+  }
+]

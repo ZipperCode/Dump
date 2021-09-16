@@ -71,6 +71,10 @@ class ApiModuleContext(base: Context,moduleFile: File): ContextWrapper(base) {
         return mPackageResourcePath
     }
 
+    override fun getClassLoader(): ClassLoader {
+        return mPluginClassLoader;
+    }
+
     override fun getSystemService(name: String): Any {
         return when(name){
             Context.LAYOUT_INFLATER_SERVICE -> {
