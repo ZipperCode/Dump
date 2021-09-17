@@ -1,6 +1,7 @@
 package com.zipper.api.module
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 
 /**
  *
@@ -15,6 +16,10 @@ interface IApiModule {
 
     fun getModuleContext(): Context
 
+    fun getMainFragment(): Fragment?
+
+    fun getFragmentClass(): List<Class<Fragment>>
+
     /**
      * 注入环境变量
      */
@@ -24,4 +29,6 @@ interface IApiModule {
      * 执行任务
      */
     fun execute()
+
+    fun release();
 }

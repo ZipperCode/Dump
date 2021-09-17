@@ -8,7 +8,9 @@
     "moduleType": 3,
     "moduleImplClass": "com.zipper.api.kgmodule.KgApiModuleImpl",
     "isBan": true,
-    "moduleExecTime": "0 0 8 * * ? "
+    "moduleExecTime": "0 0 8 * * ? ",
+    "moduleVersion": 1,
+    "moduleMd5": "debug"
   },
   {
     "moduleKey": "testModule",
@@ -19,6 +21,8 @@
     "moduleType": 3,
     "moduleImplClass": "com.zipper.testmodule.TestModuleImpl",
     "isBan": false,
-    "moduleExecTime": "0 0 8 * * ? "
+    "moduleExecTime": "0 0 8 * * ? ",
+    "moduleVersion": 1,
+    "moduleMd5": "debug"
   }
 ]

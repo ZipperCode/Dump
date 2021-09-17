@@ -1,4 +1,4 @@
-package com.zipper.api.module;
+package com.zipper.api.module.util;
 
 import android.os.Build;
 import android.util.Log;

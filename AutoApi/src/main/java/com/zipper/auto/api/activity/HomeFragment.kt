@@ -1,15 +1,16 @@
 package com.zipper.auto.api.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.zipper.api.module.ApiModuleManager
+import com.zipper.api.module.activity.ModuleActivity
 import com.zipper.auto.api.BR
 import com.zipper.auto.api.R
 import com.zipper.auto.api.activity.adapter.ModuleTaskAdapter
-import com.zipper.auto.api.activity.adapter.TaskAdapter
 import com.zipper.auto.api.databinding.FragmentHomeBinding
 import com.zipper.core.delegates.ViewById
 import com.zipper.core.fragment.BaseNavVmBFragment
@@ -34,7 +35,9 @@ class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
                         mBaseViewModel.customCallModule(bean.moduleKey)
                     }
                     1 ->{
-
+                        val intent = Intent(requireActivity(), ModuleActivity::class.java)
+                        intent.putExtra(ModuleActivity.API_MODULE_KEY, bean.moduleKey)
+                        startActivity(intent)
                     }
                     2 ->{
 

@@ -5,7 +5,7 @@ import com.zipper.api.kgmodule.bean.*
 import com.zipper.api.module.BaseApi
 import com.zipper.api.module.MLog
 import com.zipper.api.module.LoggerInterceptor
-import com.zipper.api.module.StringUtil
+import com.zipper.api.module.util.StringUtil
 import kotlinx.coroutines.delay
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

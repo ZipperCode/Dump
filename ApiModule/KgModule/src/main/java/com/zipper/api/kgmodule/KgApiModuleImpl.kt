@@ -1,6 +1,7 @@
 package com.zipper.api.kgmodule
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.zipper.api.module.ApiModuleContext
 import com.zipper.api.module.BaseApiModule
 import com.zipper.api.module.MLog
@@ -16,11 +17,14 @@ class KgApiModuleImpl(context: ApiModuleContext): BaseApiModule(context) {
     }
 
     override fun moduleUniqueKey(): String = "KG_MODULE_UNIQUE_KEY"
+    override fun getMainFragment(): Fragment? {
+        return null
+    }
 
     private val variableMap = mutableMapOf<String,String>()
 
     override fun getModuleContext(): Context {
-        return context;
+        return context
     }
 
     override fun setVariable(variableMap: Map<String, String>) {

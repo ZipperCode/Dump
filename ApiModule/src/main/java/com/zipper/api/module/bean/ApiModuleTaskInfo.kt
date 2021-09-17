@@ -1,4 +1,4 @@
-package com.zipper.api.module
+package com.zipper.api.module.bean
 
 /**
  *
