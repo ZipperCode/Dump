@@ -47,5 +47,5 @@ repositories {
 }
 
 dependencies {
-    implementation project(':Core')
+    api project(':Core')
 }

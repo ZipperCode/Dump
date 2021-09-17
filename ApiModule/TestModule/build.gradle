@@ -7,7 +7,6 @@ buildscript{
 }
 plugins{
     id 'kotlin-android'
-    id 'kotlin-kapt'
 }
 
 android {
@@ -39,14 +38,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    dataBinding{
-        enabled = true
-    }
-
-    kapt{
-        generateStubs = true
     }
 }
 

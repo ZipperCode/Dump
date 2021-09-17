@@ -39,14 +39,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
-    dataBinding{
-        enabled = true
-    }
-
-    kapt{
-        generateStubs = true
-    }
 }
 
 dependencies {
@@ -59,12 +51,6 @@ dependencies {
 //    compileOnly rootProject.ext.lib["gson"]
 //    compileOnly rootProject.ext.lib["retrofit"]
 //    compileOnly rootProject.ext.lib["retrofit_converter_gson"]
-
-    def dep_list = rootProject.ext.core_lib
-
-    dep_list.each{
-        compileOnly it
-    }
 
     compileOnly project(':ApiModule')
 }

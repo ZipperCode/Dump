@@ -35,7 +35,7 @@ class ApiModuleContext(base: Context,moduleFile: File): ContextWrapper(base) {
             throw RuntimeException("not found resource apk, init PluginContext error")
         }
         // 插件类加载器
-        mPluginClassLoader = PathClassLoader(moduleFile.absolutePath, ClassLoader.getSystemClassLoader())
+        mPluginClassLoader = PathClassLoader(moduleFile.absolutePath, baseContext.classLoader)
         val packageArchiveInfo = packageManager.getPackageArchiveInfo(moduleFile.absolutePath, 0)
             ?: throw RuntimeException("not found packageArchiveInfo ${moduleFile.absolutePath} 模块包不存在")
         // 插件包信息

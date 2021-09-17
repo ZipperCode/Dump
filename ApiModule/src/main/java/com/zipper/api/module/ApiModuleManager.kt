@@ -114,7 +114,7 @@ object ApiModuleManager {
     }
 
     fun banModule(moduleKey: String){
-
+        // TODO
     }
 
     private fun loadAssetsModuleConfig(){
@@ -180,7 +180,6 @@ object ApiModuleManager {
 
     private fun initModuleCode(){
         val unExistsModule = mutableListOf<ApiModuleInfo>()
-        val classLoader = ProxyClassLoader(javaClass.classLoader!!)
 
         for (moduleInfo in _moduleInfoList){
             val moduleFile = File(moduleInfo.modulePath)
@@ -191,7 +190,6 @@ object ApiModuleManager {
             // 添加资源
             try {
                 val moduleContext = ApiModuleContext(context,File(moduleInfo.modulePath))
-                val packageName = moduleContext.packageName
                 moduleContextMap[moduleInfo.moduleKey] = moduleContext
             }catch (e: Exception){
                 e.printStackTrace()
@@ -199,7 +197,7 @@ object ApiModuleManager {
         }
         _moduleInfoList.removeAll(unExistsModule)
         // 加载插件代码
-        classLoader.addDexPath(_moduleInfoList.map { it.modulePath }.toList())
+        ProxyClassLoader.hookElement(_moduleInfoList.map { it.modulePath }.toList(), context.classLoader)
 
         for (moduleInfo in _moduleInfoList){
             loadApiModuleClass(moduleInfo)
@@ -216,21 +214,7 @@ object ApiModuleManager {
                 return resultModule
             }
             val moduleImplClass = Class.forName(moduleInfo.moduleImplClass)
-            val moduleConstructor = moduleImplClass.constructors[0]
-
-            val moduleType = ApiModuleContext::class.java
-            val forName = Class.forName("com.zipper.api.module.ApiModuleContext")
-
-            for (p in moduleConstructor.genericParameterTypes){
-                System.err.println("constructor p = $p")
-                if(p == moduleType){
-                    System.err.println("constructor p is moduleType = $moduleType")
-                }
-                if (p == forName){
-                    System.err.println("constructor p is forName = $forName")
-                }
-            }
-//            val moduleConstructor = moduleImplClass.getDeclaredConstructor(ApiModuleContext::class.java)
+            val moduleConstructor = moduleImplClass.getDeclaredConstructor(ApiModuleContext::class.java)
             resultModule = moduleConstructor.newInstance(moduleContext) as IApiModule
             moduleMap[moduleInfo.moduleKey] = resultModule
         }catch (e: Exception){
