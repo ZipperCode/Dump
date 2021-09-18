@@ -33,10 +33,9 @@ class VariableFragment: BaseNavVmBFragment<VariableViewModel,FragmentVariableBin
         super.onViewCreated(view, savedInstanceState)
 
         flAdd.setOnClickListener {
-//            VariableEditDialog.showDialog(requireActivity(), null){ resultBean ->
-//                mBaseViewModel.containAndAdd(resultBean)
-//            }
-            navController.navigate(R.id.action_nav_variable_fragment_to_fourFragment)
+            VariableEditDialog.showDialog(requireActivity(), null){ resultBean ->
+                mBaseViewModel.updateOrAdd(resultBean)
+            }
         }
 
         mBaseViewModel.variableItemList.observe(viewLifecycleOwner, Observer {

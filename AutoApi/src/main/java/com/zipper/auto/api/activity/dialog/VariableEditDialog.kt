@@ -47,6 +47,7 @@ class VariableEditDialog: BaseBindDialog<DialogEditVariableBinding>() {
 
     override fun onDismiss(dialog: DialogInterface) {
         onDismiss?.invoke(variableItemBean!!)
+        onDismiss = null
         super.onDismiss(dialog)
     }
 

@@ -19,7 +19,7 @@ class VariableViewModel: ViewModel() {
         )
     }
 
-    fun containAndAdd(variableItemBean: VariableItemBean){
+    fun updateOrAdd(variableItemBean: VariableItemBean){
         if(variableItemBean.name.get().isNullOrEmpty() || variableItemBean.value.get().isNullOrEmpty()){
             return
         }
@@ -30,4 +30,5 @@ class VariableViewModel: ViewModel() {
             _variableItemList.value = variables
         }
     }
+
 }
