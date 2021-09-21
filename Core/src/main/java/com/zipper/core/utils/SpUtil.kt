@@ -11,7 +11,7 @@ object SpUtil {
 
     private lateinit var appContext: Context
 
-    const val BASE_NAME = "sp_base"
+    private const val BASE_NAME = "sp_base"
 
     private val cacheSp: MutableMap<String, SharedPreferencesWrapper> by lazy {
         mutableMapOf<String, SharedPreferencesWrapper>()

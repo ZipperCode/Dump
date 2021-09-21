@@ -30,5 +30,7 @@ interface IApiModule {
      */
     fun execute()
 
+    fun stop()
+
     fun release();
 }

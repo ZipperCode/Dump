@@ -3,6 +3,7 @@ package com.zipper.auto.api.activity.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
@@ -14,6 +15,7 @@ import com.zipper.auto.api.activity.bean.ModuleTaskBean
 import com.zipper.auto.api.databinding.ListItemModuleTaskBinding
 import com.zipper.core.adapter.BaseBindingListAdapter
 import com.zipper.core.adapter.BaseBindingViewHolder
+import java.lang.Exception
 
 /**
  *
@@ -31,17 +33,27 @@ class ModuleTaskAdapter(
 
     override fun onBindItem(holder: BaseBindingViewHolder<ListItemModuleTaskBinding>, position: Int, bean: ModuleTaskBean) {
         holder.binding.setVariable(BR.item, bean)
+        clickable(holder, bean)
         holder.binding.apply {
             btnModuleRun.setOnClickListener {
                 onClickBtn.invoke(CLICK_BTN_TYPE_RUN, bean)
             }
             btnModuleBan.setOnClickListener {
                 onClickBtn.invoke(CLICK_BTN_TYPE_BAN,bean)
+                clickable(holder, bean)
             }
 
             btnModuleDel.setOnClickListener {
                 onClickBtn.invoke(CLICK_BTN_TYPE_DEL, bean)
             }
+        }
+    }
+
+    private fun clickable(holder: BaseBindingViewHolder<ListItemModuleTaskBinding>,bean: ModuleTaskBean){
+        try {
+            (holder.itemView as CardView).isClickable = !bean.moduleIsBan.get()
+        }catch (e: Exception){
+            e.printStackTrace()
         }
     }
 
@@ -54,11 +66,11 @@ class ModuleTaskAdapter(
 
 class ModuleTaskDiff : DiffUtil.ItemCallback<ModuleTaskBean>() {
     override fun areItemsTheSame(oldItem: ModuleTaskBean, newItem: ModuleTaskBean): Boolean {
-        return oldItem == newItem
+        return oldItem.moduleKey == newItem.moduleKey
     }
 
     override fun areContentsTheSame(oldItem: ModuleTaskBean, newItem: ModuleTaskBean): Boolean {
-        return oldItem.moduleKey == newItem.moduleKey
+        return oldItem == newItem
     }
 
 }

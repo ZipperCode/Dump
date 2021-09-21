@@ -1,6 +1,11 @@
 package com.zipper.api.module.bean
 
 import androidx.annotation.IntDef
+import com.zipper.api.module.util.CronExpression
+import com.zipper.api.module.util.CronExpressionEx
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class ApiModuleInfo(
     val moduleKey: String,
@@ -13,11 +18,51 @@ data class ApiModuleInfo(
     val moduleType: Int,
     val moduleImplClass: String,
     val moduleExecTime: String,
-    val isBan: Boolean,
-    var moduleVersion: Int = 1,
+    var isBan: Boolean,
+    var isRun: Boolean = false,
+    var moduleVersion: Int = 100,
     var moduleMd5: String = "debug",
     val apiModuleTasks: List<ApiModuleTaskInfo>? = null
 ){
+    /**
+     * 当前执行时间
+     */
+    var currentExecTime: Long = 0L
+
+    /**
+     * 下一次执行时间
+     */
+    var nextExecTime: Long = 0L
+
+    /**
+     * 当前可执行的时间
+     * @return  根据当前时间获取的可执行时间
+     */
+    fun parserCronTime(): Date{
+        val cronExpressionEx = CronExpressionEx(moduleExecTime)
+        return cronExpressionEx.getNextValidTimeAfter(Date())
+    }
+
+    fun getExecuteTimeFormat(): String{
+        val date = parserCronTime()
+        try{
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            return sdf.format(date)
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
+        return "format error"
+    }
+
+    /**
+     * 下一次执行时间
+     * 相对于当前执行时间
+     * @return  当前执行的下一次时间
+     */
+    fun getNextCronTime(): Date{
+        val cronExpressionEx = CronExpressionEx(moduleExecTime)
+        return cronExpressionEx.getNextValidTimeAfter(parserCronTime())
+    }
 
     @IntDef(value = [ModuleType.TYPE_JAR, ModuleType.TYPE_AAR, ModuleType.TYPE_APK])
     @Retention(AnnotationRetention.SOURCE)

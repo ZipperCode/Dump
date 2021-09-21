@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="item"
             type="com.zipper.auto.api.activity.bean.ModuleTaskBean" />
@@ -12,90 +13,143 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardUseCompatPadding="true"
-        app:cardElevation="3dp"
-        android:focusable="true"
         android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/white"
+        banCardBackgroundColor="@{item.moduleIsBan}"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true"
         app:contentPadding="10dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
             <TextView
                 android:id="@+id/tv_module_name_title"
+                banTextColor="@{item.moduleIsBan}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/module_name"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_module_name"
+                banTextColor="@{item.moduleIsBan}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="0dp"
-                android:textSize="12sp"
                 android:text="@{item.moduleName}"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_module_name_title"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tv_module_exec_time"
                 app:layout_constraintStart_toEndOf="@+id/tv_module_name_title"
                 app:layout_constraintTop_toTopOf="@+id/tv_module_name_title"
                 tools:text="Task模块1" />
 
             <TextView
                 android:id="@+id/tv_module_exec_time_title"
+                banTextColor="@{item.moduleIsBan}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/module_execute_time"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_module_name_title" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_version_title" />
 
             <TextView
                 android:id="@+id/tv_module_exec_time"
+                banTextColor="@{item.moduleIsBan}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="0dp"
+                android:text="@{item.moduleExecTime}"
                 android:textSize="12sp"
-                android:text="@{item.moduleExecTimeFormat}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_module_exec_time_title"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/progressBar2"
                 app:layout_constraintStart_toEndOf="@+id/tv_module_exec_time_title"
                 app:layout_constraintTop_toTopOf="@+id/tv_module_exec_time_title"
                 tools:text="2021-10-10 10:10:10" />
 
             <TextView
+                android:id="@+id/tv_version_title"
+                banTextColor="@{item.moduleIsBan}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/module_version"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_module_name_title" />
+
+            <TextView
+                android:id="@+id/tv_version"
+                banTextColor="@{item.moduleIsBan}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.moduleVersionFormat}"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_version_title"
+                app:layout_constraintStart_toEndOf="@+id/tv_version_title"
+                app:layout_constraintTop_toTopOf="@+id/tv_version_title"
+                tools:text="v1.00" />
+
+            <TextView
                 android:id="@+id/btn_module_run"
+                banTextColor="@{item.moduleIsBan}"
                 android:layout_width="50dp"
                 android:layout_height="@dimen/module_btn_h"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="center"
                 android:lines="1"
                 android:padding="0dp"
                 android:text="@string/module_run"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/btn_module_ban"
+                app:layout_constraintEnd_toStartOf="@+id/tv_module_stop"
+                app:layout_constraintTop_toTopOf="@+id/tv_module_stop" />
+
+            <TextView
+                android:id="@+id/tv_module_stop"
+                android:layout_width="@dimen/module_btn_w"
+                android:layout_height="@dimen/module_btn_h"
+                android:layout_marginEnd="16dp"
+                android:text="@string/module_stop"
+                banTextColor="@{item.moduleIsBan}"
+                android:lines="1"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_module_ban"
-                app:layout_constraintTop_toTopOf="@+id/btn_module_ban" />
+                app:layout_constraintTop_toTopOf="@+id/btn_module_ban"
+                tools:text="停止运行" />
 
             <TextView
                 android:id="@+id/btn_module_ban"
+                banBtnText="@{item.moduleIsBan}"
                 android:layout_width="@dimen/module_btn_w"
                 android:layout_height="@dimen/module_btn_h"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="center"
                 android:lines="1"
                 android:padding="0dp"
-                android:text="@string/module_ban"
+                android:textColor="@color/task_item_normal_text_color"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/btn_module_del"
                 app:layout_constraintEnd_toStartOf="@+id/btn_module_del"
-                app:layout_constraintTop_toTopOf="@+id/btn_module_del" />
+                app:layout_constraintTop_toTopOf="@+id/btn_module_del"
+                tools:text="@string/module_ban" />
 
             <TextView
                 android:id="@+id/btn_module_del"
@@ -105,10 +159,23 @@
                 android:gravity="center"
                 android:lines="1"
                 android:text="@string/module_delete"
+                android:textColor="@color/task_item_normal_text_color"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_module_exec_time_title" />
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                banViewVisible="@{item.isRun}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

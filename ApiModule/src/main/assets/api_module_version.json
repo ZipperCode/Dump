@@ -1,11 +1,11 @@
 {
   "kgModule": {
-    "moduleVersion": 1,
+    "moduleVersion": 100,
     "modulePath": "modules/KgModule-debug.apk",
     "moduleMd5": "debug"
   },
   "testModule": {
-    "moduleVersion": 1,
+    "moduleVersion": 100,
     "modulePath": "modules/TestModule-debug.apk",
     "moduleMd5": "debug"
   }

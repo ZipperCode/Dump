@@ -1,0 +1,26 @@
+[
+  {
+    "name": "VAR_TEST_MODULE",
+    "desc": "测试模块变量"
+  },
+  {
+    "name": "VAR_TEST_MODULE",
+    "desc": "测试模块变量"
+  },
+  {
+    "name": "VAR_KG_MODULE_USER_ID",
+    "desc": "酷狗模块用户Id"
+  },
+  {
+    "name": "VAR_KG_MODULE_TOKEN",
+    "desc": "酷狗客户端Token"
+  },
+  {
+    "name": "VAR_KG_MODULE_H5_TOKEN",
+    "desc": "酷狗H5Token"
+  },
+  {
+    "name": "VAR_KG_MODULE_COOKIE",
+    "desc": "酷狗Cookie"
+  }
+]

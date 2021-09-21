@@ -9,7 +9,7 @@
     "moduleImplClass": "com.zipper.api.kgmodule.KgApiModuleImpl",
     "isBan": true,
     "moduleExecTime": "0 0 8 * * ? ",
-    "moduleVersion": 1,
+    "moduleVersion": 100,
     "moduleMd5": "debug"
   },
   {
@@ -22,7 +22,7 @@
     "moduleImplClass": "com.zipper.testmodule.TestModuleImpl",
     "isBan": false,
     "moduleExecTime": "0 0 8 * * ? ",
-    "moduleVersion": 1,
+    "moduleVersion": 100,
     "moduleMd5": "debug"
   }
 ]

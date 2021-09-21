@@ -16,4 +16,9 @@
     <color name="title_color">#505050</color>
     <color name="info_color">#8E8E8E</color>
 
+    <color name="bg_task_item_ban">#F3F3F3</color>
+    <color name="bg_task_item_normal">#FFFFFF</color>
+    <color name="task_item_ban_text_color">#9C9C9C</color>
+    <color name="task_item_normal_text_color">#818181</color>
+
 </resources>

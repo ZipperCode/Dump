@@ -21,6 +21,10 @@ class KgApiModuleImpl(context: ApiModuleContext): BaseApiModule(context) {
         return null
     }
 
+    override fun getFragmentClass(): List<Class<Fragment>> {
+        return emptyList()
+    }
+
     private val variableMap = mutableMapOf<String,String>()
 
     override fun getModuleContext(): Context {
@@ -34,8 +38,12 @@ class KgApiModuleImpl(context: ApiModuleContext): BaseApiModule(context) {
     }
 
     override fun execute() {
-        val userId = variableMap["KG_MODULE_USER_ID"]
-        val token = variableMap["KG_MODULE_TOKEN"]
-        val h5Token = variableMap["KG_MODULE_H5_TOKEN"]
+        val userId = variableMap[Const.KG_MODULE_USER_ID]
+        val token = variableMap[Const.KG_MODULE_TOKEN]
+        val h5Token = variableMap[Const.KG_MODULE_H5_TOKEN]
+    }
+
+    override fun stop() {
+
     }
 }

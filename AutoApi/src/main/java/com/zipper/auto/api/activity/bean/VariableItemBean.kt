@@ -11,7 +11,6 @@ data class VariableItemBean(
     val isGlobal:ObservableBoolean = ObservableBoolean(false)
 ) {
 
-
     companion object{
         fun convert(apiVariableBean: ApiVariableBean): VariableItemBean{
             return VariableItemBean(

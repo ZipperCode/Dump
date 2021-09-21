@@ -15,6 +15,7 @@ abstract class BaseApiModule(val context: ApiModuleContext): IApiModule {
             return instance as? T
         }
     }
+
     init {
         instance = this
     }
@@ -30,6 +31,8 @@ abstract class BaseApiModule(val context: ApiModuleContext): IApiModule {
     override fun getModuleContext(): Context {
         return context
     }
+
+    override fun stop() {}
 
     override fun release() {
         instance = null

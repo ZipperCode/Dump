@@ -18,6 +18,10 @@ class TestModuleImpl(context: ApiModuleContext): BaseApiModule(context) {
         return TestFragment()
     }
 
+    override fun getFragmentClass(): List<Class<Fragment>> {
+        TODO("Not yet implemented")
+    }
+
     override fun setVariable(variableMap: Map<String, String>) {
         MLog.d(TAG,"注入环境变量 ==> $variableMap")
     }

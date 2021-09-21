@@ -7,4 +7,8 @@ data class ApiVariableBean(
     val isGlobal: Boolean,
     val isBan: Boolean,
     val usedModule:List<String>
-)
+){
+    fun check(): Boolean{
+        return name.isNotEmpty() && value.isNotEmpty()
+    }
+}

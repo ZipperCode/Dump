@@ -9,6 +9,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 /**
  *
@@ -30,6 +31,15 @@ abstract class BaseBindingListAdapter<ITEM,VDB : ViewDataBinding >(
     override fun onBindViewHolder(holder: BaseBindingViewHolder<VDB>, position: Int) {
         onBindItem(holder,position, getItem(position))
         holder.binding.executePendingBindings()
+    }
+
+    override fun onViewRecycled(holder: BaseBindingViewHolder<VDB>) {
+        super.onViewRecycled(holder)
+        holder.binding.unbind()
+    }
+
+    override fun submitList(list: List<ITEM>?) {
+        super.submitList(list?.let { ArrayList(it) })
     }
 
     abstract fun onBindItem(holder: BaseBindingViewHolder<VDB>, position: Int, bean: ITEM)
