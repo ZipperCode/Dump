@@ -26,14 +26,14 @@
         <activity android:name=".activity.HelpActivity" />
         <activity android:name=".MainActivity"
             android:screenOrientation="fullSensor">
-
-        </activity>
-        <activity android:name="com.zipper.auto.api.activity.ApiActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name="com.zipper.auto.api.activity.ApiActivity">
+
         </activity>
         <activity android:name=".activity.AppsActivity" />
         <activity android:name=".activity.AppDetailActivity" />

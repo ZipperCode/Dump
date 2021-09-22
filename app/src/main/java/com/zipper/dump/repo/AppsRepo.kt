@@ -2,6 +2,7 @@ package com.zipper.dump.repo
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.text.TextUtils
 import androidx.databinding.ObservableBoolean
 import com.zipper.core.BaseApp
@@ -21,12 +22,6 @@ import kotlinx.coroutines.withContext
  *  @description
  **/
 class AppsRepo {
-    @Deprecated("ss")
-    private val _appsListData = MutableStateFlow<List<AppsInfo>>(mutableListOf())
-
-    @Deprecated("ss")
-    val appsListData: Flow<List<AppsInfo>>
-        get() = _appsListData
 
     private val _savePksInfo = MutableStateFlow(mutableSetOf<String>())
 
@@ -67,28 +62,82 @@ class AppsRepo {
             loadSaveDumpPksInfo()
         }
 
-    suspend fun getInstallApks(context: Context): List<AppsInfo> = withContext(Dispatchers.IO) {
-        return@withContext context.packageManager.getInstalledApplications(0).map {
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_LAUNCHER)
-            intent.setPackage(it.packageName)
-            val launchIntentForPackage =
-                context.packageManager.getLaunchIntentForPackage(it.packageName)
-            if (launchIntentForPackage != null) {
-                val icon = it.loadIcon(context.packageManager)
-                val name = context.packageManager.getApplicationLabel(it)
+    suspend fun getInstallApks(context: Context): MutableList<AppsInfo> = withContext(Dispatchers.IO) {
+        val appsList: MutableList<AppsInfo> = mutableListOf()
+        val installPackageList =
+            context.packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES)
+
+        val resolveIntent = Intent(Intent.ACTION_MAIN, null)
+        resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+
+        for (pks in installPackageList) {
+            resolveIntent.setPackage(pks.packageName)
+            val queryIntentActivities =
+                context.packageManager.queryIntentActivities(resolveIntent, 0)
+
+            if (queryIntentActivities.size > 0) {
+                val first = queryIntentActivities.first()
+
+                val icon = first.loadIcon(context.packageManager)
+                val name = context.packageManager.getApplicationLabel(pks.applicationInfo)
                 if (icon != null && !TextUtils.isEmpty(name)) {
-                    return@map AppsInfo(
+                    val appsInfo = AppsInfo(
                         icon,
                         name.toString(),
-                        it.packageName,
+                        pks.packageName,
                         ObservableBoolean(false)
+                    )
+                    appsList.add(appsInfo)
+                }
+            }
+
+        }
+        return@withContext appsList
+//        return@withContext context.packageManager.getInstalledApplications(PackageManager.GET_ACTIVITIES).map {
+//            val intent = Intent(Intent.ACTION_MAIN)
+//            intent.addCategory(Intent.CATEGORY_LAUNCHER)
+//            intent.setPackage(it.packageName)
+//            val launchIntentForPackage =
+//                context.packageManager.getLaunchIntentForPackage(it.packageName)
+//            if (launchIntentForPackage != null) {
+//                val icon = it.loadIcon(context.packageManager)
+//                val name = context.packageManager.getApplicationLabel(it)
+//                if (icon != null && !TextUtils.isEmpty(name)) {
+//                    return@map AppsInfo(
+//                        icon,
+//                        name.toString(),
+//                        it.packageName,
+//                        ObservableBoolean(false)
+//                    )
+//                }
+//            }
+//            null
+//        }.filterNotNull().toList()
+    }
+
+    suspend fun getInstall(context: Context) = flow<AppsInfo> {
+        context.packageManager.getInstalledApplications(0).forEach { appInfo ->
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_LAUNCHER)
+            intent.setPackage(appInfo.packageName)
+            val launchIntentForPackage =
+                context.packageManager.getLaunchIntentForPackage(appInfo.packageName)
+            if (launchIntentForPackage != null) {
+                val icon = appInfo.loadIcon(context.packageManager)
+                val name = context.packageManager.getApplicationLabel(appInfo)
+                if (icon != null && !TextUtils.isEmpty(name)) {
+                    emit(
+                        AppsInfo(
+                            icon,
+                            name.toString(),
+                            appInfo.packageName,
+                            ObservableBoolean(false)
+                        )
                     )
                 }
             }
-            null
-        }.filterNotNull().toList()
-    }
+        }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun firstInStatus(): Boolean = withContext(Dispatchers.IO) {
         return@withContext SpUtil.instance(SpHelper.SP_NAME)
@@ -99,27 +148,28 @@ class AppsRepo {
         SpUtil.instance(SpHelper.SP_NAME).put(SpHelper.SP_FIRST_OPENED_KEY, value)
     }
 
-    suspend fun loadAppInfo(context: Context): Flow<List<AppsInfo>> {
-        return withContext(Dispatchers.IO) {
-            val task1 = async {
-                getInstallApks(context)
-            }
+    suspend fun loadAppInfo(context: Context): Flow<List<AppsInfo>> = withContext(Dispatchers.IO) {
 
-            val task2 = async {
-                loadSaveDumpPksInfo()
-            }
-            val apps = task1.await()
-            task2.await()
-            return@withContext savePksInfo
-                .combineTransform<Set<String>, List<AppsInfo>, List<AppsInfo>>(
-                    flow { emit(apps) }) { pks, list ->
-                    list.map {
-                        if (pks.contains(it.pks)) {
-                            it.accessibilityEnable.set(true)
-                        }
-                        return@map it
-                    }
-                }
+        val task1 = async {
+            getInstallApks(context)
         }
+
+        val task2 = async {
+            loadSaveDumpPksInfo()
+        }
+        val apps = task1.await()
+        task2.await()
+        return@withContext savePksInfo
+            .combineTransform<Set<String>, List<AppsInfo>, List<AppsInfo>>(
+                flow {
+                    emit(apps)
+                }) { pks, list ->
+                list.map {
+                    if (pks.contains(it.pks)) {
+                        it.accessibilityEnable.set(true)
+                    }
+                    return@map it
+                }
+            }
     }
 }

@@ -1,5 +1,7 @@
 package com.zipper.dump
 
+import android.annotation.SuppressLint
+import android.content.Context
 import com.zipper.core.BaseApp
 import com.zipper.core.fragment.FragmentNavConfigHelper
 import com.zipper.core.utils.ThemeHelper
@@ -11,10 +13,15 @@ class App : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()
+        mContext = this
 //        ThemeHelper.applyTheme(ThemeHelper.ThemeMode.DARK_MODE)
     }
 
     companion object {
+
+        @SuppressLint("StaticFieldLeak")
+        lateinit var mContext: Context
+
         val mMainCoroutinesScope : CoroutineScope by lazy(LazyThreadSafetyMode.SYNCHRONIZED){
             CoroutineScope(Dispatchers.Main)
         }

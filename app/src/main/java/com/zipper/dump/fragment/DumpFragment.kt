@@ -93,17 +93,15 @@ class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
     inner class EventHandler {
 
         fun openOrCloseService() {
-            CoroutineScope(Dispatchers.Main).launch {
-                if (!AppUtils.isAccessibilitySettingsOn(
-                        requireActivity(),
-                        DumpService::class.java
-                    )
-                ) {
-                    showAccessibilityTip("检测到无障碍服务未开启，是否前往设置")
-                    return@launch
-                }
-                mBaseViewModel.switchServiceStatus()
+            if (!AppUtils.isAccessibilitySettingsOn(
+                    requireActivity(),
+                    DumpService::class.java
+                )
+            ) {
+                showAccessibilityTip("检测到无障碍服务未开启，是否前往设置")
+                return
             }
+            mBaseViewModel.switchServiceStatus()
         }
 
         fun openAppsSetting() {

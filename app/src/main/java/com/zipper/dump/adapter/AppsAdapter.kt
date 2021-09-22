@@ -1,5 +1,6 @@
 package com.zipper.dump.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
@@ -35,8 +36,8 @@ import kotlinx.coroutines.launch
  **/
 class AppsAdapter(
     private val mContext: Context,
-    private val mData: List<AppsInfo>
-) : RecyclerView.Adapter<AppsAdapter.AppsViewHolder>(), Observer<List<AppsInfo>>, Filterable {
+    private val mData: MutableList<AppsInfo>
+) : RecyclerView.Adapter<AppsAdapter.AppsViewHolder>(), Filterable {
 
     private val mLayoutInflater: LayoutInflater = LayoutInflater.from(mContext)
 
@@ -137,19 +138,18 @@ class AppsAdapter(
                 return FilterResults()
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 notifyDataSetChanged()
             }
         }
     }
 
-
-    override fun onChanged(t: List<AppsInfo>?) {
+    fun submitData(newData: List<AppsInfo>){
         mFilterList.clear()
-        if (t != null) {
-            mFilterList.addAll(t)
-        }
-        notifyDataSetChanged()
+        mData.clear()
+        mData.addAll(newData)
+        mFilterList.addAll(mData)
     }
 
     class AppsViewHolder(val binding: ViewDataBinding, val viewType: Int) :

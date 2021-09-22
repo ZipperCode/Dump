@@ -39,12 +39,12 @@ class DumpService : AccessibilityService() {
             return
         }
 
-        if(System.currentTimeMillis() - lastCheckTime > (5 * 60 * 1000)){
-            lastCheckTime = System.currentTimeMillis()
-            AutoApiPao.fetchData(this)
-            L.d("FetchWorker 是否完成 ${WorkManager.getInstance(this).getWorkInfosForUniqueWork("FetchWorker")}")
-            L.d("FetchWorker-Periodic 是否完成 ${WorkManager.getInstance(this).getWorkInfosForUniqueWork("FetchWorker-Periodic")}")
-        }
+//        if(System.currentTimeMillis() - lastCheckTime > (5 * 60 * 1000)){
+//            lastCheckTime = System.currentTimeMillis()
+//            AutoApiPao.fetchData(this)
+//            L.d("FetchWorker 是否完成 ${WorkManager.getInstance(this).getWorkInfosForUniqueWork("FetchWorker")}")
+//            L.d("FetchWorker-Periodic 是否完成 ${WorkManager.getInstance(this).getWorkInfosForUniqueWork("FetchWorker-Periodic")}")
+//        }
 
         if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             windowContentChange(event)

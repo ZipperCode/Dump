@@ -30,10 +30,9 @@ class AppsFragment : BaseVmBFragment<AppsViewModel, FragmentAppsBinding>() {
         mRecyclerView = view.findViewById(R.id.recyclerView)
         mRecyclerView.adapter = mAdapter
 
-        lifecycleScope.launchWhenCreated {
-            mBaseViewModel.getPackages(requireActivity())
-        }
-
+        mBaseViewModel.appsData.observe(viewLifecycleOwner, Observer {
+            mAdapter.submitData(it)
+        })
 //        mBaseViewModel.pks.observe(viewLifecycleOwner, Observer {
 //            for (app in mBaseViewModel.appsData.value ?: emptyList()) {
 //                if (it.contains(app.pks)) {

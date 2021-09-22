@@ -15,21 +15,4 @@ import java.io.File
  **/
 class MainActivity: BaseVmBActivity<MainViewModel, ActivityMainBinding>() {
     override fun vmBrId(): Int = BR.vm
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-//        val file = File(Environment.getExternalStorageDirectory(), "Dumping1.trace")
-//        Debug.startMethodTracing(file.absolutePath)
-        super.onCreate(savedInstanceState)
-        PluginManager.onMainActivityCreate(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        Debug.stopMethodTracing()
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-
-    }
 }
