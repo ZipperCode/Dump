@@ -28,14 +28,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:titleMargin="0dp">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:layout_editor_absoluteX="20dp"
-                tools:layout_editor_absoluteY="158dp">
+                android:orientation="vertical">
 
-                <include layout="@layout/layout_search_view" />
-            </FrameLayout>
+                <include layout="@layout/layout_search_view"
+                    app:vm="@{vm}"/>
+
+                <include layout="@layout/layout_apps_info_header"
+                    app:vm="@{vm}"/>
+            </LinearLayout>
+
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView

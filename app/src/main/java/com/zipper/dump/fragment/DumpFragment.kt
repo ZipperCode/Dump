@@ -105,7 +105,7 @@ class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
         }
 
         fun openAppsSetting() {
-            navController.navigate(R.id.action_dumpFragment_to_appsActivity)
+            navController.navigate(R.id.action_dumpFragment_to_appsFragment)
         }
 
         fun openSetting() {

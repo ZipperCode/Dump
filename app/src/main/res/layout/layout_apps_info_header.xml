@@ -5,12 +5,8 @@
 
     <data>
         <variable
-            name="serviceStatus"
-            type="Boolean" />
-
-        <variable
-            name="allowStatus"
-            type="androidx.databinding.ObservableBoolean" />
+            name="vm"
+            type="com.zipper.dump.activity.AppsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,8 +24,8 @@
             android:layout_marginRight="30dp"
             android:textSize="12sp"
             android:gravity="center"
-            android:text="@{serviceStatus ? @string/text_accessibility_status_success: @string/text_accessibility_status_failure}"
-            android:textColor="@{serviceStatus ? @color/text_success : @color/text_failure}"
+            android:text="@{vm.serviceStatus ? @string/text_accessibility_status_success: @string/text_accessibility_status_failure}"
+            android:textColor="@{vm.serviceStatus ? @color/text_success : @color/text_failure}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/sw_dump"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +47,7 @@
             android:layout_height="60dp"
             android:layout_marginRight="15dp"
             android:text="全部应用"
-            android:checked="@={allowStatus}"
+            android:checked="@={vm.applyAll}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

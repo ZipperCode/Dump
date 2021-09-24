@@ -1,30 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="2dp"
-    android:background="@drawable/search_foreground_shape"
-    android:focusableInTouchMode="true"
-    android:gravity="center_vertical"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:contentDescription="@string/contentDescription"
-        android:src="@drawable/ic_baseline_search_64" />
+    <data>
+        <variable
+            name="vm"
+            type="com.zipper.dump.activity.AppsViewModel" />
+    </data>
 
-    <EditText
-        android:id="@+id/et_search"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:textSize="14sp"
-        android:ems="10"
-        android:hint="@string/search_filter_hint_text"
-        android:importantForAutofill="no"
-        android:inputType="text" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:background="@drawable/search_foreground_shape"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:contentDescription="@string/contentDescription"
+            android:src="@drawable/ic_baseline_search_64" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:ems="10"
+            android:hint="@string/search_filter_hint_text"
+
+            android:imeOptions="flagNoFullscreen|actionSearch"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:text="@={vm.searchData}"
+            android:textSize="14sp" />
+    </LinearLayout>
+</layout>

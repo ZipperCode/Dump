@@ -100,7 +100,7 @@ class DumpActivity : BaseVmBActivity<DumpViewModel, ActivityDumpBinding>() {
         }
 
         fun openAppsSetting() {
-            startActivity(Intent(this@DumpActivity, AppsActivity::class.java))
+//            startActivity(Intent(this@DumpActivity, AppsActivity::class.java))
         }
 
         fun openSetting() {

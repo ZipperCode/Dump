@@ -30,10 +30,16 @@ class AppsViewModel : ViewModel() {
 
     val appsData: MutableLiveData<MutableList<AppsInfo>> = MutableLiveData(mutableListOf())
 
+    val searchData: MutableLiveData<String> = MutableLiveData("")
+
+    val serviceStatus: LiveData<Boolean> = MutableLiveData(false)
+
+    val applyAll:MutableLiveData<Boolean> = MutableLiveData(false)
+
     init {
         viewModelScope.launch {
             val d = appsRepo.getInstallApks(BaseApp.instance)
-            appsData.value = d
+            appsData.postValue(d)
         }
     }
 

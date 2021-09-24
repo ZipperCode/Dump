@@ -35,7 +35,6 @@
         <activity android:name="com.zipper.auto.api.activity.ApiActivity">
 
         </activity>
-        <activity android:name=".activity.AppsActivity" />
         <activity android:name=".activity.AppDetailActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity
