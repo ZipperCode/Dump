@@ -54,7 +54,7 @@ class MainActivity : BaseActivity() {
 
         // 显示更快
         App.mMainCoroutinesScope.launch {
-            mAppInAdapter.setData(AccessibilityHelper.mMainAppInfo)
+//            mAppInAdapter.setData(AccessibilityHelper.mMainAppInfo)
         }
     }
 

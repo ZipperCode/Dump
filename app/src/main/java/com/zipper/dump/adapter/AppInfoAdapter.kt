@@ -81,9 +81,9 @@ class AppInfoAdapter(context: Context) :
                         App.mMainCoroutinesScope.launch {
                             withContext(Dispatchers.IO) {
                                 if (view.isChecked) {
-                                    AccessibilityHelper.addPks(allPks)
+//                                    AccessibilityHelper.addPks(allPks)
                                 } else {
-                                    AccessibilityHelper.clearPks()
+//                                    AccessibilityHelper.clearPks()
                                 }
                             }
                             notifyDataSetChanged()

@@ -15,16 +15,11 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.work.WorkManager
-import com.zipper.base.service.plugin.impl.AutoApiPao
 import com.zipper.dump.App
 import com.zipper.dump.R
-import com.zipper.dump.activity.SplashActivity
 import com.zipper.dump.utils.AccessibilityHelper
 import com.zipper.core.utils.L
-import com.zipper.core.utils.SpUtil
 import com.zipper.dump.MainActivity
-import com.zipper.dump.utils.SpHelper
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -57,7 +52,8 @@ class DumpService : AccessibilityService() {
             // 过滤不需要处理的包
             if (("com.miui.systemAdSolution" == pkName) or AccessibilityHelper.pksContains(pkName)) {
                 dumpSplash(this, pkName)
-            }else if("com.tencent.mm" == pkName){
+            }
+//            else if("com.tencent.mm" == pkName){
 //                if(AccessibilityHelper.mWxSettingValue){
 //                    // 微信登陆自动
 //                    val loginTitle = AccessibilityHelper.findNodeByText(rootInActiveWindow,"微信登陆确认")
@@ -67,49 +63,40 @@ class DumpService : AccessibilityService() {
 //                        AccessibilityHelper.click(loginButton!!)
 //                    }
 //                }
-            }
+//            }
         }
     }
 
     private fun dumpSplash(rootNodeInfo: AccessibilityNodeInfo, pks: String) {
-        L.d(TAG, "当前pks = $packageName 需要进行跳过处理")
+//        L.d(TAG, "当前pks = $packageName 需要进行跳过处理")
         var clicked = false
 
         AccessibilityHelper.run {
             // 判断是否有自定义设定的viewId需要跳过
             val dumpViewIds = viewInfoListIds(pks)
-            L.d(TAG, "查找到的 dumpViewIds = $dumpViewIds")
+//            L.d(TAG, "查找到的 dumpViewIds = $dumpViewIds")
             dumpViewIds.forEach {
                 // 查找所有拥有当前id的view，处理跳过
                 clicked = clicked or (findNodeById(rootNodeInfo, it)?.let { node ->
                     click(node)
-//                    if (node.isClickable) {
-//                        click(node)
-//                    } else {
-//                        deepClick(node)
-//                    }
                 } ?: false)
             }
         }
-
+        L.d(TAG,"使用Id跳过是否生效 = $clicked")
         if (!clicked) {
-            val dumpName = SpHelper.loadString(pks)
             AccessibilityHelper.run {
                 // 能查找到包含[跳过]文本的组件
                 val dumpNode = findNodeByText(
                     rootNodeInfo,
-                    if (TextUtils.isEmpty(dumpName)) "跳过" else dumpName
+                    "跳过"
                 )
+                L.d(TAG,"查找文本进行跳过 node = $dumpNode")
                 dumpNode?.let {
-                    click(it)
-//                    return@let if (it.isClickable) {
-//                        click(it)
-//                    } else {
-//                        deepClick(it)
-//                    }
+                    clicked = click(it)
                 }
             }
         }
+        L.d(TAG,"使用文本跳过是否生效 = $clicked")
     }
 
     override fun onInterrupt() {
@@ -123,7 +110,7 @@ class DumpService : AccessibilityService() {
         serviceInfo = serviceInfo.apply {
             flags = flags or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
         }
-
+        L.d(TAG, "无障碍服务连接成功 = $mAccessibilityService")
         App.mIoCoroutinesScope.launch {
             AccessibilityHelper.init(this@DumpService)
             AccessibilityHelper.serviceRepo.refreshServiceState()

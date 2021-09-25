@@ -7,12 +7,10 @@ import android.text.TextUtils
 import androidx.databinding.ObservableBoolean
 import com.zipper.core.BaseApp
 import com.zipper.core.utils.SpUtil
-import com.zipper.dump.App
 import com.zipper.dump.bean.AppsInfo
 import com.zipper.dump.utils.SpHelper
 import com.zipper.dump.view.FloatWindow
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
@@ -23,44 +21,19 @@ import kotlinx.coroutines.withContext
  **/
 class AppsRepo {
 
-    private val _savePksInfo = MutableStateFlow(mutableSetOf<String>())
-
-    val savePksInfo: Flow<Set<String>> get() = _savePksInfo
+    val savePksInfo: Flow<Set<String>> = flow {
+        emit(loadSaveDumpPksInfo())
+    }.flowOn(Dispatchers.IO)
 
     val floatPermission: Flow<Boolean> = flow {
         emit(FloatWindow.checkPermission(BaseApp.instance, false))
     }
 
-    suspend fun loadSaveDumpPksInfo() = withContext(Dispatchers.IO) {
-        val result =
-            SpUtil.instance(SpHelper.SP_NAME).get(SpHelper.SP_SAVE_PKS_KEY, emptySet<String>())
-        _savePksInfo.emit(result.toMutableSet())
+    fun loadSaveDumpPksInfo(): Set<String>  {
+        return SpUtil.instance(SpHelper.SP_NAME)
+            .get<Set<String>>(SpHelper.SP_SAVE_PKS_KEY, emptySet())
     }
 
-    suspend fun putSaveDumpPksInfo(pksInfo: Set<String>) = withContext(Dispatchers.IO) {
-        _savePksInfo.emit(pksInfo.toMutableSet())
-        SpUtil.instance(SpHelper.SP_NAME).put(SpHelper.SP_SAVE_PKS_KEY, pksInfo)
-        loadSaveDumpPksInfo()
-    }
-
-    suspend fun putSaveDumpPksInfo(pksInfo: Collection<String>) = withContext(Dispatchers.IO) {
-        _savePksInfo.value.addAll(pksInfo)
-        _savePksInfo.emit(_savePksInfo.value)
-        SpUtil.instance(SpHelper.SP_NAME).put(SpHelper.SP_SAVE_PKS_KEY, _savePksInfo.value)
-        loadSaveDumpPksInfo()
-    }
-
-    suspend fun putSaveDumpPksInfo(pkInfo: String, isDel: Boolean = false) =
-        withContext(Dispatchers.IO) {
-            if (isDel) {
-                _savePksInfo.value.remove(pkInfo)
-            } else {
-                _savePksInfo.value.add(pkInfo)
-            }
-            _savePksInfo.emit(_savePksInfo.value)
-            SpUtil.instance(SpHelper.SP_NAME).put(SpHelper.SP_SAVE_PKS_KEY, _savePksInfo.value)
-            loadSaveDumpPksInfo()
-        }
 
     suspend fun getInstallApks(context: Context): MutableList<AppsInfo> = withContext(Dispatchers.IO) {
         val appsList: MutableList<AppsInfo> = mutableListOf()
@@ -93,26 +66,6 @@ class AppsRepo {
 
         }
         return@withContext appsList
-//        return@withContext context.packageManager.getInstalledApplications(PackageManager.GET_ACTIVITIES).map {
-//            val intent = Intent(Intent.ACTION_MAIN)
-//            intent.addCategory(Intent.CATEGORY_LAUNCHER)
-//            intent.setPackage(it.packageName)
-//            val launchIntentForPackage =
-//                context.packageManager.getLaunchIntentForPackage(it.packageName)
-//            if (launchIntentForPackage != null) {
-//                val icon = it.loadIcon(context.packageManager)
-//                val name = context.packageManager.getApplicationLabel(it)
-//                if (icon != null && !TextUtils.isEmpty(name)) {
-//                    return@map AppsInfo(
-//                        icon,
-//                        name.toString(),
-//                        it.packageName,
-//                        ObservableBoolean(false)
-//                    )
-//                }
-//            }
-//            null
-//        }.filterNotNull().toList()
     }
 
     suspend fun getInstall(context: Context) = flow<AppsInfo> {
@@ -148,28 +101,18 @@ class AppsRepo {
         SpUtil.instance(SpHelper.SP_NAME).put(SpHelper.SP_FIRST_OPENED_KEY, value)
     }
 
-    suspend fun loadAppInfo(context: Context): Flow<List<AppsInfo>> = withContext(Dispatchers.IO) {
-
-        val task1 = async {
-            getInstallApks(context)
-        }
-
-        val task2 = async {
-            loadSaveDumpPksInfo()
-        }
-        val apps = task1.await()
-        task2.await()
-        return@withContext savePksInfo
-            .combineTransform<Set<String>, List<AppsInfo>, List<AppsInfo>>(
-                flow {
-                    emit(apps)
-                }) { pks, list ->
-                list.map {
-                    if (pks.contains(it.pks)) {
-                        it.accessibilityEnable.set(true)
-                    }
-                    return@map it
-                }
-            }
+    fun saveAppPksAll(pksSet: Set<String>){
+        SpUtil.instance(SpHelper.SP_NAME).putAsync(SpHelper.SP_SAVE_PKS_KEY, pksSet)
     }
+
+    fun saveOrRemoveAppPks(pks: String, isSave: Boolean){
+        val loadSaveDumpPksInfo = HashSet(loadSaveDumpPksInfo())
+        if(isSave){
+            loadSaveDumpPksInfo.add(pks)
+        }else{
+            loadSaveDumpPksInfo.remove(pks)
+        }
+        saveAppPksAll(loadSaveDumpPksInfo)
+    }
+
 }

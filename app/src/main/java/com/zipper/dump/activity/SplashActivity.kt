@@ -65,10 +65,10 @@ class SplashActivity : BaseActivity(), View.OnClickListener {
 
         App.mIoCoroutinesScope.launch {
             val result1 = async(Dispatchers.IO) {
-                AppUtils.getLaunch(
-                    this@SplashActivity,
-                    AccessibilityHelper.mMainAppInfo
-                )
+//                AppUtils.getLaunch(
+//                    this@SplashActivity,
+//                    AccessibilityHelper.mMainAppInfo
+//                )
             }
             val result2 = async(Dispatchers.IO) {
                 AccessibilityHelper.init(this@SplashActivity)

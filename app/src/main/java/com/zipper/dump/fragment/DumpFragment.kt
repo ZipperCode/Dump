@@ -54,15 +54,15 @@ class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mServiceSwitchCardView = view.findViewById(R.id.cv_service_switch)
-        mBaseViewModel.serviceCtrlStatus.observe(viewLifecycleOwner, Observer {
-            mServiceSwitchCardView.setCardBackgroundColor(
-                ResourcesCompat.getColor(
-                    resources,
-                    if (it) R.color.card_enable_color else R.color.card_unable_color,
-                    resources.newTheme()
-                )
-            )
-        })
+//        mBaseViewModel.serviceCtrlStatus.observe(viewLifecycleOwner, Observer {
+//            mServiceSwitchCardView.setCardBackgroundColor(
+//                ResourcesCompat.getColor(
+//                    resources,
+//                    if (it) R.color.card_enable_color else R.color.card_unable_color,
+//                    resources.newTheme()
+//                )
+//            )
+//        })
     }
 
     override fun onStart() {
@@ -93,11 +93,7 @@ class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
     inner class EventHandler {
 
         fun openOrCloseService() {
-            if (!AppUtils.isAccessibilitySettingsOn(
-                    requireActivity(),
-                    DumpService::class.java
-                )
-            ) {
+            if (!AppUtils.isAccessibilitySettingsOn(requireActivity(), DumpService::class.java)) {
                 showAccessibilityTip("检测到无障碍服务未开启，是否前往设置")
                 return
             }
@@ -109,8 +105,8 @@ class DumpFragment : BaseNavVmBFragment<DumpViewModel, FragmentDumpBinding>() {
         }
 
         fun openSetting() {
-//            navController.navigate(R.id.action_dumpFragment_to_settingFragment)
-            navController.navigate(R.id.action_dumpFragment_to_taskLoadingDialog)
+            navController.navigate(R.id.action_dumpFragment_to_settingFragment)
+//            navController.navigate(R.id.action_dumpFragment_to_taskLoadingDialog)
         }
 
         fun openHelper() {

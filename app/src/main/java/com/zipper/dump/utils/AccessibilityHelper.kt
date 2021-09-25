@@ -12,7 +12,6 @@ import android.view.accessibility.AccessibilityNodeInfo
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 import com.zipper.core.utils.L
-import com.zipper.dump.bean.AppInfo
 import com.zipper.dump.bean.ViewInfo
 import com.zipper.dump.repo.AppsRepo
 import com.zipper.dump.repo.ServiceRepo
@@ -20,7 +19,6 @@ import com.zipper.dump.room.DBHelper
 import com.zipper.dump.service.DumpService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -31,12 +29,10 @@ import kotlin.collections.HashSet
 object AccessibilityHelper {
     private val TAG: String = AccessibilityHelper::class.java.simpleName
 
-    private const val SP_PKS_LIST_KEY = "name_list"
-
     /**
      * 保存需要过滤的包名
      */
-    private val mNameList: MutableSet<String> = HashSet()
+    private val mPksSet: MutableSet<String> = HashSet()
 
     /**
      * 本地保存选中跳过的view
@@ -47,12 +43,6 @@ object AccessibilityHelper {
      * 无障碍服务收集的view信息 {@link }
      */
     var mCollectViewInfoList: MutableList<ViewInfo>? = null
-
-    /**
-     * 已安装的App信息
-     */
-    @Deprecated("")
-    val mMainAppInfo: MutableList<AppInfo> = ArrayList()
 
     /**
      * 是否处于绘制视图时刻，此时不需要捕获任何无障碍事件
@@ -74,7 +64,7 @@ object AccessibilityHelper {
         mInitMutex.withLock {
             if(isInit) return
             try {
-                pksInit(context)
+                pksInit()
                 viewInfoInit(context)
             }catch (e: java.lang.Exception){
                 e.printStackTrace()
@@ -83,29 +73,14 @@ object AccessibilityHelper {
         }
     }
 
-    private suspend fun pksInit(context: Context){
-        appRepo.loadSaveDumpPksInfo()
+    private fun pksInit(){
+        mPksSet.clear()
+        mPksSet.addAll(appRepo.loadSaveDumpPksInfo())
     }
 
-    suspend fun addPks(pks: String) {
-        appRepo.putSaveDumpPksInfo(pks)
-    }
+    fun pksContains(pks: String): Boolean = mPksSet.contains(pks)
 
-    suspend fun addPks(pks: Collection<String>){
-        appRepo.putSaveDumpPksInfo(pks)
-    }
-
-    suspend fun delPks(pks: String){
-        appRepo.putSaveDumpPksInfo(pks, true)
-    }
-
-    suspend fun clearPks() {
-        appRepo.putSaveDumpPksInfo(emptySet())
-    }
-
-    fun pksContains(pks: String): Boolean = mNameList.contains(pks)
-
-    fun pksContainsAll(pks: List<String>): Boolean = mNameList.containsAll(pks)
+    fun pksContainsAll(pks: List<String>): Boolean = mPksSet.containsAll(pks)
 
     suspend fun closeServiceCtrl(){
         serviceRepo.saveServiceCtrlState(false)
@@ -130,7 +105,7 @@ object AccessibilityHelper {
         }
     }
 
-    private suspend fun readConfigViewInfo(context: Context): List<ViewInfo> = withContext(Dispatchers.IO) {
+    private fun readConfigViewInfo(context: Context): List<ViewInfo> {
         val result: MutableList<ViewInfo> = ArrayList()
         try {
             val prop = Properties()
@@ -151,7 +126,7 @@ object AccessibilityHelper {
             e.printStackTrace()
         }
 
-        return@withContext result
+        return result
     }
 
     fun addViewInfo(viewInfo: ViewInfo) {
