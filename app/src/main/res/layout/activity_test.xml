@@ -5,7 +5,7 @@
     android:id="@+id/layout_test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.TestActivity">
+    tools:context=".activity.test.TestActivity">
 
     <LinearLayout
         android:id="@+id/ll_main"
@@ -22,7 +22,6 @@
             style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/purple_500"
             app:liftOnScroll="true"
             app:paddingTopSystemWindowInsets="true">
 
@@ -31,8 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:minHeight="?attr/actionBarSize"
-                app:navigationIcon="@drawable/ic_page_back"/>
+                android:minHeight="?attr/actionBarSize"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 

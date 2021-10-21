@@ -1,4 +1,4 @@
-package com.zipper.dump.activity
+package com.zipper.dump.activity.test
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -61,7 +61,7 @@ class TestActivity : AppCompatActivity() {
                 notifyIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
             val notificationBuilder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_weixin_24)
+                .setSmallIcon(R.drawable.ic_loading)
                 .setContentTitle("我是title" + Random(100).nextInt())
                 .setContentText("我是Text" + Random(100).nextInt())
                 .setContentInfo("我是info" + Random(100).nextInt())

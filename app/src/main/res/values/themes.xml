@@ -1,25 +1,12 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="Base.Theme.Dumping" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="App.Theme.Dumping" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#33000000</item>
-    </style>
-
-    <style name="Translucent">
-        <item name="backgroundColor">@color/translucent</item>
-        <item name="android:windowBackground">@color/translucent</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
-    </style>
-
-    <style name="Theme.Dumping.NoActionBar" parent="Base.Theme.Dumping">
         <!-- 半透明状态栏 4.4+ 沉浸式设置为false-->
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowDisablePreview">false</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
-
 </resources>

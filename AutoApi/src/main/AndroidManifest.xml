@@ -26,6 +26,9 @@
         <activity android:name=".ViewPointActivity" />
         <activity android:name=".DetailActivity" />
 
+        <activity android:name="com.zipper.auto.api.activity.ApiActivity">
+
+        </activity>
 
         <service
             android:name=".service.FetchJobService"

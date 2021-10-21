@@ -178,9 +178,7 @@ class ProxyClassLoader : PathClassLoader {
             val dexPathListCls = ReflectUtils.loadHideForName("dalvik.system.DexPathList")
             val pathListObj = ReflectUtils.loadHideFieldValue(this,"pathList")
 
-
             val dexElementsObj = ReflectUtils.loadHideFieldValue(pathListObj,"dexElements") as Array<*>
-
 
 
         }catch (e: Exception){

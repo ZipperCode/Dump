@@ -43,6 +43,7 @@ android {
     }
 
     configurations.all {
+        // 强制Gradle仅针对所有依赖项编译您声明的版本号，无论依赖项声明了哪个版本号。
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
 

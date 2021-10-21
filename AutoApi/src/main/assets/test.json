@@ -1,46 +1,35 @@
 {
-  "msg": "SUCCESS",
-  "returnMsg": "SUCCESS",
-  "code": "0",
-  "btnText": "连续签到1天",
-  "noAwardTxt": "很抱歉，奖品已经被领光~",
-  "signText": "签到成功",
-  "subCode": "0",
-  "subCodeMsg": "SUCCESS",
-  "transParam": "",
-  "channelPoint": {
-    "babelChannel": "",
-    "pageId": ""
-  },
-  "list": [
-    {
-      "text": "连续1天",
-      "state": 7
-    },
-    {
-      "text": "连续2天",
-      "state": 5
-    },
-    {
-      "text": "连续3天",
-      "state": 5
-    },
-    {
-      "text": "连续4天",
-      "state": 5
-    },
-    {
-      "text": "连续5天",
-      "state": 5
-    },
-    {
-      "text": "连续6天",
-      "state": 5
-    },
-    {
-      "text": "连续7天",
-      "state": 5
-    }
-  ],
-  "statistics": "连续签到1天"
+  "success": true,
+  "error_code": "0",
+  "message": "\u6267\u884c\u6210\u529f",
+  "items": {
+    "module_id": "3",
+    "module_name": "\u4efb\u52a1\u4e2d\u5fc3",
+    "position_id": "3",
+    "position_name": "\u4efb\u52a1\u4e2d\u5fc3-\u770b\u798f\u5229\u89c6\u9891",
+    "position_cache_count": "6",
+    "position_preload_state": "0",
+    "slot_config": [
+      {
+        "slot_type": "RewardVideo",
+        "slot_info_list": [
+          {
+            "third_platform_name": "MS",
+            "third_app_id": "101583",
+            "third_slot_id": "1030764"
+          },
+          {
+            "third_platform_name": "CSJ",
+            "third_app_id": "5002055",
+            "third_slot_id": "945275007"
+          },
+          {
+            "third_platform_name": "YLH",
+            "third_app_id": "1106181595",
+            "third_slot_id": "9031313890634502"
+          }
+        ]
+      }
+    ]
+  }
 }
