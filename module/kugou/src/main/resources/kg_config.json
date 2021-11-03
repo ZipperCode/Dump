@@ -1,0 +1,22 @@
+[
+  {
+    "name": "test",
+    "userAgent": "Android10-AndroidPhone-10829-14-0-mobileCallProtocol-wifi",
+    "mid": "19866310614991365975980225640804152227",
+    "uuid": "532544371bb026cc684489e57eedbe9c",
+    "dfId": "4Wwvsj2nDISI017CmR4L886I",
+    "uid": "1882565136",
+    "token": "808f24298f4c16d5fc94034065381d18e899ef44d9b067208216e599aa09e7eb",
+    "h5Token": ""
+  },
+  {
+    "name": "8823",
+    "userAgent": "Android11-AndroidPhone-10829-14-0-mobileCallProtocol-wifi",
+    "mid": "19866310614991365975980225640804152227",
+    "uuid": "532544371bb026cc684489e57eedbe9c",
+    "dfId": "-",
+    "uid": "128004709",
+    "token": "61c0488e45e44e421ec0aa0210b34e20c4b5d57d4be051b788d3faa07b7f8ca2",
+    "h5Token": ""
+  }
+]

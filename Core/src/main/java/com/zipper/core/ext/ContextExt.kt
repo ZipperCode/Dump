@@ -1,9 +1,13 @@
 package com.zipper.core.ext
 
 import android.app.NotificationManager
+import android.app.usage.NetworkStatsManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 /**
  *  @author zipper
@@ -45,3 +49,8 @@ fun Context.sp2Px(sp: Int) : Int{
 }
 
 fun Context.notificationManager() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+fun Context.connectivityManager() = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun Context.networkStatsManager() = getSystemService(Context.NETWORK_STATS_SERVICE) as NetworkStatsManager

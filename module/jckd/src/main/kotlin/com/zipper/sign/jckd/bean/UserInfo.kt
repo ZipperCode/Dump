@@ -1,0 +1,72 @@
+package com.zipper.sign.jckd.bean
+
+data class UserInfo(
+    val active_days: String = "",
+    val age: Int = 0,
+    val app_channel: String = "",
+    val area: String = "",
+    val avatar: String = "",
+    val birthday: Any? = null,
+    val desc: String = "",
+    val gender: String = "",
+    val gender_new: String = "",
+    val income_url: String = "",
+    val invite_code: String = "",
+    val invite_code_url: String = "",
+    val invite_word: Double = 0.0,
+    val is_blocked: String = "",
+    val is_invited: String = "",
+    val is_newapprenred: String = "",
+    val is_newred: String = "",
+    val is_newtask: String = "",
+    val is_one_withdraw: String = "",
+    val level: Int = 0,
+    val mobile: String = "",
+    val money: String = "",
+    val money_str: String = "",
+    val msg_notice: MsgNotice = MsgNotice(),
+    val msg_red_num: Int = 0,
+    val nickname: String = "",
+    val phone_status: String = "",
+    val qq_status: String = "",
+    val read_article_second: Int = 0,
+    val read_time_type: ReadTimeType = ReadTimeType(),
+    val reg_time: String = "",
+    val score: Int = 0,
+    val sign_reward_score: Int = 0,
+    val sign_status: Int = 0,
+    val sign_text: String = "",
+    val sign_url: String = "",
+    val sina_status: String = "",
+    val today_read_num: String = "",
+    val today_score: String = "",
+    val token: String = "",
+    val token_id: String = "",
+    val uid: String = "",
+    val unread_message: Int = 0,
+    val unread_notice: Int = 0,
+    val unread_reply: Int = 0,
+    val user_status: String = "",
+    val wx_status: String = "",
+    val zqkey: String = "",
+    val zqkey_id: String = ""
+) {
+    data class MsgNotice(
+        val action: String = "",
+        val image: String = "",
+        val is_login: String = "",
+        val is_wap: String = "",
+        val name: String = "",
+        val show_red_point: Int = 0,
+        val text: String = "",
+        val url: String = ""
+    )
+
+    data class ReadTimeType(
+        val action: String = "",
+        val desc: String = "",
+        val is_wap: Int = 0,
+        val num: String = "",
+        val url: String = ""
+    )
+}
