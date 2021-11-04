@@ -1,5 +1,6 @@
 package com.zipper.dump
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 /**
@@ -8,4 +9,9 @@ import androidx.lifecycle.ViewModel
  *  @description
  **/
 class MainViewModel: ViewModel() {
+
+    val kgState:MutableLiveData<Boolean> = MutableLiveData(false)
+    val zqState:MutableLiveData<Boolean> = MutableLiveData(false)
+    val jcState:MutableLiveData<Boolean> = MutableLiveData(false)
+    val gdState:MutableLiveData<Boolean> = MutableLiveData(false)
 }

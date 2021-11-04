@@ -19,6 +19,7 @@ ext {
     androidx_preference_version = "1.1.1"
     androidx_room_version = "2.2.6"
     androidx_nav_version = "2.3.5"
+    androidx_multidex_version = "2.0.1"
 
     material_version = "1.4.0"
 
@@ -48,6 +49,7 @@ ext {
             "ax_navigation_fragment_ktx"      : "androidx.navigation:navigation-fragment-ktx:$androidx_nav_version",
             "ax_navigation_fragment_ui_ktx"   : "androidx.navigation:navigation-ui-ktx:$androidx_nav_version",
             "ax_legacy_support"               : "androidx.legacy:legacy-support-v4:1.0.0",
+            "ax_multidex"                     : "androidx.multidex:multidex:$androidx_multidex_version",
 
             "material"                        : "com.google.android.material:material:${material_version}",
 

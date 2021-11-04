@@ -23,6 +23,8 @@ android {
         versionCode 2
         versionName "2.0"
 
+        multiDexEnabled true
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         signingConfigs {
@@ -79,7 +81,8 @@ repositories {
 dependencies {
     implementation project(':Core')
     implementation project(':BaseService')
-    implementation project(':AutoApi')
+//    implementation project(':AutoApi')
+//    implementation project(':ApiModule')
 
     implementation rootProject.ext.lib["ax_preference_ktx"]
     implementation rootProject.ext.lib["ax_work_runtime_ktx"]
@@ -88,6 +91,11 @@ dependencies {
         kapt it.value
     }
 
+    implementation files('libs/core-1.0-SNAPSHOT.jar')
+    implementation files('libs/gdbh-1.0-SNAPSHOT.jar')
+    implementation files('libs/jckd-1.0-SNAPSHOT.jar')
+    implementation files('libs/kugou-1.0-SNAPSHOT.jar')
+    implementation files('libs/zqkd-1.0-SNAPSHOT.jar')
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.11.2') {

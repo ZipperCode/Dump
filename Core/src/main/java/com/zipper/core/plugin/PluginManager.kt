@@ -28,6 +28,9 @@ object PluginManager : IPlugin, IAppStatusChangedListener {
         }
         if (appInfo != null) {
             mMetaData = appInfo.metaData
+            if (mMetaData == null){
+                return
+            }
             val pluginNameKeys = mMetaData!!.keySet().filter { it.startsWith(PLUGIN_HEAD) }.toList()
             for (pluginNameKey in pluginNameKeys) {
                 try {
