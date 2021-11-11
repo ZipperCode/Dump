@@ -15,10 +15,7 @@ import com.zipper.sign.kugou.ConfigBean
 import com.zipper.sign.kugou.KgTaskApi
 import com.zipper.sign.zqkd.ZqkdApi
 import com.zipper.sign.zqkd.ZqkdApiParam
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  *  @author zipper
@@ -78,7 +75,9 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
                     val res = it.await()
                     mRunTaskApi.remove(res)
                 }
-                mBaseViewModel.kgState.value = false
+                withContext(Dispatchers.IO){
+                    mBaseViewModel.kgState.value = false
+                }
             }
         }
 
@@ -102,7 +101,9 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
                     val res = it.await()
                     mRunTaskApi.remove(res)
                 }
-                mBaseViewModel.zqState.value = false
+                withContext(Dispatchers.IO){
+                    mBaseViewModel.zqState.value = false
+                }
             }
 
         }
@@ -127,7 +128,9 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
                     val res = it.await()
                     mRunTaskApi.remove(res)
                 }
-                mBaseViewModel.jcState.value = false
+                withContext(Dispatchers.IO){
+                    mBaseViewModel.jcState.value = false
+                }
             }
         }
 
@@ -140,7 +143,9 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
 
             CoroutineScope(Dispatchers.IO).launch {
                 GdbhApi().testExecute()
-                mBaseViewModel.gdState.value = false
+                withContext(Dispatchers.IO){
+                    mBaseViewModel.gdState.value = false
+                }
             }
         }
     }
