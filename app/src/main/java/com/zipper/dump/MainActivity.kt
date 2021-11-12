@@ -1,7 +1,10 @@
 package com.zipper.dump
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.SparseArray
+import androidx.lifecycle.Observer
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.zipper.core.activity.BaseVmBActivity
@@ -50,35 +53,41 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
             }
             SpUtil.instance(TASK_SP_NAME).put(Constant.SP_KEY_IS_RE_LOAD_TASK_CONFIG, false)
         }
+
+        SignService.kgState.observe(this, Observer {
+            mBaseViewModel.kgState.value = it
+        })
+
+        SignService.zqState.observe(this, Observer {
+            mBaseViewModel.zqState.value = it
+        })
+        SignService.jcState.observe(this, Observer {
+            mBaseViewModel.jcState.value = it
+        })
+
+        SignService.gdState.observe(this, Observer {
+            mBaseViewModel.gdState.value = it
+        })
+    }
+
+    private fun startService(action: String){
+        val intent = Intent(this@MainActivity, SignService::class.java)
+        intent.action = action
+        startService(intent)
     }
 
     inner class EventHandler{
+
+        fun start(){
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        }
 
         fun doKG(){
             if (mBaseViewModel.kgState.value == true){
                 showToast("已经正在执行了")
                 return
             }
-
-            mBaseViewModel.kgState.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                val json = SpUtil.instance(TASK_SP_NAME).get(Constant.SP_KEY_KG,"[]")
-                val userList: List<ConfigBean> = Gson().fromJson(json, object : TypeToken<List<ConfigBean>>(){}.type)
-                userList.map {
-                    async {
-                        val task = KgTaskApi(it)
-                        mRunTaskApi.add(task)
-                        task.execute()
-                        task
-                    }
-                }.forEach {
-                    val res = it.await()
-                    mRunTaskApi.remove(res)
-                }
-                withContext(Dispatchers.IO){
-                    mBaseViewModel.kgState.value = false
-                }
-            }
+            startService(SignService.KUGOU)
         }
 
         fun doZQ(){
@@ -86,26 +95,7 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
                 showToast("已经正在执行了")
                 return
             }
-            mBaseViewModel.zqState.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                val json = SpUtil.instance(TASK_SP_NAME).get(Constant.SP_KEY_ZQ,"[]")
-                val list: List<ZqkdApiParam> = Gson().fromJson(json, object : TypeToken<List<ZqkdApiParam>>() {}.type)
-                list.map {
-                    async {
-                        val task = ZqkdApi()
-                        mRunTaskApi.add(task)
-                        task.execute(it)
-                        task
-                    }
-                }.forEach {
-                    val res = it.await()
-                    mRunTaskApi.remove(res)
-                }
-                withContext(Dispatchers.IO){
-                    mBaseViewModel.zqState.value = false
-                }
-            }
-
+            startService(SignService.ZQKD)
         }
 
         fun doJC(){
@@ -113,25 +103,7 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
                 showToast("已经正在执行了")
                 return
             }
-            mBaseViewModel.jcState.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                val json = SpUtil.instance(TASK_SP_NAME).get(Constant.SP_KEY_JC,"[]")
-                val list: List<JckdApiParam> = Gson().fromJson(json, object : TypeToken<List<JckdApiParam>>() {}.type)
-                list.map {
-                    async {
-                        val task = JckdApi()
-                        mRunTaskApi.add(task)
-                        task.execute(it)
-                        task
-                    }
-                }.forEach {
-                    val res = it.await()
-                    mRunTaskApi.remove(res)
-                }
-                withContext(Dispatchers.IO){
-                    mBaseViewModel.jcState.value = false
-                }
-            }
+            startService(SignService.JCKD)
         }
 
         fun doGD(){
@@ -139,14 +111,7 @@ class MainActivity: BaseVmBActivity<MainViewModel,MainBinding>() {
                 showToast("已经正在执行了")
                 return
             }
-            mBaseViewModel.gdState.value = true
-
-            CoroutineScope(Dispatchers.IO).launch {
-                GdbhApi().testExecute()
-                withContext(Dispatchers.IO){
-                    mBaseViewModel.gdState.value = false
-                }
-            }
+            startService(SignService.GUBH)
         }
     }
 }
