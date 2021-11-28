@@ -12,7 +12,7 @@ import com.zipper.auto.api.activity.ApiActivity
 import com.zipper.auto.api.job.FetchWorker
 import com.zipper.auto.api.job.UpdateStatusWorker
 import com.zipper.auto.api.store.JJSDatabase
-import com.zipper.base.service.IPluginAutoApi
+import com.zipper.base.service.plugin.IPluginAutoApi
 import com.zipper.core.BaseApp
 import com.zipper.core.plugin.BasePlugin
 import com.zipper.core.utils.LaunchUtil

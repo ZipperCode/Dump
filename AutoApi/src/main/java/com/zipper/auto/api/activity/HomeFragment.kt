@@ -26,7 +26,7 @@ class HomeFragment : BaseNavVmBFragment<HomeViewModel, FragmentHomeBinding>() {
     private lateinit var adapter: ModuleTaskAdapter
 
     override fun getVariable(): SparseArray<Any> {
-        adapter = ModuleTaskAdapter(requireContext()) { type, bean ->
+        adapter = ModuleTaskAdapter() { type, bean ->
             when (type) {
                 0 /* run */ -> {
                     if (ApiModuleManager.checkModuleIsRun(bean.moduleKey)) {

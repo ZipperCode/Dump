@@ -23,10 +23,8 @@ import java.lang.Exception
  * @date   2021/9/13
  **/
 class ModuleTaskAdapter(
-    context: Context,
     val onClickBtn: (type: Int, bean: ModuleTaskBean) -> Unit
 ) : BaseBindingListAdapter<ModuleTaskBean, ListItemModuleTaskBinding>(
-    LayoutInflater.from(context),
     R.layout.list_item_module_task,
     ModuleTaskDiff()
 ) {

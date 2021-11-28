@@ -1,5 +1,6 @@
 package com.zipper.core.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.IdRes
@@ -17,13 +18,21 @@ import java.util.*
  * @date   2021/9/13
  **/
 abstract class BaseBindingListAdapter<ITEM,VDB : ViewDataBinding >(
-    val inflater: LayoutInflater,
     @LayoutRes
     val itemLayout: Int,
     diff: DiffUtil.ItemCallback<ITEM>
 ) : ListAdapter<ITEM,BaseBindingViewHolder<VDB>>(diff) {
+    protected lateinit var inflater: LayoutInflater
+
+    protected lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseBindingViewHolder<VDB> {
+        if (!::context.isInitialized){
+            context = parent.context
+        }
+        if (!::inflater.isInitialized){
+            inflater = LayoutInflater.from(context)
+        }
         val binding: VDB = DataBindingUtil.inflate<VDB>(inflater, itemLayout, parent, false)
         return BaseBindingViewHolder(binding)
     }

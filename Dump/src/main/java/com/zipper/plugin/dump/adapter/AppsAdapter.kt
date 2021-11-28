@@ -18,9 +18,8 @@ import com.zipper.plugin.dump.databinding.ListItemAppsInfoBinding
  * @author zhangzhipeng
  * @date   2021/9/24
  **/
-class AppAdapter(context: Context)
+class AppAdapter()
     : BaseBindingListAdapter<AppsInfo, ListItemAppsInfoBinding>(
-    LayoutInflater.from(context),
     R.layout.list_item_apps_info,
     AppsDiff()
 ), Filterable {

@@ -81,6 +81,7 @@ repositories {
 dependencies {
     implementation project(':Core')
     implementation project(':BaseService')
+    implementation project(':TaskModule')
 //    implementation project(':AutoApi')
 //    implementation project(':ApiModule')
 
@@ -91,11 +92,11 @@ dependencies {
         kapt it.value
     }
 
-    implementation files('libs/core-1.0-SNAPSHOT.jar')
-    implementation files('libs/gdbh-1.0-SNAPSHOT.jar')
-    implementation files('libs/jckd-1.0-SNAPSHOT.jar')
-    implementation files('libs/kugou-1.0-SNAPSHOT.jar')
-    implementation files('libs/zqkd-1.0-SNAPSHOT.jar')
+//    implementation files('libs/core-1.0-SNAPSHOT.jar')
+//    implementation files('libs/gdbh-1.0-SNAPSHOT.jar')
+//    implementation files('libs/jckd-1.0-SNAPSHOT.jar')
+//    implementation files('libs/kugou-1.0-SNAPSHOT.jar')
+//    implementation files('libs/zqkd-1.0-SNAPSHOT.jar')
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.11.2') {

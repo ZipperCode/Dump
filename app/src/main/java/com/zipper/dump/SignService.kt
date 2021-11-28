@@ -15,13 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.zipper.core.utils.SpUtil
-import com.zipper.sign.gdbh.GdbhApi
-import com.zipper.sign.jckd.JckdApi
-import com.zipper.sign.jckd.JckdApiParam
-import com.zipper.sign.kugou.ConfigBean
-import com.zipper.sign.kugou.KgTaskApi
-import com.zipper.sign.zqkd.ZqkdApi
-import com.zipper.sign.zqkd.ZqkdApiParam
+import com.zipper.task.module.TaskModuleManager
 import kotlinx.coroutines.*
 
 /**
@@ -39,26 +33,67 @@ class SignService: Service() {
         const val JCKD = "JCKD"
         const val GUBH = "GUBH"
 
-        val kgState: MutableLiveData<Boolean> = MutableLiveData(false)
-        val zqState: MutableLiveData<Boolean> = MutableLiveData(false)
-        val jcState: MutableLiveData<Boolean> = MutableLiveData(false)
-        val gdState: MutableLiveData<Boolean> = MutableLiveData(false)
+        /**
+         * 开启服务
+         */
+        const val ACTION_START_SERVICE = "action.start_service"
+
+        /**
+         * 停止服务
+         */
+        const val ACTION_STOP_SERVICE = "action.stop_service"
+
+        /**
+         * 添加通知
+         */
+        const val ACTION_ADD_NOTIFY = "action.add_notify"
+
+        /**
+         * 更新通知
+         */
+        const val ACTION_UPDATE_NOTIFY = "action.update_notify"
+
+        /**
+         * 运行任务
+         */
+        const val ACTION_RUN_TASK = "action.run_task"
+
+        /**
+         * 停止任务
+         */
+        const val ACTION_STOP_TASK = "action.stop_task"
+
+        /**
+         * 服务行为
+         */
+        const val INTENT_PARAM_ACTION_KEY = "action"
+        const val INTENT_PARAM_TASK_KEY = "intent.param.task_key"
+
+        /**
+         * 是否需要弹出服务开启
+         */
+        val alertSignServiceDialog: MutableLiveData<Boolean> = MutableLiveData(true)
     }
+
+    private val ioCoroutine: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate")
+        alertSignServiceDialog.value = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        alertSignServiceDialog.value = true
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand")
-        when(intent?.action ?: "START"){
-            START -> notifyServiceStatus(true)
-            STOP -> notifyServiceStatus(false)
-            ZQKD -> doZQ()
-            KUGOU -> doKG()
-            JCKD -> doJC()
-            GUBH -> doGD()
+        when(intent?.action){
+            ACTION_START_SERVICE -> notifyServiceStatus(true)
+            ACTION_STOP_SERVICE -> notifyServiceStatus(false)
+            ACTION_RUN_TASK -> runTask(intent.getStringExtra(INTENT_PARAM_TASK_KEY))
         }
         return START_STICKY
     }
@@ -114,89 +149,38 @@ class SignService: Service() {
         startForeground(SignAccessibilityService.NOTIFICATION_ID, builder.build())
     }
 
-    fun doKG(){
-        if (kgState.value == true){
+    /**
+     * 运行任务
+     */
+    private fun runTask(taskKey: String?){
+        if (taskKey.isNullOrEmpty()){
+            Log.d(TAG,"任务运行失败，原因：任务key为空")
             return
         }
-        kgState.value = true
-        CoroutineScope(Dispatchers.IO).launch {
-            val json = SpUtil.instance(MainActivity.TASK_SP_NAME).get(Constant.SP_KEY_KG,"[]")
-            val userList: List<ConfigBean> = Gson().fromJson(json, object : TypeToken<List<ConfigBean>>(){}.type)
-            userList.map {
-                async {
-                    val task = KgTaskApi(it)
-                    task.execute()
-                    task
-                }
-            }.forEach {
-                val res = it.await()
-            }
-            withContext(Dispatchers.Main){
-                kgState.value = false
-            }
+        if (TaskModuleManager.taskIsRun(taskKey)){
+            Log.d(TAG,"任务运行失败，原因：任务已经在运行了")
+            return
+        }
+        ioCoroutine.launch {
+            TaskModuleManager.runTask(taskKey)
         }
     }
 
-    fun doZQ(){
-        if (zqState.value == true){
+    /**
+     * 任务停止运行
+     */
+    private fun stopTask(taskKey: String?){
+        if (taskKey.isNullOrEmpty()){
+            Log.d(TAG,"任务停止运行失败，原因：任务key为空")
             return
         }
-        zqState.value = true
-        CoroutineScope(Dispatchers.IO).launch {
-            val json = SpUtil.instance(MainActivity.TASK_SP_NAME).get(Constant.SP_KEY_ZQ,"[]")
-            val list: List<ZqkdApiParam> = Gson().fromJson(json, object : TypeToken<List<ZqkdApiParam>>() {}.type)
-            list.map {
-                async {
-                    val task = ZqkdApi()
-                    task.execute(it)
-                    task
-                }
-            }.forEach {
-                val res = it.await()
-            }
-            withContext(Dispatchers.Main){
-                zqState.value = false
-            }
-        }
-
-    }
-
-    fun doJC(){
-        if (jcState.value == true){
+        if (!TaskModuleManager.taskIsRun(taskKey)){
+            Log.d(TAG,"任务运行失败，原因：任务没有在运行")
             return
         }
-        jcState.value = true
-        CoroutineScope(Dispatchers.IO).launch {
-            val json = SpUtil.instance(MainActivity.TASK_SP_NAME).get(Constant.SP_KEY_JC,"[]")
-            val list: List<JckdApiParam> = Gson().fromJson(json, object : TypeToken<List<JckdApiParam>>() {}.type)
-            list.map {
-                async {
-                    val task = JckdApi()
-                    task.execute(it)
-                    task
-                }
-            }.forEach {
-                val res = it.await()
-            }
-            withContext(Dispatchers.Main){
-                jcState.value = false
-            }
-        }
+        TaskModuleManager.stopTask(taskKey)
     }
 
-    fun doGD(){
-        if (gdState.value == true){
-            return
-        }
-        gdState.value = true
-
-        CoroutineScope(Dispatchers.IO).launch {
-            GdbhApi().testExecute()
-            withContext(Dispatchers.Main){
-                gdState.value = false
-            }
-        }
-    }
 
 
 }

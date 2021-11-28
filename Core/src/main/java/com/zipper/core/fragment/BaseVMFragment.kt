@@ -14,7 +14,7 @@ import java.lang.reflect.Type
 abstract class BaseVMFragment<VM : ViewModel> : BaseFragment() {
 
     private lateinit var mFragmentProvider: ViewModelProvider
-    private lateinit var mActivityProvider: ViewModelProvider
+    protected open lateinit var mActivityProvider: ViewModelProvider
 
     protected lateinit var mBaseViewModel: VM
         private set

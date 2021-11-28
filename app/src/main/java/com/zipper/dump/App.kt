@@ -11,6 +11,7 @@ import android.R.attr.name
 import android.util.Base64
 import android.util.Log
 import com.zipper.dump.utils.Name
+import com.zipper.task.module.TaskModuleManager
 import java.io.ByteArrayInputStream
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
@@ -20,11 +21,12 @@ class App : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()
+        TaskModuleManager.initModule(this)
         mContext = this
 //        ThemeHelper.applyTheme(ThemeHelper.ThemeMode.DARK_MODE)
         val a = 1
         val toByteArray =
-            packageManager.getPackageInfo("com.ldzs.zhangxin", 64).signatures[0].toByteArray()
+            packageManager.getPackageInfo("com.ldzs.jcweather", 64).signatures[0].toByteArray()
 
         Log.d("AAAAAB",  Base64.encodeToString(toByteArray, 0))
         Log.d("AAAAA", Name.parseSignature(toByteArray,a.toChar()))
@@ -36,11 +38,5 @@ class App : BaseApp() {
         @SuppressLint("StaticFieldLeak")
         lateinit var mContext: Context
 
-        val mMainCoroutinesScope : CoroutineScope by lazy(LazyThreadSafetyMode.SYNCHRONIZED){
-            CoroutineScope(Dispatchers.Main)
-        }
-        val mIoCoroutinesScope: CoroutineScope by lazy(LazyThreadSafetyMode.SYNCHRONIZED){
-            CoroutineScope(Dispatchers.IO)
-        }
     }
 }

@@ -2,4 +2,32 @@
 <resources>
     <string name="app_name">a</string>
     <string name="desc">执行签到任务使用</string>
+
+    <string name="nav_home">主页</string>
+    <string name="nav_variable">变量</string>
+    <string name="nav_person">我的</string>
+
+    <string name="dump">跳转</string>
+    <string name="finished">已完成</string>
+
+    <string name="panel_variable_title">变量修改</string>
+    <string name="name">名称：</string>
+    <string name="value">值：</string>
+    <string name="remarks">备注：</string>
+    <string name="global">全</string>
+    <string name="global_title">是否应用全局</string>
+    <string name="save">保存</string>
+
+    <string name="image_desc">图片</string>
+
+    <string name="module_name">模块名：</string>
+    <string name="module_execute_time">执行时间：</string>
+    <string name="module_version">版本：</string>
+    <string name="module_run">手动运行</string>
+    <string name="module_stop">停止</string>
+    <string name="module_ban">禁用</string>
+    <string name="module_resume">启用</string>
+    <string name="module_delete">删除</string>
+    <string name="split_colon"> => </string>
+
 </resources>

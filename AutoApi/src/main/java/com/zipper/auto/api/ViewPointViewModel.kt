@@ -7,13 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zipper.auto.api.bean.TitleBean
 import com.zipper.auto.api.bean.ViewPoint
-import com.zipper.base.service.plugin.impl.AutoApiPao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class ViewPointViewModel: ViewModel() {
 

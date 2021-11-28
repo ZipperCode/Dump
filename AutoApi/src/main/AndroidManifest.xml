@@ -27,7 +27,10 @@
         <activity android:name=".DetailActivity" />
 
         <activity android:name="com.zipper.auto.api.activity.ApiActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <service

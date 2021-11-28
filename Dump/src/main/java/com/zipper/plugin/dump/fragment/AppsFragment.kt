@@ -25,7 +25,7 @@ class AppsFragment : BaseVmBFragment<AppsViewModel, FragmentAppsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mAdapter = AppAdapter(requireContext())
+        mAdapter = AppAdapter()
         mRecyclerView.adapter = mAdapter
 
         mBaseViewModel.appsData.observe(viewLifecycleOwner, Observer {

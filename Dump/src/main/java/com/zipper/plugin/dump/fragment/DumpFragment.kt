@@ -7,10 +7,8 @@ import android.util.SparseArray
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
-import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.zipper.base.service.plugin.impl.AutoApiPao
+import com.zipper.base.service.plugin.pao.AutoApiPao
 import com.zipper.core.fragment.BaseNavVmBFragment
 import com.zipper.core.utils.L
 import com.zipper.plugin.dump.BR

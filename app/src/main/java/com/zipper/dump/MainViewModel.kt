@@ -1,7 +1,9 @@
 package com.zipper.dump
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavDestination
 
 /**
  *  @author zipper
@@ -10,8 +12,17 @@ import androidx.lifecycle.ViewModel
  **/
 class MainViewModel: ViewModel() {
 
-    val kgState:MutableLiveData<Boolean> = MutableLiveData(false)
-    val zqState:MutableLiveData<Boolean> = MutableLiveData(false)
-    val jcState:MutableLiveData<Boolean> = MutableLiveData(false)
-    val gdState:MutableLiveData<Boolean> = MutableLiveData(false)
+    companion object{
+        val mainFragmentSet = setOf(R.id.nav_home_fragment, R.id.nav_variable_fragment, R.id.nav_person_fragment)
+    }
+
+    private val _navBottomBarVisible: MutableLiveData<Boolean> = MutableLiveData(true)
+
+    val navBottomBarVisible: LiveData<Boolean> get() = _navBottomBarVisible
+
+    fun destinationChanged(destination: NavDestination){
+        _navBottomBarVisible.value = containMainScreen(destination.id)
+    }
+
+    fun containMainScreen(id: Int?) : Boolean = mainFragmentSet.contains(id)
 }
