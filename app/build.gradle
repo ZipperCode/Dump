@@ -98,6 +98,7 @@ dependencies {
 //    implementation files('libs/kugou-1.0-SNAPSHOT.jar')
 //    implementation files('libs/zqkd-1.0-SNAPSHOT.jar')
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'androidx.asynclayoutinflater:asynclayoutinflater:1.0.0'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.11.2') {
 //        exclude group: 'org.json', module: 'json' //provided by Android natively
